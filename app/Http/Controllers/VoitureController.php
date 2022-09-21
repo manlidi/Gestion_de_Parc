@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Voiture;
+use App\Models\Piece;
 use App\Models\Assurance;
 class VoitureController extends Controller
 {
@@ -82,6 +83,15 @@ class VoitureController extends Controller
         ]);
     }
 
+    public function details($id){
+        $nbr = DB::table('reparers')
+            ->join('voitures', 'voitures.id', '=', 'reparers.voiture_id')
+            ->select(DB::raw('count(*) as nombre'))
+            ->where('voitures.id', '=', $id)
+            ->get();
+        return view('voitures.details', compact('nbr'));
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -114,5 +124,12 @@ class VoitureController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function piece($id)
+    {
+        $pieces = Piece::where('voiture_id', $id)->get()->pluck('id', 'nompiece')->toArray();
+        return response()->json($pieces);
+        // dd($communes);
     }
 }

@@ -64,7 +64,37 @@
 
   <!-- Template Main JS File -->
   <script src="../assets/js/main.js"></script>
+  <script>
+    function getPiece(piece,textCategorie){
+        if( piece.length == 0 ){
+            return;
+        }else{
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function(){
+                if(this.readyState == 4 && this.status == 200){
+                    let pieces = this.responseText;
 
+                    var selectElement = document.getElementById(textCategorie);
+                    selectElement.innerHTML='<option value="">Selectionner la piece</option>';
+                    var option;
+                    JSON.parse(pieces, (value, key) => {
+                        if( value.length != 0 ){
+                            option = document.createElement("option");
+                            option.value = key;
+                            option.text = value;
+                            selectElement.add(option);
+                        }
+                    });
+                }
+            };
+            var routeUrl;
+            routeUrl = "{{ url('get/piece/') }}/" + piece;
+
+            xmlhttp.open("GET", routeUrl, true);
+            xmlhttp.send();
+        }
+    }
+    </script>
 </body>
 
 </html>

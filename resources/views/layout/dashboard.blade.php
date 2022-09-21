@@ -103,7 +103,7 @@
                                             <tbody>
                                                 @forelse($voiture as $item)
                                                     <tr>
-                                                        <td>{{ $item->marque }}</td>
+                                                        <td><a href="{{url('detailsvoiture/'.$item->id)}}">{{ $item->marque }}</a></td>
                                                         <td>{{ $item->immatriculation }}</td>
                                                         <td>{{ $item->datdebservice }}</td>
                                                         <td>{{ $item->kilmax }} km</td>

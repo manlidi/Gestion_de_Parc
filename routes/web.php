@@ -8,6 +8,9 @@ use App\Http\Controllers\VoitureController;
 use App\Http\Controllers\MissionController;
 use App\Http\Controllers\MissionUserController;
 use App\Http\Controllers\ChauffeurController;
+use App\Http\Controllers\GarageController;
+use App\Http\Controllers\PieceController;
+use App\Http\Controllers\ReparerController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -40,6 +43,8 @@ Route::get('deleteass/{id}', [AssuranceController::class, 'destroy']);
 Route::get('voitures', [VoitureController::class,'index']);
 Route::get('addvoitures', [VoitureController::class,'create']);
 Route::post('savevoitures', [VoitureController::class,'store']);
+Route::get('get/piece/{id}',[VoitureController::class,"piece"]);
+Route::get('detailsvoiture/{id}',[VoitureController::class,"details"]);
 
 Route::get('missions', [MissionController::class, 'index'])->name('missions');
 Route::get('addmissions', [MissionController::class,'create']);
@@ -60,6 +65,18 @@ Route::post('savechauffeurs', [MissionUserController::class, 'savechauffeur']);
 Route::get('chauffeurs', [ChauffeurController::class, 'index'])->name('chauffeurs');
 Route::get('createchauffeurs', [ChauffeurController::class, 'create']);
 Route::post('storechauffeurs', [ChauffeurController::class, 'store']);
+
+Route::get('garages', [GarageController::class, 'index'])->name('garages');
+Route::get('addgarage', [GarageController::class, 'create']);
+Route::post('savegarage', [GarageController::class, 'store']);
+
+Route::get('pieces', [PieceController::class, 'index'])->name('pieces');
+Route::get('createpiece', [PieceController::class, 'create']);
+Route::post('savepiece', [PieceController::class, 'store']);
+
+Route::get('listereparation', [ReparerController::class, 'index'])->name('listereparation');
+Route::get('reparations', [ReparerController::class, 'create']);
+Route::post('createreparation', [ReparerController::class, 'store']);
 });
 Route::get('login', [AuthController::class, 'index']);
 Route::post('loginusers', [AuthController::class, 'create']);

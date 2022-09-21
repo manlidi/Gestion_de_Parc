@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Assurance;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Piece;
 
 class Voiture extends Model
 {
@@ -27,5 +28,9 @@ class Voiture extends Model
 
     public function assurance(){
         return $this->belongsTo(Assurance::class);
+    }
+
+    public function pieces(){
+        return $this->hasMany(Piece::class);
     }
 }

@@ -30,7 +30,7 @@
                                                 </td>
                                             </tr>
                                         @empty
-                                            <tr colspan="7">Pas de Structure trouver</tr>
+                                            <tr colspan="7">Pas d'assurance trouver</tr>
                                         @endforelse
                                     </tbody>
                                 </table>
