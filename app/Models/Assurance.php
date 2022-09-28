@@ -13,10 +13,11 @@ class Assurance extends Model
     protected $fillable = [
         'societeAssurance',
         'datedebA',
-        'datefinA'
+        'datefinA',
+        'voiture_id'
     ];
 
-    public function voitures(){
-        return $this->hasMany(Voiture::class);
+    public function voiture(){
+        return $this->belongsTo(Voiture::class);
     }
 }

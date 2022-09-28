@@ -42,6 +42,21 @@
                                             @endif
                                         </div>
                                         <div class="col-12">
+                                            <select class="form-select" name="voiture_id">
+                                                <option selected>{{$assurances->voiture->marque}}</option>
+                                                @if ($voiture->count() > 0)
+                                                    @foreach ($voiture as $us)
+                                                        <option value="{{ $us->id }}">{{ $us->marque }}</option>
+                                                    @endforeach
+                                                @else
+                                                    <option value="">Pas de voiture</option>
+                                                @endif
+                                            </select>
+                                            @if ($errors->has('voiture_id'))
+                                                <span class="text-danger">{{ $errors->first('voiture_id') }}</span>
+                                            @endif
+                                        </div>
+                                        <div class="col-12">
                                             <button class="btn btn-primary w-100" type="submit">Modifier</button>
                                         </div>
                                     </form>

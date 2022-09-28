@@ -13,11 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('notifications', function (Blueprint $table) {
+        Schema::create('assurances', function (Blueprint $table) {
             $table->id();
-            $table->string('message');
-            $table->string('status')->default('Non Vue');
-            $table->foreignId('assurance_id')->constrained();
+            $table->string('societeAssurance');
+            $table->date('datedebA');
+            $table->date('datefinA');
+            $table->boolean('status')->default(true);
+            $table->boolean('notif')->default(false);
+            $table->foreignId('voiture_id')->constrained();
             $table->timestamps();
         });
     }
@@ -29,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('notifications');
+        Schema::dropIfExists('assurances');
     }
 };

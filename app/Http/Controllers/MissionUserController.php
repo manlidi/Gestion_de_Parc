@@ -6,8 +6,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Mission;
 use App\Models\MissionUser;
-use App\Models\MissionVoiture;
-use App\Models\MissionChauffeur;
 use App\Models\User;
 use App\Models\Voiture;
 use App\Models\Chauffeur;
@@ -22,31 +20,23 @@ class MissionUserController extends Controller
      */
     public function index($id)
     {
-        $user = DB::table('mission_users')
-            ->join('users', 'users.id', '=', 'mission_users.user_id')
+        $voiture = DB::table('mission_users')
+            ->join('voitures', 'voitures.id', '=', 'mission_users.voiture_id')
             ->join('missions', 'missions.id', '=', 'mission_users.mission_id')
-            ->select('users.name')
+            ->select('voitures.*')
             ->where('missions.id', '=', $id)
             ->get();
 
-        $voiture = DB::table('mission_voitures')
-            ->join('voitures', 'voitures.id', '=', 'mission_voitures.voiture_id')
-            ->join('missions', 'missions.id', '=', 'mission_voitures.mission_id')
-            ->select('voitures.marque')
-            ->where('missions.id', '=', $id)
-            ->get();
-
-        $chauffeur = DB::table('mission_chauffeurs')
-            ->join('chauffeurs', 'chauffeurs.id', '=', 'mission_chauffeurs.chauffeur_id')
-            ->join('missions', 'missions.id', '=', 'mission_chauffeurs.mission_id')
-            ->select('chauffeurs.*')
+        $chauffeur = DB::table('mission_users')
+            ->join('chauffeurs', 'chauffeurs.id', '=', 'mission_users.chauffeur_id')
+            ->join('missions', 'missions.id', '=', 'mission_users.mission_id')
+            ->join('voitures', 'voitures.id', '=', 'mission_users.voiture_id')
+            ->select('chauffeurs.*', 'voitures.*')
             ->where('missions.id', '=', $id)
             ->get();
 
         $mission = Mission::find($id);
-        //$mission->with('users')->get();
-        //dd($mission);
-        return view('missions.allmissionuser', compact('user', 'mission', 'voiture', 'chauffeur'));
+        return view('missions.allmissionuser', compact('mission', 'voiture', 'chauffeur'));
     }
 
     /**
@@ -56,10 +46,15 @@ class MissionUserController extends Controller
      */
     public function create($id)
     {
-        //->where('structure_id', '=', Auth::user()->structure_id)
-        $user = DB::table('users')->get();
-        $mission = Mission::find($id);
-        return view('missions.addmissionuser', compact('mission', 'user'));
+        $chauffeur = Chauffeur::all()->where('disp', '=', 'Disponible');
+        $mission = MissionUser::find($id);
+        $voiture = DB::table('mission_users')
+            ->join('voitures', 'voitures.id', '=', 'mission_users.voiture_id')
+            ->join('missions', 'missions.id', '=', 'mission_users.mission_id')
+            ->select('voitures.*')
+            ->where('missions.id', '=', $id)
+            ->get();
+        return view('missions.addmissionchauffeurs', compact('mission', 'chauffeur', 'voiture'));
     }
 
     /**
@@ -68,45 +63,27 @@ class MissionUserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
-        $mission_user = new MissionUser();
-        $mission_user->mission_id = $request->mission_id;
-        $mission_user->user_id = $request->user_id;
-        $status = $mission_user->save();
+        $mission_chauffeur = MissionUser::all()->where('voiture_id', '=', $request->voiture_id);
+        foreach($mission_chauffeur as $mc){
+            $mission = DB::table('mission_users')
+            ->where('id', '=', $mc->id, 'AND', 'mission_id', '=', $id, 'AND', 'voiture_id', '=', $request->voiture_id)
+            ->select('id')
+            ->get();
+            foreach($mission as $r){
+                $status = DB::table('mission_users')
+                    ->where('id', $r->id)
+                    ->update(['chauffeur_id' => $request->chauffeur_id]);
+            }
+        }
 
-        if( $status ) $parametre = ['status'=>true, 'msg'=>'Membre affecter à la mission avec succès'];
-        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
-        return redirect()->route('missions')->with($parametre);
-    }
+        $cva = DB::table('chauffeurs')
+                    ->where('id', $request->chauffeur_id)
+                    ->update(['disp' => 'Non Disponible']);
 
-    public function save(Request $request){
-
-        $mission_voiture = new MissionVoiture();
-        $mission_voiture->mission_id = $request->mission_id;
-        $mission_voiture->voiture_id = $request->voiture_id;
-        $mission_voiture->kmdeb = $request->kmdeb;
-        $status = $mission_voiture->save();
-
-        $v = Voiture::find($mission_voiture->voiture_id);
-        $v = DB::table('voitures')->where('id', $mission_voiture->voiture_id)->update(['dispo' => 'Indisponible', 'mouvement' => 'En mission']);
-
-        if( $status ) $parametre = ['status'=>true, 'msg'=>'Voiture affecter à la mission avec succès'];
-        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
-        return redirect()->route('missions')->with($parametre);
-    }
-
-    public function savechauffeur(Request $request){
-        $mission_chauffeur = new MissionChauffeur();
-        $mission_chauffeur->mission_id = $request->mission_id;
-        $mission_chauffeur->chauffeur_id = $request->chauffeur_id;
-        $status = $mission_chauffeur->save();
-
-        $ch = Chauffeur::find($mission_chauffeur->chauffeur_id);
-        $ch = DB::table('chauffeurs')->where('id', $mission_chauffeur->chauffeur_id)->update(['disp' => 'Indisponible']);
-
-        if( $status ) $parametre = ['status'=>true, 'msg'=>'Chauffeur affecter à la mission avec succès'];
-        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
+        if( $status ) $parametre = ['status'=>true, 'msg'=>'Chauffeur affecter avec succès'];
+        else $parametre = ['status'=>false, 'msg'=>'Erreur de mise à jour'];
         return redirect()->route('missions')->with($parametre);
     }
 
@@ -118,9 +95,7 @@ class MissionUserController extends Controller
      */
     public function show($id)
     {
-        $voiture = DB::table('voitures')->get();
-        $mission = Mission::find($id);
-        return view('missions.addmissionvoiture', compact('mission', 'voiture'));
+        //
     }
 
     /**
@@ -131,9 +106,7 @@ class MissionUserController extends Controller
      */
     public function edit($id)
     {
-        $chauffeur = DB::table('chauffeurs')->get();
-        $mission = Mission::find($id);
-        return view('missions.addmissionchauffeurs', compact('mission', 'chauffeur'));
+        //
     }
 
     /**

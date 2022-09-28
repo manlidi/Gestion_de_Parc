@@ -26,8 +26,8 @@ class Voiture extends Model
         'assurance_id'
     ];
 
-    public function assurance(){
-        return $this->belongsTo(Assurance::class);
+    public function assurances(){
+        return $this->hasMany(Assurance::class);
     }
 
     public function pieces(){

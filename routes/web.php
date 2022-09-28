@@ -11,6 +11,7 @@ use App\Http\Controllers\ChauffeurController;
 use App\Http\Controllers\GarageController;
 use App\Http\Controllers\PieceController;
 use App\Http\Controllers\ReparerController;
+use App\Http\Controllers\NotificationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,7 +24,7 @@ use App\Http\Controllers\ReparerController;
 */
 
 Route::get('/', function () {return view('layout.login');});
-Route::get('dashboard', [AuthController::class, 'dashboard']);
+Route::get('dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
 
 Route::middleware(['auth', 'role:Administrateur'])->group(function () {
 Route::get('structures', [StructureController::class, 'index']);
@@ -34,7 +35,7 @@ Route::put('upstructures/{id}', [StructureController::class, 'update']);
 Route::get('delstructures/{id}', [StructureController::class, 'destroy']);
 
 Route::get('assurance', [AssuranceController::class,'index']);
-Route::get('addassurance', [AssuranceController::class,'create']);
+Route::get('addassurance/{id}', [AssuranceController::class,'create']);
 Route::post('postA', [AssuranceController::class, 'save']);
 Route::get('editass/{id}', [AssuranceController::class, 'edit']);
 Route::put('updateass/{id}', [AssuranceController::class, 'update']);
@@ -54,12 +55,8 @@ Route::get('del/{id}', [MissionController::class, 'destroy']);
 
 
 Route::get('det/{id}', [MissionUserController::class, 'index']);
-Route::get('createmembre/{id}', [MissionUserController::class, 'create']);
-Route::post('saveusermission', [MissionUserController::class, 'store']);
-Route::get('addvoit/{id}', [MissionUserController::class, 'show']);
-Route::post('savevoitumission', [MissionUserController::class, 'save']);
-Route::get('addchauf/{id}', [MissionUserController::class, 'edit']);
-Route::post('savechauffeurs', [MissionUserController::class, 'savechauffeur']);
+Route::get('addchauf/{id}', [MissionUserController::class, 'create']);
+Route::post('savechauffeurs/{id}', [MissionUserController::class, 'store']);
 
 
 Route::get('chauffeurs', [ChauffeurController::class, 'index'])->name('chauffeurs');
@@ -77,6 +74,9 @@ Route::post('savepiece', [PieceController::class, 'store']);
 Route::get('listereparation', [ReparerController::class, 'index'])->name('listereparation');
 Route::get('reparations', [ReparerController::class, 'create']);
 Route::post('createreparation', [ReparerController::class, 'store']);
+
+// Route::get('notif', [NotificationController::class, 'index']);
+
 });
 Route::get('login', [AuthController::class, 'index']);
 Route::post('loginusers', [AuthController::class, 'create']);

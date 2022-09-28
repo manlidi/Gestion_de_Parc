@@ -15,9 +15,10 @@
                         <div class="card-body">
                             <h5 class="card-title">Liste des chauffeurs</h5>
                             <div class="table-responsive">
-                                <table class="table table-bordered table-responsive">
+                                <table class="table table-responsive datatable">
                                     <thead>
                                         <tr>
+                                            <th scope="col">#</th>
                                             <th scope="col">Nom du chauffeur</th>
                                             <th scope="col">Prénom du chauffeur</th>
                                             <th scope="col">Téléphone du chauffeur</th>
@@ -28,6 +29,7 @@
                                     <tbody>
                                         @forelse($chauffeurs as $item)
                                             <tr>
+                                                <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $item->nom_cva }}</td>
                                                 <td>{{ $item->prenom_cva }}</td>
                                                 <td>{{ $item->tel }}</td>

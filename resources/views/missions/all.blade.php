@@ -14,25 +14,25 @@
                         <div class="card-body">
                             <h5 class="card-title">Liste des missions</h5>
                             <div class="table-responsive">
-                                <table class="table table-bordered table-responsive">
+                                <table class="table table-responsive datatable">
                                     <thead>
                                         <tr>
+                                            <th scope="col">#</th>
                                             <th scope="col">Objet de la mission</th>
                                             <th scope="col">Date début de la mission</th>
                                             <th scope="col">Date fin de la mission</th>
                                             <th scope="col">Etat</th>
-                                            <th scope="col">Voir les détails</th>
                                             <th scope="col"><b style="color: red">Marqué comme fait / Supprimer</b></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @forelse($mission as $item)
                                             <tr>
-                                                <td>{{ $item->objetmission }}</td>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td><a href="{{url('det/' . $item->id)}}">{{ $item->objetmission }}</a></td>
                                                 <td>{{ $item->datedeb }}</td>
                                                 <td>{{ $item->datefin }}</td>
                                                 <td><b style="color: red">{{ $item->etat }}</b></td>
-                                                <td><a href="{{ url('det/' . $item->id) }}">Détails</a></td>
                                                 <td>
                                                     @if ($item->etat == 'Non fait')
                                                         <form action="{{ url('up/' . $item->id) }}" method="POST">

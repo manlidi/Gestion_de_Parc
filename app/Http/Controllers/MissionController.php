@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
+use App\Models\MissionUser;
 use App\Models\Mission;
+use App\Models\User;
+use App\Models\Voiture;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class MissionController extends Controller
@@ -26,7 +30,8 @@ class MissionController extends Controller
      */
     public function create()
     {
-        return view('missions.add');
+        $voiture = Voiture::all()->where('dispo', '=', 'Disponible');
+        return view('missions.add', compact('voiture'));
     }
 
     /**
@@ -59,11 +64,23 @@ class MissionController extends Controller
      */
     public function show(array $data)
     {
-        return Mission::create([
+        $mission = Mission::create([
             'objetmission' => $data['objetmission'],
             'datedeb' => $data['datedeb'],
             'datefin' => $data['datefin']
         ]);
+
+        $voitures = $data['voitures'];
+        foreach( $voitures as $voiture ){
+            MissionUser::create([
+                'voiture_id' => $voiture,
+                'mission_id' => $mission->id
+            ]);
+
+            $cva = DB::table('voitures')
+                    ->where('id', $voiture)
+                    ->update(['dispo' => 'Non Disponible', 'mouvement' => 'En mission']);
+        }
     }
 
     /**

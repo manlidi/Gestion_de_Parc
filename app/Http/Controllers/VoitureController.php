@@ -27,8 +27,7 @@ class VoitureController extends Controller
      */
     public function create()
     {
-        $assur = Assurance::all();
-        return view('voitures.add', compact('assur'));
+        return view('voitures.add');
     }
 
     /**
@@ -50,7 +49,6 @@ class VoitureController extends Controller
             'kilmax' => 'required',
             'connsommation' => 'required',
             'coutaquisition' => 'required',
-            'assurance_id' => 'required',
         ]);
 
         $data = $request->all();
@@ -79,7 +77,6 @@ class VoitureController extends Controller
             'kilmax' => $data['kilmax'],
             'connsommation' => $data['connsommation'],
             'coutaquisition' => $data['coutaquisition'],
-            'assurance_id' => $data['assurance_id']
         ]);
     }
 
@@ -89,7 +86,11 @@ class VoitureController extends Controller
             ->select(DB::raw('count(*) as nombre'))
             ->where('voitures.id', '=', $id)
             ->get();
-        return view('voitures.details', compact('nbr'));
+        $detail = DB::table('voitures')
+            ->select('voitures.*')
+            ->where('id', '=', $id)
+            ->get();
+        return view('voitures.details', compact('nbr','detail'));
     }
 
     /**

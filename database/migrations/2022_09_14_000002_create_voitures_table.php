@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('marque');
             $table->integer('capacite');
-            $table->string('immatriculation');
+            $table->string('immatriculation')->unique();
             $table->date('datdebservice');
             $table->integer('dureeVie');
             $table->integer('numchassis');
@@ -27,7 +27,6 @@ return new class extends Migration
             $table->integer('coutaquisition');
             $table->string('mouvement')->default('Au parc');
             $table->string('dispo')->default('Disponible');
-            $table->foreignId('assurance_id')->constrained();
             $table->timestamps();
         });
     }

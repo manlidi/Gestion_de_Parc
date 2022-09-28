@@ -89,12 +89,9 @@
                                         <table class="table table-borderless datatable">
                                             <thead>
                                                 <tr>
+                                                    <th scope="col">#</th>
                                                     <th scope="col">Marque</th>
                                                     <th scope="col">Immatriculation</th>
-                                                    <th scope="col">Date début de service</th>
-                                                    <th scope="col">Kilomètre maximal</th>
-                                                    <th scope="col">Assurance</th>
-                                                    <th scope="col">Durée de vie</th>
                                                     <th scope="col">Etat</th>
                                                     <th scope="col">Position</th>
                                                     <th scope="col">Disponibilité</th>
@@ -103,12 +100,9 @@
                                             <tbody>
                                                 @forelse($voiture as $item)
                                                     <tr>
+                                                        <td>{{ $loop->iteration }}</td>
                                                         <td><a href="{{url('detailsvoiture/'.$item->id)}}">{{ $item->marque }}</a></td>
                                                         <td>{{ $item->immatriculation }}</td>
-                                                        <td>{{ $item->datdebservice }}</td>
-                                                        <td>{{ $item->kilmax }} km</td>
-                                                        <td>{{ $item->assurance->societeAssurance }}</td>
-                                                        <td>{{ $item->dureeVie }} ans</td>
                                                         <td>{{ $item->etat }}</td>
                                                         <td><b style="color: green">{{ $item->mouvement }}</b></td>
                                                         <td>

@@ -15,8 +15,11 @@ return new class extends Migration
     {
         Schema::create('mission_users', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->double('kmdeb')->default(0);
+            $table->double('kmfin')->default(0);
             $table->foreignId('mission_id')->constrained()->onDelete('cascade');
+            $table->foreignId('voiture_id')->constrained()->onDelete('cascade')->nullable();
+            $table->foreignId('chauffeur_id')->constrained()->onDelete('cascade')->nullable();
             $table->timestamps();
         });
     }

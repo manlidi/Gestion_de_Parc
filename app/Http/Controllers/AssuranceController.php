@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Assurance;
+use App\Models\Voiture;
+use Illuminate\Support\Facades\DB;
 
 class AssuranceController extends Controller
 {
@@ -14,7 +16,7 @@ class AssuranceController extends Controller
      */
     public function index()
     {
-        $assurance = Assurance::all();
+        $assurance = Assurance::all()->where('status','=',true);
         return view('assurances.all', compact('assurance'));
     }
 
@@ -23,9 +25,10 @@ class AssuranceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        return view('assurances.add');
+        $voiture = Voiture::all()->where('id', '=', $id);
+        return view('assurances.add', compact('voiture'));
     }
 
     public function save(Request $request){
@@ -33,13 +36,14 @@ class AssuranceController extends Controller
             'societeAssurance' => 'required',
             'datedebA' => 'required',
             'datefinA' => 'required',
+            'voiture_id'    =>  'required',
             'datefinA'    =>  'required|date|after:datedebA'
         ]);
 
         $data = $request->all();
         $check = $this->store($data);
 
-        $assurance = Assurance::all();
+        $assurance = Assurance::all()->where('status','=',true);
         return view('assurances.all', compact('assurance'));
     }
     /**
@@ -53,8 +57,17 @@ class AssuranceController extends Controller
         return Assurance::create([
             'societeAssurance' => $data['societeAssurance'],
             'datedebA' => $data['datedebA'],
-            'datefinA' => $data['datefinA']
+            'datefinA' => $data['datefinA'],
+            'voiture_id' => $data['voiture_id']
         ]);
+        
+        $assurances = Assurance::all()->where('status','=',true, 'AND', 'voiture_id','=',$data['voiture_id']);
+        foreach( $assurances as $assurance ){
+            $assur = Assurance::find($assurance->id);
+            $assur->status = false;
+            $assur->update();
+        }
+
     }
 
     /**
@@ -77,8 +90,8 @@ class AssuranceController extends Controller
     public function edit($id)
     {
         $assurances = Assurance::find($id);
-
-        return view('assurances.edit', compact('assurances'));
+        $voiture = Voiture::all();
+        return view('assurances.edit', compact('assurances','voiture'));
     }
 
     /**
@@ -94,6 +107,7 @@ class AssuranceController extends Controller
         $assurance->societeAssurance = $request->input('societeAssurance');
         $assurance->datedebA = $request->input('datedebA');
         $assurance->datefinA = $request->input('datefinA');
+        $assurance->voiture_id = $request->input('voiture_id');
         $assurance->update();
 
         $assurance = Assurance::all();

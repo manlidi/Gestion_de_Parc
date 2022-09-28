@@ -9,16 +9,12 @@
                         <div class="card-body">
                             <h5 class="card-title">Liste des voitures</h5>
                             <div class="table-responsive">
-                                <table class="table table-bordered table-responsive">
+                                <table class="table table-responsive datatable">
                                     <thead>
                                         <tr>
+                                            <th scope="col">N°</th>
                                             <th scope="col">Marque</th>
                                             <th scope="col">Immatriculation</th>
-                                            <th scope="col">Date début de service</th>
-                                            <th scope="col">Kilomètre maximal</th>
-                                            <th scope="col">Assurance</th>
-                                            <th scope="col">Durée de vie</th>
-                                            <th scope="col">Etat</th>
                                             <th scope="col">Position</th>
                                             <th scope="col">Disponibilité</th>
                                         </tr>
@@ -26,13 +22,12 @@
                                     <tbody>
                                         @forelse($voiture as $item)
                                             <tr>
-                                                <td><a href="{{ url('detailsvoiture/' . $item->id) }}">{{ $item->marque }}</a></td>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>
+                                                    <a href="{{ url('detailsvoiture/' . $item->id) }}"><strong>{{ $item->marque }}</strong></a><br>
+                                                    <a style="color: red" href="{{ url('addassurance/' . $item->id) }}">Ajouter une assurance</a>
+                                                </td>
                                                 <td>{{ $item->immatriculation }}</td>
-                                                <td>{{ $item->datdebservice }}</td>
-                                                <td>{{ $item->kilmax }} km</td>
-                                                <td>{{ $item->assurance->societeAssurance }}</td>
-                                                <td>{{ $item->dureeVie }} ans</td>
-                                                <td>{{ $item->etat }}</td>
                                                 <td><b style="color: green">{{ $item->mouvement }}</b></td>
                                                 <td>
                                                     @if ($item->dispo == 'Disponible')

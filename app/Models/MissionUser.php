@@ -11,6 +11,9 @@ class MissionUser extends Model
 
     protected $fillable = [
         'mission_id',
-        'user_id'
+        'voiture_id',
+        'chauffeur_id',
+        'kmdeb',
+        'kmfin'
     ];
 }

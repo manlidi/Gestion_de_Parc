@@ -86,21 +86,6 @@
                                         <span class="text-danger">{{ $errors->first('coutaquisition') }}</span>
                                     @endif
                                 </div>
-                                <div class="col-md-6">
-                                    <select class="form-select" name="assurance_id">
-                                        <option selected>Sélectionner l'assurance</option>
-                                        @if ($assur->count() > 0)
-                                            @foreach ($assur as $us)
-                                                <option value="{{ $us->id }}">{{ $us->societeAssurance }}</option>
-                                            @endforeach
-                                        @else
-                                            <option value="">Pas d'Assurance</option>
-                                        @endif
-                                    </select>
-                                    @if ($errors->has('assurance_id'))
-                                        <span class="text-danger">{{ $errors->first('assurance_id') }}</span>
-                                    @endif
-                                </div>
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                     <button type="reset" class="btn btn-secondary">Reset</button>
