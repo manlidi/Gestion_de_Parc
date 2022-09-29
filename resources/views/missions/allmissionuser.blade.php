@@ -11,11 +11,15 @@
                             </div>
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title"><u>Mission:</u> <strong>{{ $mission->objetmission }}</strong></h5>
+                                    <h5 class="card-title"><u>Mission:</u> <strong>{{ $mission->objetmission }}</strong>
+                                    </h5>
                                     <div class="table-responsive">
                                         <table class="table table-responsive table-bordered datatable">
                                             <thead>
                                                 <tr>
+                                                    @if ($mission->etat == 'Fait')
+                                                        <th scope="col">Rendre</th>
+                                                    @endif
                                                     <th scope="col">Les voitures affectées</th>
                                                     <th scope="col">Les chauffeurs affectées</th>
                                                     <th scope="col">Kilométrage de début</th>
@@ -24,30 +28,59 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
+                                                    @if ($mission->etat == 'Fait')
+                                                        <td>
+                                                            <input id="checkall" type="checkbox">
+                                                        </td>
+                                                    @endif
                                                     <td>
                                                         @forelse ($voiture as $us)
-                                                            <strong>- {{ $us->marque }}</strong> immatriculée <span style="color: red">{{$us->immatriculation}}</span><br>
-                                                        @empty
-                                                            Pas de voiture affecter à cette mission
-                                                        @endforelse
+                                                            @if ($mission->etat == 'Fait')
+                                                                <table>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td> <input class="check-input" type="checkbox"
+                                                                                    name="check" value="">
+                                                                            </td>
+                                                                            <td>
+                                                            @endif
+                                                            <strong>- {{ $us->marque }}</strong>
+                                                            immatriculée <span
+                                                                style="color: red">{{ $us->immatriculation }}</span>
+                                                            @if ($mission->etat == 'Fait')
                                                     </td>
-                                                    <td>
-                                                        @forelse ($chauffeur as $us)
-                                                           <strong>- {{ $us->nom_cva }} {{ $us->prenom_cva }}</strong> affecter a la voiture <span style="color: red">{{ $us->marque }}</span><br>
-                                                        @empty
-                                                            Pas de chauffeur affecter à cette mission
-                                                        @endforelse
-                                                        <br>
-                                                        @if ($mission->etat == 'Non fait')
-                                                            <strong><u><a class="btn btn-secondary"
-                                                                href="{{ url('addchauf/' . $mission->id) }}">Affecter un
-                                                                chauffeur</a></u></strong>
-                                                        @endif
-                                                    </td>
-                                                    <td>---</td>
-                                                    <td>---</td>
                                                 </tr>
                                             </tbody>
+                                        </table>
+                                        @endif
+                                    @empty
+                                        Pas de voiture affecter à cette mission
+                                        @endforelse
+                                        </td>
+                                        <td>
+                                            @forelse ($chauffeur as $us)
+                                                <strong>- {{ $us->nom_cva }} {{ $us->prenom_cva }}</strong>
+                                                affecter a la voiture <span
+                                                    style="color: red">{{ $us->marque }}</span><br>
+                                            @empty
+                                                Pas de chauffeur affecter à cette mission
+                                            @endforelse
+                                            <br>
+                                            @if ($mission->etat == 'Non fait')
+                                                <strong>
+                                                    <u>
+                                                        <a class="btn btn-secondary"
+                                                            href="{{ url('addchauf/' . $mission->id) }}">
+                                                            Affecter un chauffeur
+                                                        </a>
+                                                    </u>
+                                                </strong>
+                                            @endif
+                                        </td>
+                                        <td>---</td>
+                                        <td>---</td>
+                                        </tr>
+                                        </tbody>
                                         </table>
                                     </div>
                                 </div>

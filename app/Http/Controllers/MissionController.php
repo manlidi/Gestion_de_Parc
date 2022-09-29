@@ -30,7 +30,7 @@ class MissionController extends Controller
      */
     public function create()
     {
-        $voiture = Voiture::all()->where('dispo', '=', 'Disponible');
+        $voiture = Voiture::all()->where('dispo', '=', 'Disponible ');
         return view('missions.add', compact('voiture'));
     }
 
@@ -89,13 +89,70 @@ class MissionController extends Controller
      * @param  \App\Models\Mission  $mission
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
+        $voitures = $request['voiture'];
+        foreach( $voitures as $voiture ){
+            $mUser = MissionUser::find($voiture);
+            $mUser->kmfin = $request[$voiture];
+            $mUser->update();
+
+            // $vDispo = Voiture::find($voiture);
+            // $vDispo->dispo = "Disponible";
+            // $vDispo->update();
+        }
         $mission = Mission::find($id);
-        $mission = DB::table('missions')->where('id', $id)->update(['etat' => 'Fait']);
+        $mission->etat = "Fait";
+        $mission->update();
 
         $mission = Mission::all();
         return view('missions.all', compact('mission'));
+    }
+
+    public static function missionModal($id, $url){
+        $voituremissions = DB::table('mission_users')
+            ->join('voitures', 'voitures.id', '=', 'mission_users.voiture_id')
+            ->select('voitures.*')
+            ->where('mission_users.mission_id', '=', $id)
+            ->get();
+        ?>
+            <div class="modal fade" id="modal<?= $id ?>" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Complété le kilométrage de fin</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-8 col-md-8 d-flex flex-column align-items-center justify-content-center">
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <form class="row g-3 needs-validation" action="<?= $url ?>" method="post">
+                                            <input type="hidden" name="_token" value="<?= csrf_token() ?>" />
+                                            <?=  method_field('PUT'); ?>
+                                                <?php
+                                                    foreach ($voituremissions as $key) {
+                                                        ?>
+                                                            <input type="text" class="form-control" value="<?= $key->marque . ' ('. $key->immatriculation . ')'; ?>" disabled>
+                                                            <input type="hidden" name="voiture[]" value="<?= $key->id ?>">
+                                                            <input type="number" name="<?= $key->id ?>" class="form-control" min="1" placeholder="Kilométrage de fin" required>
+                                                        <?php
+                                                    }
+                                                ?>
+                                                <div class="col-12">
+                                                    <button type="submit" name="submit" class="btn btn-primary">Enregistrer</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php
     }
 
     /**

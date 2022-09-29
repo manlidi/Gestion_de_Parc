@@ -1,3 +1,9 @@
+<?php
+
+namespace App\Http\Controllers;
+
+?>
+
 @extends('master')
 @section('content')
     <main id="main" class="main">
@@ -29,17 +35,16 @@
                                         @forelse($mission as $item)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td><a href="{{url('det/' . $item->id)}}">{{ $item->objetmission }}</a></td>
+                                                <td><a href="{{ url('det/' . $item->id) }}">{{ $item->objetmission }}</a>
+                                                </td>
                                                 <td>{{ $item->datedeb }}</td>
                                                 <td>{{ $item->datefin }}</td>
                                                 <td><b style="color: red">{{ $item->etat }}</b></td>
                                                 <td>
                                                     @if ($item->etat == 'Non fait')
-                                                        <form action="{{ url('up/' . $item->id) }}" method="POST">
-                                                            @csrf
-                                                            @method('PUT')
-                                                            <button class="btn btn-primary" type="submit">OK</button>
-                                                        </form>
+                                                        <button class="btn btn-primary" type="button"
+                                                            data-bs-toggle="modal" data-bs-target="#modal<?= $item->id ?>">Fait</button>
+                                                            <?= MissionController::missionModal($item->id, route('up',['id'=> $item->id ]))?>
                                                     @else
                                                         <a class="btn btn-danger"
                                                             onclick="return confirm('Supprimer vraiment?')"

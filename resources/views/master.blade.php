@@ -102,6 +102,37 @@
             }
         }
     </script>
+    <script>
+        $(function(e) {
+            $("#checkall").click(function(){
+                $(".check-input").prop('checked', $(this).prop('checked'));
+            });
+
+            /*$("#updatevoituremission").click(function(e){
+                e.preventDefault();
+                var allids = [];
+
+                $("input:checkbox[name=check]:checked").each(function(){
+                    allids.push($(this).val());
+                });
+
+                $.ajax({
+                    url:"{{ url('remisevoiture') }}",
+                    type:"PUT",
+                    data:{
+                        _token:$("input[name=_token]").val(),
+                        check:allids
+                    },
+                    success:function(response){
+                        $.each(allids, function(key,val){
+                            $("#vid"+val).remove();
+                        })
+                    }
+                });
+            })*/
+        });
+    </script>
+
 </body>
 
 </html>

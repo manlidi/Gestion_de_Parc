@@ -15,16 +15,14 @@ class NotificationController extends Controller
      */
     public function index()
     {
-        $notification = DB::table('notifications')
-            ->select('notifications.*')
-            //->where('assurance_id', '=', $id)
+        $week=date("Y-m-d", strtotime ("+1 week"));
+        $today=date("Y-m-d");
+
+        $select = DB::table('voitures')
+            ->join('assurances', 'assurances.voitures_id', '=', 'voitures.id')
+            ->select('*')
+            ->where('datefinA', '>', $today, 'AND', 'datefinA', '<', $week)
             ->get();
-
-        foreach($notification as $up){
-            $update = DB::table('notifications')->where('id', $up->id)->update(['status' => 'Vue']);
-        }
-
-        return view('notifications.all', compact('notification'));
     }
 
     /**

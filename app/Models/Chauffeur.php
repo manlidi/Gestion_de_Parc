@@ -21,4 +21,8 @@ class Chauffeur extends Model
     public function structure(){
         return $this->belongsTo(Structure::class);
     }
+
+    public function mission_users(){
+        return $this->hasMany(MissionUser::class);
+    }
 }

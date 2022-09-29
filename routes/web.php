@@ -46,12 +46,13 @@ Route::get('addvoitures', [VoitureController::class,'create']);
 Route::post('savevoitures', [VoitureController::class,'store']);
 Route::get('get/piece/{id}',[VoitureController::class,"piece"]);
 Route::get('detailsvoiture/{id}',[VoitureController::class,"details"]);
+Route::put('remisevoiture',[VoitureController::class,"upe"]);
 
 Route::get('missions', [MissionController::class, 'index'])->name('missions');
 Route::get('addmissions', [MissionController::class,'create']);
 Route::post('savemission', [MissionController::class,'store']);
-Route::put('up/{id}', [MissionController::class, 'edit']);
-Route::get('del/{id}', [MissionController::class, 'destroy']);
+Route::put('up/{id}', [MissionController::class, 'edit'])->name('up');
+Route::put('del/{id}', [MissionController::class, 'destroy']);
 
 
 Route::get('det/{id}', [MissionUserController::class, 'index']);
