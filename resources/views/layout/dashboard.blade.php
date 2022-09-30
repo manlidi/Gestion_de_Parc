@@ -101,15 +101,17 @@
                                                 @forelse($voiture as $item)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
-                                                        <td><a href="{{url('detailsvoiture/'.$item->id)}}">{{ $item->marque }}</a></td>
+                                                        <td><a
+                                                                href="{{ url('detailsvoiture/' . $item->id) }}">{{ $item->marque }}</a>
+                                                        </td>
                                                         <td>{{ $item->immatriculation }}</td>
                                                         <td>{{ $item->etat }}</td>
                                                         <td><b style="color: green">{{ $item->mouvement }}</b></td>
                                                         <td>
-                                                            @if ($item->dispo == "Disponible")
+                                                            @if ($item->dispo == 'Disponible')
                                                                 <b style="color: blue">{{ $item->dispo }}</b>
                                                             @else
-                                                            <b style="color: red">{{ $item->dispo }}</b>
+                                                                <b style="color: red">{{ $item->dispo }}</b>
                                                             @endif
                                                         </td>
                                                     </tr>
@@ -138,78 +140,58 @@
                     <div class="col-lg-12">
                         <div class="row">
                             <div class="col-12">
-                                <div class="card recent-sales overflow-auto">
-
-                                    <div class="filter">
-                                        <a class="icon" href="#" data-bs-toggle="dropdown"><i
-                                                class="bi bi-three-dots"></i></a>
-                                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                            <li class="dropdown-header text-start">
-                                                <h6>Filter</h6>
-                                            </li>
-
-                                            <li><a class="dropdown-item" href="#">Today</a></li>
-                                            <li><a class="dropdown-item" href="#">This Month</a></li>
-                                            <li><a class="dropdown-item" href="#">This Year</a></li>
-                                        </ul>
-                                    </div>
-
+                                <div class="card info-card revenue-card">
                                     <div class="card-body">
-                                        <h5 class="card-title">Recent Sales <span>| Today</span></h5>
+                                        <h3 class="card-title">Demandes</span></h3>
+                                        <div class="d-flex align-items-center">
+                                            <div
+                                                class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                                <i class="bi bi-house"></i>
+                                            </div>
+                                            <div class="ps-3">
+                                                <h6>Vous avez @foreach ($d as $count)
+                                                        {{ $count->nbr }}
+                                                    @endforeach demande(s) non approuvée !</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="card recent-sales overflow-auto">
+                                    <div class="card-body">
+                                        <h5 class="card-title">La liste de vos demande non approuvée</h5>
 
                                         <table class="table table-borderless datatable">
                                             <thead>
                                                 <tr>
                                                     <th scope="col">#</th>
-                                                    <th scope="col">Customer</th>
-                                                    <th scope="col">Product</th>
-                                                    <th scope="col">Price</th>
+                                                    <th scope="col">Objet de la demande</th>
+                                                    <th scope="col">Voiture demandée</th>
+                                                    <th scope="col">Chauffeur demandé</th>
+                                                    <th scope="col">Date début</th>
+                                                    <th scope="col">Date de fin</th>
                                                     <th scope="col">Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <th scope="row"><a href="#">#2457</a></th>
-                                                    <td>Brandon Jacob</td>
-                                                    <td><a href="#" class="text-primary">At praesentium minu</a></td>
-                                                    <td>$64</td>
-                                                    <td><span class="badge bg-success">Approved</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row"><a href="#">#2147</a></th>
-                                                    <td>Bridie Kessler</td>
-                                                    <td><a href="#" class="text-primary">Blanditiis dolor omnis
-                                                            similique</a></td>
-                                                    <td>$47</td>
-                                                    <td><span class="badge bg-warning">Pending</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row"><a href="#">#2049</a></th>
-                                                    <td>Ashleigh Langosh</td>
-                                                    <td><a href="#" class="text-primary">At recusandae
-                                                            consectetur</a>
-                                                    </td>
-                                                    <td>$147</td>
-                                                    <td><span class="badge bg-success">Approved</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row"><a href="#">#2644</a></th>
-                                                    <td>Angus Grady</td>
-                                                    <td><a href="#" class="text-primar">Ut voluptatem id earum
-                                                            et</a>
-                                                    </td>
-                                                    <td>$67</td>
-                                                    <td><span class="badge bg-danger">Rejected</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row"><a href="#">#2644</a></th>
-                                                    <td>Raheem Lehner</td>
-                                                    <td><a href="#" class="text-primary">Sunt similique
-                                                            distinctio</a>
-                                                    </td>
-                                                    <td>$165</td>
-                                                    <td><span class="badge bg-success">Approved</span></td>
-                                                </tr>
+                                                @forelse ($demande as $item)
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ $item->objetdemande }}</td>
+                                                        <td>{{ $item->voiture->marque }}
+                                                            ({{ $item->voiture->immatriculation }})
+                                                        </td>
+                                                        <td>
+                                                            {{ $item->chauffeur->nom_cva ?? '--' }} {{ $item->chauffeur->prenom_cva ?? '--' }}
+                                                        </td>
+                                                        <td>{{ $item->datedeb }}</td>
+                                                        <td>{{ $item->datefin }}</td>
+                                                        <td><span class="badge bg-danger">{{ $item->status }}</span></td>
+                                                    </tr>
+                                                @empty
+                                                    <tr>Vous n'avez fait aucune demande !</tr>
+                                                @endforelse
                                             </tbody>
                                         </table>
 

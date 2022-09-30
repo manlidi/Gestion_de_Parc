@@ -6,6 +6,7 @@ use App\Models\Assurance;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Piece;
+use App\Models\Demande;
 
 class Voiture extends Model
 {
@@ -36,5 +37,9 @@ class Voiture extends Model
 
     public function mission_users(){
         return $this->hasMany(MissionUser::class);
+    }
+
+    public function demandes(){
+        return $this->hasMany(Demande::class);
     }
 }

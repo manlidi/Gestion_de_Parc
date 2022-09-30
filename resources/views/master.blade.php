@@ -103,33 +103,15 @@
         }
     </script>
     <script>
-        $(function(e) {
-            $("#checkall").click(function(){
-                $(".check-input").prop('checked', $(this).prop('checked'));
+        $(function() {
+            $(".form-check-input").click(function(event){
+                var x = $(this).is(':checked');
+                if(x == true){
+                    $(this).parents(".col-sm-12").find('.form-select').show();
+                }else{
+                    $(this).parents(".col-sm-12").find('.form-select').hide();
+                }
             });
-
-            /*$("#updatevoituremission").click(function(e){
-                e.preventDefault();
-                var allids = [];
-
-                $("input:checkbox[name=check]:checked").each(function(){
-                    allids.push($(this).val());
-                });
-
-                $.ajax({
-                    url:"{{ url('remisevoiture') }}",
-                    type:"PUT",
-                    data:{
-                        _token:$("input[name=_token]").val(),
-                        check:allids
-                    },
-                    success:function(response){
-                        $.each(allids, function(key,val){
-                            $("#vid"+val).remove();
-                        })
-                    }
-                });
-            })*/
         });
     </script>
 

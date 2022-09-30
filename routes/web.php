@@ -27,7 +27,11 @@ use App\Http\Controllers\NotificationController;
 Route::get('/', function () {return view('layout.index');});
 Route::get('dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
 
-Route::get('demandes', [DemandeController::class, 'index']);
+Route::get('demandes', [DemandeController::class, 'index'])->name('demandes');
+Route::get('admin_demandes', [DemandeController::class, 'indexAdmin']);
+Route::get('adddemande', [DemandeController::class, 'create']);
+Route::post('adddemandes', [DemandeController::class, 'store']);
+
 
 Route::middleware(['auth', 'role:Administrateur'])->group(function () {
 Route::get('structures', [StructureController::class, 'index']);
@@ -58,8 +62,12 @@ Route::put('up/{id}', [MissionController::class, 'edit'])->name('up');
 Route::put('del/{id}', [MissionController::class, 'destroy']);
 
 
-Route::get('det/{id}', [MissionUserController::class, 'index']);
+Route::get('rendreVoiture/{id}/{type}', [MissionUserController::class, 'rendreVoiture'])->name(('rendreVoiture'));
+Route::get('det/{id}', [MissionUserController::class, 'index'])->name('det');
+Route::get('rendreAllVoiture/{id}', [MissionUserController::class, 'rendreVoiture'])->name(('rendreAllVoiture'));
 Route::get('addchauf/{id}', [MissionUserController::class, 'create']);
+Route::put('addKmDebut/{id}', [MissionUserController::class, 'addKmDebut'])->name('addKmDebut');
+Route::put('addChauffeure/{id}', [MissionUserController::class, 'addChauffeure'])->name('addChauffeure');
 Route::post('savechauffeurs/{id}', [MissionUserController::class, 'store']);
 
 

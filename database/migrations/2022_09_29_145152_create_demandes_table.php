@@ -19,7 +19,9 @@ return new class extends Migration
             $table->date('datedeb');
             $table->date('datefin');
             $table->foreignId('voiture_id')->constrained()->onDelete('cascade');
-            $table->foreignId('chauffeur_id')->constrained()->onDelete('cascade')->default(NULL);
+            $table->foreignId('chauffeur_id')->constrained()->onDelete('cascade')->nullable()->default(NULL);
+            $table->foreignId('user_id')->constrained()->onDelete('cascade')->nullable()->default(NULL);
+            $table->string('status')->default('Non Approuvée');
             $table->timestamps();
         });
     }

@@ -76,6 +76,13 @@
                     </li>
                 </ul>
             </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url('admin_demandes') }}">
+                    <i class="bi bi-eye"></i>
+                    <span>Voir les demandes</span>
+                </a>
+            </li>
         @endif
         @if (Auth::user() && Auth::user()->role == 'Utilisateur')
             <li class="nav-item">
