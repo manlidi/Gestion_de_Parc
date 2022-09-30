@@ -1,0 +1,89 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Demande;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+
+class DemandeController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        if(Auth::guest()){
+            return redirect('login');
+        }
+        return view('demandes.all');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Demande  $demande
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Demande $demande)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\Demande  $demande
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Demande $demande)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Demande  $demande
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Demande $demande)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Demande  $demande
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Demande $demande)
+    {
+        //
+    }
+}

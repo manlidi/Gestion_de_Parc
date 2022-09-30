@@ -30,7 +30,7 @@ class MissionController extends Controller
      */
     public function create()
     {
-        $voiture = Voiture::all()->where('dispo', '=', 'Disponible ');
+        $voiture = Voiture::all()->where('dispo', '=', 'Disponible');
         return view('missions.add', compact('voiture'));
     }
 

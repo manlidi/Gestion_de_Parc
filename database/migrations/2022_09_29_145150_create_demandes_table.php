@@ -13,10 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('mission_chauffeurs', function (Blueprint $table) {
+        Schema::create('demandes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('chauffeur_id')->constrained()->onDelete('cascade');
-            $table->foreignId('mission_id')->constrained()->onDelete('cascade');
+            $table->string('objetdemande');
+            $table->date('datedeb');
+            $table->date('datefin');
+            $table->foreignId('voiture_id')->constrained()->onDelete('cascade');
+            $table->foreignId('chauffeur_id')->constrained()->onDelete('cascade')->default(NULL);
             $table->timestamps();
         });
     }
@@ -28,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mission_chauffeurs');
+        Schema::dropIfExists('demandes');
     }
 };
