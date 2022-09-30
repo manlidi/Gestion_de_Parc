@@ -55,8 +55,12 @@ Route::put('up/{id}', [MissionController::class, 'edit'])->name('up');
 Route::put('del/{id}', [MissionController::class, 'destroy']);
 
 
-Route::get('det/{id}', [MissionUserController::class, 'index']);
+Route::get('rendreVoiture/{id}/{type}', [MissionUserController::class, 'rendreVoiture'])->name(('rendreVoiture'));
+Route::get('det/{id}', [MissionUserController::class, 'index'])->name('det');
+Route::get('rendreAllVoiture/{id}', [MissionUserController::class, 'rendreVoiture'])->name(('rendreAllVoiture'));
 Route::get('addchauf/{id}', [MissionUserController::class, 'create']);
+Route::put('addKmDebut/{id}', [MissionUserController::class, 'addKmDebut'])->name('addKmDebut');
+Route::put('addChauffeure/{id}', [MissionUserController::class, 'addChauffeure'])->name('addChauffeure');
 Route::post('savechauffeurs/{id}', [MissionUserController::class, 'store']);
 
 

@@ -18,8 +18,8 @@ return new class extends Migration
             $table->double('kmdeb')->default(0);
             $table->double('kmfin')->default(0);
             $table->foreignId('mission_id')->constrained()->onDelete('cascade');
-            $table->foreignId('voiture_id')->constrained()->onDelete('cascade')->nullable();
-            $table->foreignId('chauffeur_id')->constrained()->onDelete('cascade')->nullable();
+            $table->foreignId('voiture_id')->constrained()->onDelete('cascade')->nullable()->default(NULL);
+            $table->foreignId('chauffeur_id')->constrained()->onDelete('cascade')->nullable()->default(NULL);
             $table->timestamps();
         });
     }

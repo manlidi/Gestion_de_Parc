@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
-use App\Models\Mission;
-use App\Models\MissionUser;
 use App\Models\User;
+use App\Models\Mission;
 use App\Models\Voiture;
 use App\Models\Chauffeur;
+use App\Models\MissionUser;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class MissionUserController extends Controller
@@ -20,23 +21,112 @@ class MissionUserController extends Controller
      */
     public function index($id)
     {
-        $voiture = DB::table('mission_users')
-            ->join('voitures', 'voitures.id', '=', 'mission_users.voiture_id')
-            ->join('missions', 'missions.id', '=', 'mission_users.mission_id')
-            ->select('voitures.*')
-            ->where('missions.id', '=', $id)
-            ->get();
+        $chauffeurAjouterMission = MissionUserController::chauffeurAjouterMission($id);
+        $kmDebutAjouterMission = MissionUserController::kmDebutAjouterMission($id);
+        $voitureRendu = MissionUserController::voitureRendu($id);
 
-        $chauffeur = DB::table('mission_users')
-            ->join('chauffeurs', 'chauffeurs.id', '=', 'mission_users.chauffeur_id')
-            ->join('missions', 'missions.id', '=', 'mission_users.mission_id')
-            ->join('voitures', 'voitures.id', '=', 'mission_users.voiture_id')
-            ->select('chauffeurs.*', 'voitures.*')
-            ->where('missions.id', '=', $id)
-            ->get();
+        $current_user_id = Auth::id();
+        $userStructureId = User::find($current_user_id)->structure->id;
 
         $mission = Mission::find($id);
-        return view('missions.allmissionuser', compact('mission', 'voiture', 'chauffeur'));
+        return view('missions.allmissionuser', compact('mission', 'userStructureId', 'chauffeurAjouterMission', 'kmDebutAjouterMission', 'voitureRendu'));
+    }
+
+    public function rendreVoiture( $id, $voiture=null ){
+        if( $voiture != null ){
+            $voiture = Voiture::find($voiture);
+            $voiture->dispo = "Disponible";
+            $voiture->mouvement = "Au parc";
+            $voiture->update();
+            $parametre = ['status'=>true, 'msg'=>'Les voitures ont été rendue avec succès'];
+            return redirect()->route('det',['id'=>$id])->with($parametre);
+        }else{
+            $missions = Mission::find($id)->mission_users;
+            $status = true;
+            foreach( $missions as $mission ){
+                $voiture = Voiture::find($mission->voiture->id);
+                if( $voiture->dispo != 'Disponible' ){
+                    $voiture->dispo = "Disponible";
+                    $voiture->mouvement = "Au parc";
+                    $status = $voiture->update();
+                }
+                if( ! $status ){
+                    $parametre = ['status'=>true, 'msg'=>'Erreur lors de la soumission'];
+                    return redirect()->route('det',['id'=>$id])->with($parametre);
+                }
+            }
+            $parametre = ['status'=>true, 'msg'=>'Les voitures ont été rendue avec succès'];
+            return redirect()->route('missions')->with($parametre);
+        }
+    }
+
+    public function addKmDebut( Request $request, $id ){
+        $voitures = $request['voiture'];
+        $status=true;
+        foreach( $voitures as $voiture ){
+            $mUser = MissionUser::find($voiture);
+            $mUser->kmdeb = $request[$voiture];
+            $status = $mUser->update();
+
+            if( ! $status ){
+                $parametre = ['status'=>true, 'msg'=>'Erreur lors de la soumission'];
+                return redirect()->route('det',['id'=>$id])->with($parametre);
+            }
+        } 
+        
+        $parametre = ['status'=>true, 'msg'=>'Kilométrage de début ajouté avec succès'];
+        return redirect()->route('det',['id'=>$id])->with($parametre);
+    }
+
+    public function addChauffeure( Request $request, $id ){
+        $missions = $request['chauffeur'];
+        $status=true;
+        foreach( $missions as $mission ){
+            $mUser = MissionUser::find($mission);
+            if( $request[$mission] != null ){
+                $mUser->chauffeur_id = $request[$mission];
+                $status = $mUser->update();
+    
+                $chauffeur = Chauffeur::find($request[$mission]);
+                $chauffeur->disp = "Non Disponible";
+                $chauffeur->update();
+    
+                if( ! $status ){
+                    $parametre = ['status'=>true, 'msg'=>'Erreur lors de la soumission'];
+                    return redirect()->route('det',['id'=>$id])->with($parametre);
+                }
+            }
+        } 
+        $parametre = ['status'=>true, 'msg'=>'Chauffeur ajouté avec succès'];
+        return redirect()->route('det',['id'=>$id])->with($parametre);
+    }
+    
+
+    public static function chauffeurAjouterMission( $missionId ){
+        $ajouter = true;
+        $missions = Mission::find($missionId);
+        foreach( $missions->mission_users as $mission ){
+            if( $mission->chauffeur == null ) $ajouter = false;
+        }
+        return $ajouter;
+    }
+
+    public static function kmDebutAjouterMission( $missionId ){
+        $ajouter = true;
+        $missions = Mission::find($missionId);
+        foreach( $missions->mission_users as $mission ){
+            if( $mission->kmdeb == 0 ){ $ajouter = false; }
+        }
+        return $ajouter;
+    }
+
+    public static function voitureRendu( $missionId ){
+        $rendre = true;
+        $missions = Mission::find($missionId);
+        foreach( $missions->mission_users as $mission ){
+            if( $mission->voiture->dispo == 'Non Disponible' ){ $rendre = false; }
+        }
+        return $rendre;
     }
 
     /**
