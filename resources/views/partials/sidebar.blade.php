@@ -3,13 +3,15 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
 
-        @if (Auth::user() && Auth::user()->role == 'Administrateur')
+        @if (Auth::user())
             <li class="nav-item">
                 <a class="nav-link " href="{{ url('dashboard') }}">
                     <i class="bi bi-grid"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
+        @endif
+        @if (Auth::user() && Auth::user()->role == 'Administrateur')
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-clipboard-plus"></i><span>Ajout</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -75,14 +77,6 @@
                 </ul>
             </li>
         @endif
-        @if (Auth::user())
-            <li class="nav-item">
-                <a class="nav-link " href="{{ url('dashboard') }}">
-                    <i class="bi bi-grid"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
-        @endif
         @if (Auth::user() && Auth::user()->role == 'Utilisateur')
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('demandes') }}">
@@ -92,12 +86,6 @@
             </li>
         @endif
         @if (!Auth::user())
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ url('demandes') }}">
-                    <i class="bi bi-book"></i>
-                    <span>Faire une demande</span>
-                </a>
-            </li>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('register') }}">
                     <i class="bi bi-card-list"></i>
