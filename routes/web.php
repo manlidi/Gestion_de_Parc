@@ -28,10 +28,15 @@ Route::get('/', function () {return view('layout.index');});
 Route::get('dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
 
 Route::get('admin_demandes', [DemandeController::class, 'indexAdmin']);
+Route::get('adminDemandeApprouve', [DemandeController::class, 'indexAdminApprouve']);
+Route::get('demandeApprouve', [DemandeController::class, 'indexApprouve']);
 Route::get('demanderVoiture', [DemandeController::class, 'createVoiture'])->name('demanderVoiture');
 Route::get('demanderChauffeur', [DemandeController::class, 'createChauffeur'])->name('demanderChauffeur');
 Route::get('demanderReparation', [DemandeController::class, 'createReparation'])->name('demanderReparation');
+Route::get('updateDemandeVoiture/{id}', [DemandeController::class, 'updateDemandeVoiture'])->name('updateDemandeVoiture');
+Route::get('updateDemandeChauffeur/{id}', [DemandeController::class, 'updateDemandeChauffeur'])->name('updateDemandeChauffeur');
 Route::post('saveDemande/{type}', [DemandeController::class, 'store'])->name('saveDemande');
+Route::post('updateDemande/{id}/{type}', [DemandeController::class, 'update'])->name('updateDemande');
 
 
 Route::middleware(['auth', 'role:Administrateur'])->group(function () {

@@ -1,5 +1,5 @@
-<?php 
-namespace App\Http\Controllers; 
+<?php
+namespace App\Http\Controllers;
 use App\Models\Voiture;
 use App\Models\Chauffeur;
 use Illuminate\Support\Facades\Auth;
@@ -168,6 +168,7 @@ use Illuminate\Support\Facades\Auth;
                                                 <th scope="col">Date début</th>
                                                 <th scope="col">Date de fin</th>
                                                 <th scope="col">Status</th>
+                                                <th scope="col">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -175,7 +176,7 @@ use Illuminate\Support\Facades\Auth;
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $item->objetdemande }}</td>
-                                                    <td><span class=" <?php if( $item->type == 'reparation' ) echo 'text-danger'; else echo 'text-primary'; ?>">{{ ucfirst($item->type) }}</span></td>
+                                                    <td><span class="<?php if( $item->type == 'reparation' ) echo 'text-danger';else if($item->type == 'chauffeur') echo 'text-success'; else echo 'text-primary'; ?>">{{ ucfirst($item->type) }}</span></td>
                                                     <td>
                                                         @if( ($item->type == 'voiture') || $item->type == 'reparation' )
                                                             <strong>{{ Voiture::find($item->affecter_id)->marque }} ( {{ Voiture::find($item->affecter_id)->immatriculation }} )</strong>
@@ -186,26 +187,34 @@ use Illuminate\Support\Facades\Auth;
                                                     <td>{{ $item->datedeb ?? '--' }}</td>
                                                     <td>{{ $item->datefin ?? '--' }}</td>
                                                     <td><span class="badge bg-danger">{{ $item->status }}</span></td>
+                                                    <td>
+                                                        @if( $item->type == 'voiture' )
+                                                            <a href="{{ route('updateDemandeVoiture',['id'=>$item->id]) }}"><button type="button" class="btn btn-outline-primary btn-sm">Edit</button></a>
+                                                        @endif
+                                                        @if( $item->type == 'chauffeur' )
+                                                            <a href="{{ route('updateDemandeChauffeur',['id'=>$item->id]) }}"><button type="button" class="btn btn-outline-success btn-sm">Edit</button></a>
+                                                        @endif
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
-                                    @else  
+                                    @else
                                         <div class="alert alert-warning">
                                             Vous n'avez fait aucune demande !
                                         </div>
                                     @endif
                                 </div>
-    
+
                             </div>
                         </div>
-    
+
                     </div>
                 </div>
-    
+
             </div>
         </section>
-    
+
     </main>
     @endif
 @endsection

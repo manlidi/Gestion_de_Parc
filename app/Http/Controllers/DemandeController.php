@@ -22,11 +22,22 @@ class DemandeController extends Controller
         if(Auth::guest()){
             return redirect('login');
         }
-        $demande = Demande::all()->where('user_id', Auth::user()->id);
+        $demande = Demande::all()->where('user_id', Auth::user()->id)->orderBy('id','DESC');
         return view('demandes.all', compact('demande'));
     }
+
+    public function indexAdminApprouve(){
+        $demande = Demande::all()->where('status', 'Approuvée')->orderBy('id','DESC');
+        return view('demandes.adminDemandeApprouve', compact('demande'));
+    }
+
+    public function indexApprouve(){
+        $demande = Demande::all()->where('status', 'Approuvée')->orderBy('id','DESC');
+        return view('demandes.demandeApprouve', compact('demande'));
+    }
+
     public function indexAdmin(){
-        $demande = Demande::all()->where('status', 'Non Approuvée');
+        $demande = Demande::all()->where('status', 'Non Approuvée')->orderBy('id','DESC');
         return view('demandes.admindemandes', compact('demande'));
     }
 
@@ -70,7 +81,7 @@ class DemandeController extends Controller
     {
         if( $type == 'voiture' ){
             $status = self::saveModel($request, $type, $request->voiture_id);
-            
+
             if($request->check == "on"){
                 self::saveModel($request, 'chauffeur');
             }
@@ -105,26 +116,16 @@ class DemandeController extends Controller
         return $status;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Demande  $demande
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Demande $demande)
-    {
-        //
+    public function updateDemandeVoiture( $id ){
+        $demande = Demande::find($id);
+        $voiture = Voiture::all()->where('dispo', '=', 'Disponible', 'AND', 'structure_id', '=', $id);
+        return view('demandes.addVoiture', compact('voiture','demande'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Demande  $demande
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Demande $demande)
-    {
-        //
+    public function updateDemandeChauffeur( $id ){
+        $demande = Demande::find($id);
+        $chauffeur = Chauffeur::all()->where('disp', '=', 'Disponible', 'AND', 'structure_id', '=', $id);
+        return view('demandes.addChauffeur', compact('chauffeur','demande'));
     }
 
     /**
@@ -134,9 +135,24 @@ class DemandeController extends Controller
      * @param  \App\Models\Demande  $demande
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Demande $demande)
+    public function update(Request $request, $id, $type)
     {
-        //
+        $demande = Demande::find($id);
+        $demande->objetdemande = $request->objetdemande;
+        $demande->datedeb = $request->datedeb;
+        $demande->datefin = $request->datefin;
+        if( $type == 'voiture' ){
+            $demande->affecter_id = $request->voiture_id;
+        }else{
+            $demande->affecter_id = $request->chauffeur_id;
+        }
+        $demande->type = $type;
+        $demande->user_id = Auth::user()->id;
+        $status = $demande->update();
+
+        if( $status ) $parametre = ['status'=>true, 'msg'=>'Votre modification a été enregistré avec succès. Veuillez attendre sa validation!'];
+        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de la modification'];
+        return redirect()->route('dashboard')->with($parametre);
     }
 
     /**

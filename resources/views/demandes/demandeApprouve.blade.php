@@ -13,7 +13,7 @@ use App\Models\Chauffeur;
                         <div class="col-12">
                             <div class="card recent-sales overflow-auto">
                                 <div class="card-body">
-                                    <h5 class="card-title">Liste des demandes</h5>
+                                    <h5 class="card-title">Liste Des Demandes Approuvées</h5>
                                     @if (session('status'))
                                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                                             <i class="bi bi-check-circle me-1"></i>
@@ -85,7 +85,7 @@ use App\Models\Chauffeur;
                                         </table>
                                     @else
                                         <div class="alert alert-warning">
-                                            Vous n'avez fait aucune demande !
+                                            Vous n'avez aucune demande approuvée !
                                         </div>
                                     @endif
                                 </div>

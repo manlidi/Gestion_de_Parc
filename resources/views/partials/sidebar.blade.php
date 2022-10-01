@@ -81,8 +81,20 @@
                     <span>Voir les demandes</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url('adminDemandeApprouve') }}">
+                    <i class="bi bi-eye"></i>
+                    <span>Demandes Approuvées</span>
+                </a>
+            </li>
         @endif
         @if (Auth::user() && Auth::user()->role == 'Utilisateur')
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url('demandeApprouve') }}">
+                    <i class="bi bi-book"></i>
+                    <span>Demandes Approuvées</span>
+                </a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('demanderVoiture') }}">
                     <i class="bi bi-book"></i>
