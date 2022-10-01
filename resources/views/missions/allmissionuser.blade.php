@@ -8,11 +8,11 @@
                     <div class="card-body">
                         <h5><u>Détails de la Mission</u> : <strong>{{ $mission->objetmission }}</strong></h5>
                         <h5 class="card-title">
-                            <u>Status:</u> 
-                            <strong class="text-secondary">{{ $mission->etat }} 
+                            <u>Status:</u>
+                            <strong class="text-secondary">{{ $mission->etat }}
                                 @if ($mission->etat == 'Non fait')
                                     (<span class="text-primary">En cours</span>)
-                                @else  
+                                @else
                                     (<span class="text-success">Terminé</span>)
                                 @endif
                             </strong>
@@ -40,13 +40,13 @@
                                                 @if ($mission->etat == 'Fait')
                                                     @if(! $voitureRendu)
                                                         <a href="{{ url('rendreAllVoiture/' . $mission->id) }}"><button type="button" class="btn btn-outline-success btn-sm">Rendre Toutes</button></a>
-                                                    @else 
+                                                    @else
                                                         <button type="button" disabled class="btn btn-success btn-sm">Rendu</button>
                                                     @endif
                                                 @endif
                                             </th>
                                             <th scope="col">
-                                                Chauffeurs 
+                                                Chauffeurs
                                                 @if(! $chauffeurAjouterMission )
                                                     <button type="button" data-bs-toggle="modal" data-bs-target="#chauffeuremodal<?= $mission->id ?>" class="btn btn-outline-primary btn-sm">Ajouter</button>
                                                 @endif
@@ -75,30 +75,30 @@
                                                 <td>{{ $affecter->voiture->marque }} ( {{ $affecter->voiture->immatriculation }} )</td>
                                                 <td>
                                                     @if( ! empty($affecter->chauffeur) )
-                                                        {{ $affecter->chauffeur->nom_cva  }} {{ $affecter->chauffeur->prenom_cva }} 
+                                                        {{ $affecter->chauffeur->nom_cva  }}
                                                     @else
                                                         Pas de Chauffeur
-                                                    @endif 
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     @if( $affecter->kmdeb != 0 )
                                                         {{ $affecter->kmdeb }} km
                                                     @else
                                                         {{ $affecter->kmdeb }} km (<span class="text-danger">Non défini</span>)
-                                                    @endif 
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     @if( $affecter->kmfin != 0 )
                                                         {{ $affecter->kmfin }} km
                                                     @else
                                                         {{ $affecter->kmfin }} km (Non défini)
-                                                    @endif 
+                                                    @endif
                                                 </td>
                                                 @if ($mission->etat == "Fait")
                                                 <td>
                                                     @if( $affecter->voiture->dispo == 'Non Disponible')
                                                         <a href="{{ url('rendreVoiture/' . $mission->id . '/' . $affecter->voiture->id) }}"><button type="button" class="btn btn-outline-success btn-sm">Rendre</button></a>
-                                                    @else 
+                                                    @else
                                                         <button type="button" disabled class="btn btn-success btn-sm">Rendu</button>
                                                     @endif
                                                 </td>

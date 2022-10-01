@@ -32,7 +32,7 @@
                                                 <td>{{ $item->objetdemande }}</td>
                                                 <td>{{ $item->voiture->marque }} ({{ $item->voiture->immatriculation }})</td>
                                                 <td>
-                                                    {{ $item->chauffeur->nom_cva ?? '--' }} {{ $item->chauffeur->prenom_cva ?? '--' }}
+                                                    {{ $item->chauffeur->nom_cva ?? '---' }}
                                                 </td>
                                                 <td>{{ $item->user->name }}</td>
                                                 <td>{{ $item->user->structure->nomStructure }}</td>

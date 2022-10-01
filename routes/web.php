@@ -72,8 +72,6 @@ Route::post('savechauffeurs/{id}', [MissionUserController::class, 'store']);
 
 
 Route::get('chauffeurs', [ChauffeurController::class, 'index'])->name('chauffeurs');
-Route::get('createchauffeurs', [ChauffeurController::class, 'create']);
-Route::post('storechauffeurs', [ChauffeurController::class, 'store']);
 
 Route::get('garages', [GarageController::class, 'index'])->name('garages');
 Route::get('addgarage', [GarageController::class, 'create']);

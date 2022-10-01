@@ -84,7 +84,7 @@
                 </a>
             </li>
         @endif
-        @if (Auth::user() && Auth::user()->role == 'Utilisateur')
+        @if (Auth::user() && (Auth::user()->role == 'Utilisateur' || Auth::user()->role == 'Chauffeur'))
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('demandes') }}">
                     <i class="bi bi-book"></i>

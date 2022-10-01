@@ -35,7 +35,7 @@
                                     <select class="form-select" name="chauffeur_id" style="display: none">
                                         @if ($chauffeur->count() > 0)
                                             @foreach ($chauffeur as $us)
-                                                <option value="{{ $us->id }}">{{ $us->nom_cva }} {{ $us->prenom_cva }}</option>
+                                                <option value="{{ $us->id }}">{{ $us->nom_cva }}</option>
                                             @endforeach
                                         @else
                                             <option value="">Pas de chauffeur disponible</option>

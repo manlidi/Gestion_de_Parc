@@ -6,6 +6,12 @@
             <section class="section dashboard">
                 <div class="row">
                     <div class="col-lg-12">
+                        @if (session('status'))
+                        <div class="alert alert-success" role="alert">
+                            <span class="font-medium">{{ session('msg') }}</span>
+                        </div>
+                    @endif
+                    <br><br>
                         <div class="row">
                             <a href="{{ url('structures') }}" class="col-xxl-4 col-md-3">
                                 <div class="card info-card revenue-card">
@@ -138,6 +144,12 @@
             <section class="section dashboard">
                 <div class="row">
                     <div class="col-lg-12">
+                        @if (session('status'))
+                        <div class="alert alert-success" role="alert">
+                            <span class="font-medium">{{ session('msg') }}</span>
+                        </div>
+                    @endif
+                    <br><br>
                         <div class="row">
                             <div class="col-12">
                                 <div class="card info-card revenue-card">
@@ -183,7 +195,7 @@
                                                             ({{ $item->voiture->immatriculation }})
                                                         </td>
                                                         <td>
-                                                            {{ $item->chauffeur->nom_cva ?? '--' }} {{ $item->chauffeur->prenom_cva ?? '--' }}
+                                                            {{ $item->chauffeur->nom_cva ?? '--' }}
                                                         </td>
                                                         <td>{{ $item->datedeb }}</td>
                                                         <td>{{ $item->datefin }}</td>

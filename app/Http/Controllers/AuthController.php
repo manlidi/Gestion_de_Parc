@@ -54,29 +54,34 @@ class AuthController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'role' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            'structure_id' => 'required',
-        ]);
+        if($request->role == "Chauffeur"){
+            $cva = new Chauffeur;
+            $cva->nom_cva = $request->name;
+            $cva->role = $request->role;
+            $cva->email = $request->email;
+            $cva->password = Hash::make($request->password);
+            $cva->structure_id = $request->structure_id;
+            $status = $cva->save();
 
-        $data = $request->all();
-        $check = $this->sign($data);
+            if( $status ) $parametre = ['status'=>true, 'msg'=>'Chauffeur Enrégistré avec succès'];
+            else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
+            return redirect()->route('dashboard')->with($parametre);
 
-        return redirect("dashboard");
+        }else if($request->role == "Utilisateur"){
+            $user = new User;
+            $user->name = $request->name;
+            $user->role = $request->role;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            $user->structure_id = $request->structure_id;
+            $status = $user->save();
+
+            if( $status ) $parametre = ['status'=>true, 'msg'=>'Utilisateur Enrégistré avec succès'];
+            else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
+            return redirect()->route('dashboard')->with($parametre);
+        }
     }
 
-    public function sign(array $data){
-        return User::create([
-            'name' => $data['name'],
-            'role' => $data['role'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'structure_id' => $data['structure_id']
-        ]);
-    }
 
     public function dashboard(){
         if(Auth::check()){

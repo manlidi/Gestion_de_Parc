@@ -23,33 +23,27 @@
                                         @csrf
                                         <div class="col-12">
                                             <input type="text" class="form-control" name="name" id="name"
-                                                placeholder="Nom et prénoms" autofocus>
+                                                placeholder="Nom et prénoms" required>
                                             @if ($errors->has('name'))
                                                 <span class="text-danger">{{ $errors->first('name') }}</span>
                                             @endif
                                         </div>
 
                                         <div class="col-12">
-                                            <select class="form-select" name="role">
+                                            <select class="form-select" name="role" required>
                                                 <option selected>Sélectionner votre role</option>
-                                                <option value="Administrateur">Administrateur</option>
+                                                <option value="Chauffeur">Chauffeur</option>
                                                 <option value="Utilisateur">Utilisateur</option>
                                             </select>
-                                            @if ($errors->has('role'))
-                                                <span class="text-danger">{{ $errors->first('role') }}</span>
-                                            @endif
                                         </div>
 
                                         <div class="col-12">
                                             <input type="email" class="form-control" name="email" id="email"
-                                                placeholder="Email" autofocus>
-                                            @if ($errors->has('email'))
-                                                <span class="text-danger">{{ $errors->first('email') }}</span>
-                                            @endif
+                                                placeholder="Email" required>
                                         </div>
 
                                         <div class="col-12">
-                                            <select class="form-select" name="structure_id">
+                                            <select class="form-select" name="structure_id" required>
                                                 <option selected>Sélectionner votre structure</option>
                                                 @if ($structures->count() > 0)
                                                     @foreach ($structures as $us)
@@ -66,10 +60,7 @@
 
                                         <div class="col-12">
                                             <input type="password" class="form-control" name="password" id="password"
-                                                placeholder="Mot de passe">
-                                            @if ($errors->has('password'))
-                                                <span class="text-danger">{{ $errors->first('password') }}</span>
-                                            @endif
+                                                placeholder="Mot de passe" required>
                                         </div>
 
                                         <div class="col-12">
