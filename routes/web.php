@@ -11,6 +11,7 @@ use App\Http\Controllers\ChauffeurController;
 use App\Http\Controllers\GarageController;
 use App\Http\Controllers\PieceController;
 use App\Http\Controllers\ReparerController;
+use App\Http\Controllers\DemandeController;
 use App\Http\Controllers\NotificationController;
 /*
 |--------------------------------------------------------------------------
@@ -23,8 +24,15 @@ use App\Http\Controllers\NotificationController;
 |
 */
 
-Route::get('/', function () {return view('layout.login');});
+Route::get('/', function () {return view('layout.index');});
 Route::get('dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
+
+Route::get('admin_demandes', [DemandeController::class, 'indexAdmin']);
+Route::get('demanderVoiture', [DemandeController::class, 'createVoiture'])->name('demanderVoiture');
+Route::get('demanderChauffeur', [DemandeController::class, 'createChauffeur'])->name('demanderChauffeur');
+Route::get('demanderReparation', [DemandeController::class, 'createReparation'])->name('demanderReparation');
+Route::post('saveDemande/{type}', [DemandeController::class, 'store'])->name('saveDemande');
+
 
 Route::middleware(['auth', 'role:Administrateur'])->group(function () {
 Route::get('structures', [StructureController::class, 'index']);
@@ -83,7 +91,7 @@ Route::post('createreparation', [ReparerController::class, 'store']);
 // Route::get('notif', [NotificationController::class, 'index']);
 
 });
-Route::get('login', [AuthController::class, 'index']);
+Route::get('login', [AuthController::class, 'index'])->name('login');
 Route::post('loginusers', [AuthController::class, 'create']);
 Route::get('register', [AuthController::class, 'show']);
 Route::post('registerusers', [AuthController::class, 'store']);

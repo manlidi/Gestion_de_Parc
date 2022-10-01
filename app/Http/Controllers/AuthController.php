@@ -11,6 +11,8 @@ use App\Models\User;
 use App\Models\Voiture;
 use App\Models\Mission;
 use App\Models\Chauffeur;
+use Illuminate\Support\Facades\DB;
+use App\Models\Demande;
 
 class AuthController extends Controller
 {
@@ -83,7 +85,12 @@ class AuthController extends Controller
             $vo = Voiture::count();
             $mission = Mission::count();
             $chauffeurs = Chauffeur::count();
-            return view('layout.dashboard', compact('structure', 'voiture', 'vo', 'mission', 'chauffeurs'));
+            $demande = Demande::all()->where('user_id', Auth::user()->id);
+            $d = DB::table('demandes')
+                ->select(DB::raw('Count(*) as nbr'))
+                ->where('user_id', Auth::user()->id)
+                ->get();
+            return view('layout.dashboard', compact('structure', 'voiture', 'vo', 'mission', 'chauffeurs', 'demande', 'd'));
         }
         return redirect('/login');
     }

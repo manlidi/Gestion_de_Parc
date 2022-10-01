@@ -6,6 +6,7 @@ use App\Models\Assurance;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Piece;
+use App\Models\Demande;
 
 class Voiture extends Model
 {

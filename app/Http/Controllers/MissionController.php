@@ -104,6 +104,14 @@ class MissionController extends Controller
         $mission->etat = "Fait";
         $mission->update();
 
+        $chauffeur = DB::table('mission_users')
+            ->join('chauffeurs', 'chauffeurs.id', '=', 'mission_users.chauffeur_id')
+            ->join('missions', 'missions.id', '=', 'mission_users.mission_id')
+            ->select('chauffeurs.*')
+            ->where('missions.id', $id)
+            ->get();
+        dd($chauffeur);
+
         $mission = Mission::all();
         return view('missions.all', compact('mission'));
     }
@@ -154,7 +162,7 @@ class MissionController extends Controller
                                         <input type="text" class="form-control" value="<?= $key->voiture->marque . ' ('. $key->voiture->immatriculation . ')'; ?>" disabled>
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="number" name="<?= $key->id ?>" value="<?php if( $key->kmdeb != 0 ) echo $key->kmdeb; ?>" class="form-control" min="1" placeholder="Kilométrage de fin" required>
+                                        <input type="number" name="<?= $key->id ?>" value="<?php if( $key->kmdeb != 0 ) echo $key->kmdeb; ?>" class="form-control" min="1" placeholder="Kilométrage de début" required>
                                     </div>
                                     <input type="hidden" name="voiture[]" value="<?= $key->id ?>">
                                     <?php
@@ -171,7 +179,7 @@ class MissionController extends Controller
                                     <?php
                                 }
                             }
-                            ?>  
+                            ?>
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
