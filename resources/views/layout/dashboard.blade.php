@@ -175,7 +175,7 @@ use Illuminate\Support\Facades\Auth;
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $item->objetdemande }}</td>
-                                                    <td><span class="text-primary">{{ ucfirst($item->type) }}</span></td>
+                                                    <td><span class=" <?php if( $item->type == 'reparation' ) echo 'text-danger'; else echo 'text-primary'; ?>">{{ ucfirst($item->type) }}</span></td>
                                                     <td>
                                                         @if( ($item->type == 'voiture') || $item->type == 'reparation' )
                                                             <strong>{{ Voiture::find($item->affecter_id)->marque }} ( {{ Voiture::find($item->affecter_id)->immatriculation }} )</strong>
@@ -183,8 +183,8 @@ use Illuminate\Support\Facades\Auth;
                                                             <strong>{{ Chauffeur::find($item->affecter_id)->nom_cva }} {{ Chauffeur::find($item->affecter_id)->prenom_cva }} </strong>
                                                         @endif
                                                     </td>
-                                                    <td>{{ $item->datedeb }}</td>
-                                                    <td>{{ $item->datefin }}</td>
+                                                    <td>{{ $item->datedeb ?? '--' }}</td>
+                                                    <td>{{ $item->datefin ?? '--' }}</td>
                                                     <td><span class="badge bg-danger">{{ $item->status }}</span></td>
                                                 </tr>
                                             @endforeach

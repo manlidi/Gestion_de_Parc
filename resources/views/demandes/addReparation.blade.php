@@ -6,31 +6,23 @@
                 <div class="col-lg-12">
                     <div class="card mb-3">
                         <div class="card-body">
-                            <h5 class="card-title">Demandez un chauffeur</h5>
-                            <form class="row g-3 needs-validation" method="POST" action="{{ route('saveDemande',['type'=>'chauffeur']) }}">
+                            <h5 class="card-title">Demandez une Réparation</h5>
+                            <form class="row g-3 needs-validation" method="POST" action="{{ route('saveDemande',['type'=>'reparation']) }}">
                                 @csrf
                                 <div class="col-12">
                                     <input type="text" name="objetdemande" id="objetdemande" class="form-control"
-                                        placeholder="Objet de la demande" required>
+                                        placeholder="Objet de la demande" value="Réparer Une Voiture" required>
                                 </div>
                                 <div class="col-12">
-                                    <select class="form-select" name="chauffeur_id" required>
-                                        @if ($chauffeur->count() > 0)
-                                            @foreach ($chauffeur as $us)
-                                                <option value="{{ $us->id }}">{{ $us->nom_cva }} {{ $us->prenom_cva }}</option>
+                                    <select class="form-select" name="voiture_id" required>
+                                        @if ($voiture->count() > 0)
+                                            @foreach ($voiture as $us)
+                                                <option value="{{ $us->id }}">{{ $us->marque }}</option>
                                             @endforeach
                                         @else
                                             <option value="">Pas de voiture disponible</option>
                                         @endif
                                     </select>
-                                </div>
-                                <div class="col-6">
-                                    <label for="">Date début</label>
-                                    <input type="date" required class="form-control" name="datedeb" id="datedeb">
-                                </div>
-                                <div class="col-6">
-                                    <label for="">Date fin</label>
-                                    <input type="date" required class="form-control" name="datefin" id="datefin">
                                 </div>
                                 <div class="text-left">
                                     <button type="submit" class="btn btn-primary">Envoyer la demande</button>
