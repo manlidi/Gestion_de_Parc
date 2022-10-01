@@ -27,15 +27,21 @@ use App\Http\Controllers\NotificationController;
 Route::get('/', function () {return view('layout.index');});
 Route::get('dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
 
-Route::get('admin_demandes', [DemandeController::class, 'indexAdmin']);
-Route::get('adminDemandeApprouve', [DemandeController::class, 'indexAdminApprouve']);
+Route::get('admin_demandes', [DemandeController::class, 'indexAdmin'])->name('admin_demandes');
+Route::get('adminDemandeApprouve', [DemandeController::class, 'indexAdminApprouve'])->name('adminDemandeApprouve');
+
 Route::get('demandeApprouve', [DemandeController::class, 'indexApprouve']);
 Route::get('demanderVoiture', [DemandeController::class, 'createVoiture'])->name('demanderVoiture');
 Route::get('demanderChauffeur', [DemandeController::class, 'createChauffeur'])->name('demanderChauffeur');
+Route::get('rendreDemande/{id}/{type}', [DemandeController::class, 'rendreDemande'])->name('rendreDemande');
+Route::get('desapprouverDemande/{id}/{type}', [DemandeController::class, 'desapprouverDemande'])->name('desapprouverDemande');
+Route::get('rejeterDemande/{id}/{type}', [DemandeController::class, 'rejeterDemande'])->name('rejeterDemande');
 Route::get('demanderReparation', [DemandeController::class, 'createReparation'])->name('demanderReparation');
+Route::get('validerDemande/{id}/{type}', [DemandeController::class, 'validerDemande'])->name('validerDemande')->whereNumber('id');
+Route::post('saveDemande/{type}', [DemandeController::class, 'store'])->name('saveDemande');
+Route::get('saveDemandeReparation/{id}', [DemandeController::class, 'store'])->name('saveDemandeReparation');
 Route::get('updateDemandeVoiture/{id}', [DemandeController::class, 'updateDemandeVoiture'])->name('updateDemandeVoiture');
 Route::get('updateDemandeChauffeur/{id}', [DemandeController::class, 'updateDemandeChauffeur'])->name('updateDemandeChauffeur');
-Route::post('saveDemande/{type}', [DemandeController::class, 'store'])->name('saveDemande');
 Route::post('updateDemande/{id}/{type}', [DemandeController::class, 'update'])->name('updateDemande');
 
 

@@ -34,7 +34,6 @@ use App\Models\Chauffeur;
                                                     <th scope="col">Date début</th>
                                                     <th scope="col">Date de fin</th>
                                                     <th scope="col">Status</th>
-                                                    <th scope="col">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -64,21 +63,8 @@ use App\Models\Chauffeur;
                                                         </td>
                                                         <td>{{ $item->datedeb ?? '--' }}</td>
                                                         <td>{{ $item->datefin ?? '--' }}</td>
-                                                        <td><span class="badge bg-danger">{{ $item->status }}</span></td>
-                                                        <td>
-                                                            @if ($item->type == 'voiture')
-                                                                <a
-                                                                    href="{{ route('updateDemandeVoiture', ['id' => $item->id]) }}"><button
-                                                                        type="button"
-                                                                        class="btn btn-outline-primary btn-sm">Edit</button></a>
-                                                            @endif
-                                                            @if ($item->type == 'chauffeur')
-                                                                <a
-                                                                    href="{{ route('updateDemandeChauffeur', ['id' => $item->id]) }}"><button
-                                                                        type="button"
-                                                                        class="btn btn-outline-success btn-sm">Edit</button></a>
-                                                            @endif
-                                                        </td>
+                                                        <td><span class="badge bg-success">{{ $item->status }}</span></td>
+                                                        
                                                     </tr>
                                                 @endforeach
                                             </tbody>
