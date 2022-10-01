@@ -22,22 +22,22 @@ class DemandeController extends Controller
         if(Auth::guest()){
             return redirect('login');
         }
-        $demande = Demande::all()->where('user_id', Auth::user()->id)->orderBy('id','DESC');
+        $demande = Demande::all()->where('user_id', Auth::user()->id);
         return view('demandes.all', compact('demande'));
     }
 
     public function indexAdminApprouve(){
-        $demande = Demande::all()->where('status', 'Approuvée')->orderBy('id','DESC');
+        $demande = Demande::all()->where('status', 'Approuvée');
         return view('demandes.adminDemandeApprouve', compact('demande'));
     }
 
     public function indexApprouve(){
-        $demande = Demande::all()->where('status', 'Approuvée')->orderBy('id','DESC');
+        $demande = Demande::all()->where('status', 'Approuvée');
         return view('demandes.demandeApprouve', compact('demande'));
     }
 
     public function indexAdmin(){
-        $demande = Demande::all()->where('status', 'Non Approuvée')->orderBy('id','DESC');
+        $demande = Demande::all()->where('status', 'Non Approuvée');
         return view('demandes.admindemandes', compact('demande'));
     }
 
