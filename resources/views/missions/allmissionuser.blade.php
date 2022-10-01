@@ -97,7 +97,7 @@
                                                 @if ($mission->etat == "Fait")
                                                 <td>
                                                     @if( $affecter->voiture->dispo == 'Non Disponible')
-                                                        <a href="{{ url('rendreVoiture/' . $mission->id . '/' . $affecter->voiture->id) }}"><button type="button" class="btn btn-outline-success btn-sm">Rendre</button></a>
+                                                        <a href="{{ url('rendreVoiture/' . $mission->id . '/' . $affecter->voiture->id . '/' .$affecter->id) }}"><button type="button" class="btn btn-outline-success btn-sm">Rendre</button></a>
                                                     @else 
                                                         <button type="button" disabled class="btn btn-success btn-sm">Rendu</button>
                                                     @endif

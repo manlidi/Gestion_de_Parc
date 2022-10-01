@@ -95,6 +95,10 @@ class MissionController extends Controller
             $mUser = MissionUser::find($voiture);
             $mUser->kmfin = $request[$voiture];
             $mUser->update();
+
+            $voit = Voiture::find($mUser->voiture_id);
+            $voit->kilmax -= $request[$voiture];
+            $voit->update();
         } 
         $mission = Mission::find($id);
         $mission->etat = "Fait";
@@ -224,7 +228,7 @@ class MissionController extends Controller
     }
 
     public static function getStructureChauffeure($id){
-        $chauffeures = Chauffeur::where('structure_id',$id)->get()->pluck('id','nom_cva')->toArray();
+        $chauffeures = Chauffeur::where('structure_id','=',$id,'AND','disp','=','Disponible')->get()->pluck('id','nom_cva')->toArray();
         return $chauffeures;
     }
 }

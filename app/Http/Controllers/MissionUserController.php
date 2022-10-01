@@ -32,12 +32,18 @@ class MissionUserController extends Controller
         return view('missions.allmissionuser', compact('mission', 'userStructureId', 'chauffeurAjouterMission', 'kmDebutAjouterMission', 'voitureRendu'));
     }
 
-    public function rendreVoiture( $id, $voiture=null ){
+    public function rendreVoiture( $id, $voiture=null, $missionUserId=null ){
         if( $voiture != null ){
             $voiture = Voiture::find($voiture);
             $voiture->dispo = "Disponible";
             $voiture->mouvement = "Au parc";
             $voiture->update();
+
+            $chauffeurId = MissionUser::find($missionUserId)->chauffeur_id;
+            $chauffeur = Chauffeur::find($chauffeurId);
+            $chauffeur->disp = "Disponible";
+            $chauffeur->update();
+            
             $parametre = ['status'=>true, 'msg'=>'Les voitures ont été rendue avec succès'];
             return redirect()->route('det',['id'=>$id])->with($parametre);
         }else{
@@ -49,6 +55,11 @@ class MissionUserController extends Controller
                     $voiture->dispo = "Disponible";
                     $voiture->mouvement = "Au parc";
                     $status = $voiture->update();
+                }
+                if( $mission->chauffeur_id != null ){
+                    $chauffeur = Chauffeur::find($mission->chauffeur_id);
+                    $chauffeur->disp = "Disponible";
+                    $chauffeur->update();
                 }
                 if( ! $status ){
                     $parametre = ['status'=>true, 'msg'=>'Erreur lors de la soumission'];
@@ -72,8 +83,8 @@ class MissionUserController extends Controller
                 $parametre = ['status'=>true, 'msg'=>'Erreur lors de la soumission'];
                 return redirect()->route('det',['id'=>$id])->with($parametre);
             }
-        } 
-        
+        }
+
         $parametre = ['status'=>true, 'msg'=>'Kilométrage de début ajouté avec succès'];
         return redirect()->route('det',['id'=>$id])->with($parametre);
     }
@@ -86,21 +97,21 @@ class MissionUserController extends Controller
             if( $request[$mission] != null ){
                 $mUser->chauffeur_id = $request[$mission];
                 $status = $mUser->update();
-    
+
                 $chauffeur = Chauffeur::find($request[$mission]);
                 $chauffeur->disp = "Non Disponible";
                 $chauffeur->update();
-    
+
                 if( ! $status ){
                     $parametre = ['status'=>true, 'msg'=>'Erreur lors de la soumission'];
                     return redirect()->route('det',['id'=>$id])->with($parametre);
                 }
             }
-        } 
+        }
         $parametre = ['status'=>true, 'msg'=>'Chauffeur ajouté avec succès'];
         return redirect()->route('det',['id'=>$id])->with($parametre);
     }
-    
+
 
     public static function chauffeurAjouterMission( $missionId ){
         $ajouter = true;
