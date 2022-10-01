@@ -90,12 +90,8 @@ class AuthController extends Controller
             $vo = Voiture::count();
             $mission = Mission::count();
             $chauffeurs = Chauffeur::count();
-            $demande = Demande::all()->where('user_id', Auth::user()->id);
-            $d = DB::table('demandes')
-                ->select(DB::raw('Count(*) as nbr'))
-                ->where('user_id', Auth::user()->id)
-                ->get();
-            return view('layout.dashboard', compact('structure', 'voiture', 'vo', 'mission', 'chauffeurs', 'demande', 'd'));
+            $demande = Demande::all()->where('user_id', Auth::user()->id)->where('status', 'Non Approuvée');
+            return view('layout.dashboard', compact('structure', 'voiture', 'vo', 'mission', 'chauffeurs', 'demande'));
         }
         return redirect('/login');
     }

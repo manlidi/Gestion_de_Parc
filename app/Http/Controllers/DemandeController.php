@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Session;
 use App\Models\User;
 use App\Models\Demande;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +23,7 @@ class DemandeController extends Controller
         if(Auth::guest()){
             return redirect('login');
         }
-        $demande = Demande::all()->where('user_id', Auth::user()->id);
+        $demande = Demande::all()->where('user_id', Auth::user()->id)->where('status', 'Non Approuvée');
         return view('demandes.all', compact('demande'));
     }
 
@@ -34,12 +33,22 @@ class DemandeController extends Controller
     }
 
     public function indexApprouve(){
-        $demande = Demande::all()->where('status', 'Approuvée');
+        $demande = DB::table('demandes')
+            ->join('users', 'users.id', '=', 'demandes.user_id')
+            ->select('demandes.*', 'users.structure_id')
+            ->where('users.structure_id', '=', User::find(Auth::user()->id)->structure_id)
+            ->where('status', '=', 'Approuvée')
+            ->get();
         return view('demandes.demandeApprouve', compact('demande'));
     }
 
     public function indexAdmin(){
-        $demande = Demande::all()->where('status', 'Non Approuvée');
+        $demande = DB::table('demandes')
+            ->join('users', 'users.id', '=', 'demandes.user_id')
+            ->select('demandes.*', 'users.structure_id')
+            ->where('users.structure_id', '=', User::find(Auth::user()->id)->structure_id)
+            ->where('status', '=', 'Non Approuvée')
+            ->get();
         return view('demandes.admindemandes', compact('demande'));
     }
 
@@ -52,8 +61,12 @@ class DemandeController extends Controller
     {
         $authorId = Auth::id();
         $id = User::find($authorId)->structure->id;
-        $voiture = Voiture::all()->where('dispo', '=', 'Disponible', 'AND', 'structure_id', '=', $id);
-        $chauffeur = Chauffeur::all()->where('disp', '=', 'Disponible', 'AND', 'structure_id', '=', $id);
+        $voiture = Voiture::all()
+            ->where('dispo', '=', 'Disponible')
+            ->where('structure_id', '=', $id);
+        $chauffeur = Chauffeur::all()
+            ->where('disp', '=', 'Disponible' )
+            ->where('structure_id', '=', $id);
         return view('demandes.addVoiture', compact('voiture', 'chauffeur'));
     }
 
@@ -65,10 +78,10 @@ class DemandeController extends Controller
         $voituredemande = DB::table('demandes')
             ->join('voitures', 'voitures.id', '=', 'demandes.affecter_id')
             ->select('voitures.*')
-            ->where('demandes.type', '=', 'voiture', 'AND', 'demandes.user_id', '=', $authorId,)
+            ->where('demandes.type', '=', 'voiture')
+            ->where('demandes.user_id', '=', $authorId)
             ->where('demandes.status', '=', 'Approuvée')
             ->get();
-            //dd($voituredemande);
         return view('demandes.addReparation', compact('voiture', 'voituredemande'));
     }
 
@@ -76,7 +89,9 @@ class DemandeController extends Controller
     {
         $authorId = Auth::id();
         $id = User::find($authorId)->structure->id;
-        $chauffeur = Chauffeur::all()->where('disp', '=', 'Disponible', 'AND', 'structure_id', '=', $id);
+        $chauffeur = Chauffeur::all()
+            ->where('disp', '=', 'Disponible')
+            ->where('structure_id', '=', $id);
         return view('demandes.addChauffeur', compact('chauffeur'));
     }
 
@@ -98,9 +113,6 @@ class DemandeController extends Controller
         if( $type == 'chauffeur' ){
             $status = self::saveModel($request, $type);
         }
-        if( $type == 'reparation' ){
-            $status = self::saveModel($request, $type, $request->voiture_id);
-        }
 
         if( $status ) $parametre = ['status'=>true, 'msg'=>'Votre demande a été enregistré avec succès. Veuillez attendre sa validation!'];
         else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
@@ -110,15 +122,15 @@ class DemandeController extends Controller
     public static function saveModel($request, $type, $affection=null){
         $demande = new Demande();
         $demande->objetdemande = $request->objetdemande;
-        if( isset($demande->datedeb) ){
-            $demande->datedeb = $request->datedeb;
-            $demande->datefin = $request->datefin;
-        }
+        $demande->datedeb = $request->datedeb;
+        $demande->datefin = $request->datefin;
+
         if( $affection != null ){
             $demande->affecter_id = $affection;
         }else{
             $demande->affecter_id = $request->chauffeur_id;
         }
+
         $demande->type = $type;
         $demande->user_id = Auth::user()->id;
         $status = $demande->save();
@@ -127,12 +139,16 @@ class DemandeController extends Controller
 
     public function updateDemandeVoiture( $id ){
         $demande = Demande::find($id);
-        $voiture = Voiture::all()->where('dispo', '=', 'Disponible', 'AND', 'structure_id', '=', $id);
+        $voiture = Voiture::all()
+            ->where('dispo', '=', 'Disponible')
+            ->where('structure_id', '=', $id);
         return view('demandes.addVoiture', compact('voiture','demande'));
     }
     public function updateDemandeChauffeur( $id ){
         $demande = Demande::find($id);
-        $chauffeur = Chauffeur::all()->where('disp', '=', 'Disponible', 'AND', 'structure_id', '=', $id);
+        $chauffeur = Chauffeur::all()
+            ->where('disp', '=', 'Disponible')
+            ->where('structure_id', '=', $id);
         return view('demandes.addChauffeur', compact('chauffeur','demande'));
     }
 
@@ -161,6 +177,96 @@ class DemandeController extends Controller
         if( $status ) $parametre = ['status'=>true, 'msg'=>'Votre modification a été enregistré avec succès. Veuillez attendre sa validation!'];
         else $parametre = ['status'=>false, 'msg'=>'Erreur lors de la modification'];
         return redirect()->route('dashboard')->with($parametre);
+    }
+
+    public function validerDemande($id, $type){
+        $demande = Demande::find($id);
+        $demande->status = "Approuvée";
+        $status = $demande->update();
+
+        if( $type == 'voiture' ){
+            $voiture = Voiture::find($demande->affecter_id);
+            $voiture->dispo = "Non Disponible"; 
+            $voiture->mouvement = "En sortie";
+            $voiture->update(); 
+        }
+
+        if( $type == 'chauffeur' ){
+            $chauffeur = Chauffeur::find($demande->affecter_id);
+            $chauffeur->disp = "Non Disponible"; 
+            $chauffeur->update();
+        }
+
+        if( $status ) $parametre = ['status'=>true, 'msg'=>'Demande approuvée avec succès !'];
+        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de la validation de la demande'];
+        return redirect()->route('admin_demandes')->with($parametre);
+    }
+
+    public function rendreDemande( $id, $type ){
+        $demande = Demande::find($id);
+        $demande->status = "Rendu";
+        $status = $demande->update();
+
+        if( $type == 'voiture' ){
+            $voiture = Voiture::find($demande->affecter_id);
+            $voiture->dispo = "Disponible"; 
+            $voiture->mouvement = "Au parc";
+            $voiture->update(); 
+        }
+
+        if( $type == 'chauffeur' ){
+            $chauffeur = Chauffeur::find($demande->affecter_id);
+            $chauffeur->disp = "Disponible"; 
+            $chauffeur->update();
+        }
+
+        if( $status ) $parametre = ['status'=>true, 'msg'=>'Voiture ou Chauffeur rendu avec succès'];
+        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de la soumission'];
+        return redirect()->route('adminDemandeApprouve')->with($parametre);
+    }
+
+    public function desapprouverDemande( $id, $type ){
+        $demande = Demande::find($id);
+        $demande->status = "Non Approuvée";
+        $status = $demande->update();
+
+        if( $type == 'voiture' ){
+            $voiture = Voiture::find($demande->affecter_id);
+            $voiture->dispo = "Disponible"; 
+            $voiture->mouvement = "En sortie";
+            $voiture->update(); 
+        }
+
+        if( $type == 'chauffeur' ){
+            $chauffeur = Chauffeur::find($demande->affecter_id);
+            $chauffeur->disp = "Disponible"; 
+            $chauffeur->update();
+        }
+
+        if( $status ) $parametre = ['status'=>true, 'msg'=>'Demande désapprouvée avec succès'];
+        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de la soumission'];
+        return redirect()->route('adminDemandeApprouve')->with($parametre);
+    }
+
+    public function rejeterDemande($id, $type){
+        $demande = Demande::find($id);
+        $status = $demande->delete();
+
+        if( $status ) $parametre = ['status'=>true, 'msg'=>'Demande rejetée avec succès'];
+        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de la soumission'];
+        return redirect()->route('admin_demandes')->with($parametre);
+    }
+
+    public static function voitureIsDispo( $id ){
+        $voiture = Voiture::find($id);
+        if( $voiture->dispo == "Disponible" ) return true;
+        else return false;
+    }
+
+    public static function chauffeurIsDispo( $id ){
+        $chauffeur = Chauffeur::find($id);
+        if( $chauffeur->disp == "Disponible" ) return true;
+        else return false;
     }
 
     /**

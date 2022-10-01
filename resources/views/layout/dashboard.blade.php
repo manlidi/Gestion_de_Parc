@@ -192,13 +192,36 @@ use Illuminate\Support\Facades\Auth;
                                                     </td>
                                                     <td>{{ $item->datedeb ?? '--' }}</td>
                                                     <td>{{ $item->datefin ?? '--' }}</td>
-                                                    <td><span class="badge bg-danger">{{ $item->status }}</span></td>
                                                     <td>
-                                                        @if( $item->type == 'voiture' )
-                                                            <a href="{{ route('updateDemandeVoiture',['id'=>$item->id]) }}"><button type="button" class="btn btn-outline-primary btn-sm">Edit</button></a>
+                                                        @if($item->type == 'chauffeur')
+                                                            @if( DemandeController::chauffeurIsDispo($item->affecter_id) )
+                                                                <span class="badge bg-warning p-1">{{ $item->status }}</span>
+                                                            @else
+                                                                <span class="badge bg-danger p-1">Chauffeur Indisponible</span>
+                                                            @endif
                                                         @endif
-                                                        @if( $item->type == 'chauffeur' )
-                                                            <a href="{{ route('updateDemandeChauffeur',['id'=>$item->id]) }}"><button type="button" class="btn btn-outline-success btn-sm">Edit</button></a>
+                                                        @if($item->type == 'voiture')
+                                                            @if( DemandeController::voitureIsDispo($item->affecter_id) )
+                                                                <span class="badge bg-warning p-1">{{ $item->status }}</span>
+                                                            @else
+                                                                <span class="badge bg-danger p-1">Voiture Indisponible</span>
+                                                            @endif
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if($item->type == 'chauffeur')
+                                                            @if( DemandeController::chauffeurIsDispo($item->affecter_id) )
+                                                                <a href="{{ route('updateDemandeChauffeur',['id'=>$item->id]) }}"><button type="button" class="btn btn-outline-success btn-sm">Modifier</button></a>
+                                                            @else
+                                                                <a href="{{ route('updateDemandeChauffeur',['id'=>$item->id]) }}"><button type="button" class="btn btn-success btn-sm">Changer</button></a>
+                                                            @endif
+                                                        @endif
+                                                        @if($item->type == 'voiture')
+                                                            @if( DemandeController::voitureIsDispo($item->affecter_id) )
+                                                                <a href="{{ route('updateDemandeVoiture',['id'=>$item->id]) }}"><button type="button" class="btn btn-outline-primary btn-sm">Modifier</button></a>
+                                                            @else
+                                                                <a href="{{ route('updateDemandeVoiture',['id'=>$item->id]) }}"><button type="button" class="btn btn-primary btn-sm">Changer</button></a>
+                                                            @endif
                                                         @endif
                                                     </td>
                                                 </tr>

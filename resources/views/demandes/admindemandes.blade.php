@@ -41,7 +41,16 @@ use App\Models\Chauffeur;
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $item->objetdemande }}</td>
-                                                <td><span class="<?php if( $item->type == 'reparation' ) echo 'text-danger'; else echo 'text-primary'; ?>">{{ ucfirst($item->type) }}</span></td>
+                                                <td>
+                                                    <span 
+                                                        class="<?php if ($item->type == 'reparation') {
+                                                            echo 'text-danger';
+                                                        } elseif ($item->type == 'chauffeur') {
+                                                            echo 'text-success';
+                                                        } else {
+                                                            echo 'text-primary';
+                                                        } ?>">{{ ucfirst($item->type) }}
+                                                    </span>
                                                 <td>
                                                     @if( ($item->type == 'voiture') || $item->type == 'reparation' )
                                                         <strong>{{ Voiture::find($item->affecter_id)->marque }} ( {{ Voiture::find($item->affecter_id)->immatriculation }} )</strong>
@@ -51,8 +60,42 @@ use App\Models\Chauffeur;
                                                 </td>
                                                 <td>{{ $item->datedeb ?? '--' }}</td>
                                                 <td>{{ $item->datefin ?? '--' }}</td>
-                                                <td><span class="badge bg-danger">{{ $item->status }}</span></td>
-                                                <td><a class="btn btn-outline-info btn-sm" href="">Valider</a></td>
+                                                <td>
+                                                    @if($item->type == 'chauffeur')
+                                                        @if( DemandeController::chauffeurIsDispo($item->affecter_id) )
+                                                            <span class="badge bg-warning p-1">{{ $item->status }}</span>
+                                                        @else
+                                                            <span class="badge bg-danger p-2">En attente de <br>disponibilité</span>
+                                                        @endif
+                                                    @endif
+                                                    @if($item->type == 'voiture')
+                                                        @if( DemandeController::voitureIsDispo($item->affecter_id) )
+                                                            <span class="badge bg-warning p-1">{{ $item->status }}</span>
+                                                        @else
+                                                            <span class="badge bg-danger p-2">En attente de <br>disponibilité</span>
+                                                        @endif
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($item->type == 'chauffeur')
+                                                        @if( DemandeController::chauffeurIsDispo($item->affecter_id) )
+                                                            <a class="btn btn-outline-info btn-sm" href="{{ route('validerDemande', ['id'=>$item->id, 'type' => $item->type]) }}">Valider</a>
+                                                            <a class="btn btn-outline-danger btn-sm" href="{{ route('rejeterDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rejeter</a>
+                                                        @else
+                                                            <button class="btn btn-outline-info disabled btn-sm">Valider</button>
+                                                            <a class="btn btn-outline-danger btn-sm" href="{{ route('rejeterDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rejeter</a>
+                                                        @endif
+                                                    @endif
+                                                    @if($item->type == 'voiture')
+                                                        @if( DemandeController::voitureIsDispo($item->affecter_id) )
+                                                            <a class="btn btn-outline-info btn-sm" href="{{ route('validerDemande', ['id'=>$item->id, 'type' => $item->type]) }}">Valider</a>
+                                                            <a class="btn btn-outline-danger btn-sm" href="{{ route('rejeterDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rejeter</a>
+                                                        @else
+                                                            <button class="btn btn-outline-info disabled btn-sm">Valider</button>
+                                                            <a class="btn btn-outline-danger btn-sm" href="{{ route('rejeterDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rejeter</a>
+                                                        @endif
+                                                    @endif
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
