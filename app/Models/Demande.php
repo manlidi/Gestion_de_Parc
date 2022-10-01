@@ -13,21 +13,13 @@ class Demande extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'objetdemande',
         'datedeb',
         'datefin',
-        'voiture_id',
-        'chauffeur_id',
-        'user_id'
+        'affecter_id',
+        'type'
     ];
-
-    public function voiture(){
-        return $this->belongsTo(Voiture::class);
-    }
-
-    public function chauffeur(){
-        return $this->belongsTo(Chauffeur::class);
-    }
 
     public function user(){
         return $this->belongsTo(User::class);

@@ -27,10 +27,12 @@ use App\Http\Controllers\NotificationController;
 Route::get('/', function () {return view('layout.index');});
 Route::get('dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
 
-Route::get('demandes', [DemandeController::class, 'index'])->name('demandes');
 Route::get('admin_demandes', [DemandeController::class, 'indexAdmin']);
-Route::get('adddemande', [DemandeController::class, 'create']);
-Route::post('adddemandes', [DemandeController::class, 'store']);
+Route::get('demanderVoiture', [DemandeController::class, 'createVoiture'])->name('demanderVoiture');
+Route::get('demanderChauffeur', [DemandeController::class, 'createChauffeur'])->name('demanderChauffeur');
+Route::get('demanderReparation', [DemandeController::class, 'createReparation'])->name('demanderReparation');
+Route::post('saveDemande/{type}', [DemandeController::class, 'store'])->name('saveDemande');
+Route::get('editdemandes/{id}', [DemandeController::class, 'edit'])->name('editdemandes');
 
 
 Route::middleware(['auth', 'role:Administrateur'])->group(function () {
@@ -62,7 +64,7 @@ Route::put('up/{id}', [MissionController::class, 'edit'])->name('up');
 Route::put('del/{id}', [MissionController::class, 'destroy']);
 
 
-Route::get('rendreVoiture/{id}/{type}', [MissionUserController::class, 'rendreVoiture'])->name(('rendreVoiture'));
+Route::get('rendreVoiture/{id}/{type}/{idMissionUser}', [MissionUserController::class, 'rendreVoiture'])->name(('rendreVoiture'));
 Route::get('det/{id}', [MissionUserController::class, 'index'])->name('det');
 Route::get('rendreAllVoiture/{id}', [MissionUserController::class, 'rendreVoiture'])->name(('rendreAllVoiture'));
 Route::get('addchauf/{id}', [MissionUserController::class, 'create']);
@@ -86,7 +88,6 @@ Route::get('reparations', [ReparerController::class, 'create']);
 Route::post('createreparation', [ReparerController::class, 'store']);
 
 // Route::get('notif', [NotificationController::class, 'index']);
-
 });
 Route::get('login', [AuthController::class, 'index'])->name('login');
 Route::post('loginusers', [AuthController::class, 'create']);

@@ -13,10 +13,8 @@
         @endif
         @if (Auth::user() && Auth::user()->role == 'Administrateur')
             <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-clipboard-plus"></i><span>Ajout</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+
+                <ul>
                     <li class="nav-item">
                         <a class="nav-link collapsed" href="{{ url('structures') }}">
                             <i class="bi bi-circle"></i>
@@ -86,9 +84,21 @@
         @endif
         @if (Auth::user() && (Auth::user()->role == 'Utilisateur' || Auth::user()->role == 'Chauffeur'))
             <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ url('demandes') }}">
+                <a class="nav-link collapsed" href="{{ url('demanderVoiture') }}">
                     <i class="bi bi-book"></i>
-                    <span>Faire une demande</span>
+                    <span>Demander Une Voiture</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url('demanderChauffeur') }}">
+                    <i class="bi bi-book"></i>
+                    <span>Demander Un Chauffeur</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url('demanderReparation') }}">
+                    <i class="bi bi-book"></i>
+                    <span>Demande De Réparation</span>
                 </a>
             </li>
         @endif

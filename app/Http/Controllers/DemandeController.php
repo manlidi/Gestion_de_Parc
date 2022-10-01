@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Session;
+use App\Models\User;
 use App\Models\Demande;
 use App\Models\Voiture;
 use App\Models\Chauffeur;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DemandeController extends Controller
 {
@@ -34,11 +35,25 @@ class DemandeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function createVoiture()
     {
-        $voiture = Voiture::all()->where('dispo', '=', 'Disponible');
-        $chauffeur = Chauffeur::all()->where('disp', '=', 'Disponible');
-        return view('demandes.add', compact('voiture', 'chauffeur'));
+        $authorId = Auth::id();
+        $id = User::find($authorId)->structure->id;
+        $voiture = Voiture::all()->where('dispo', '=', 'Disponible', 'AND', 'structure_id', '=', $id);
+        $chauffeur = Chauffeur::all()->where('disp', '=', 'Disponible', 'AND', 'structure_id', '=', $id);
+        return view('demandes.addVoiture', compact('voiture', 'chauffeur'));
+    }
+
+    public function createChauffeur()
+    {
+        $authorId = Auth::id();
+        $id = User::find($authorId)->structure->id;
+        $chauffeur = Chauffeur::all()->where('disp', '=', 'Disponible', 'AND', 'structure_id', '=', $id);
+        return view('demandes.addChauffeur', compact('chauffeur'));
+    }
+
+    public function createReparation(){
+        return "ok";
     }
 
     /**
@@ -47,26 +62,38 @@ class DemandeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $type)
     {
+        if( $type == 'voiture' ){
+            $status = self::saveModel($request, $type, $request->voiture_id);
+
+            if($request->check == "on"){
+                self::saveModel($request, 'chauffeur');
+            }
+        }
+        if( $type == 'chauffeur' ){
+            $status = self::saveModel($request, $type);
+        }
+
+        if( $status ) $parametre = ['status'=>true, 'msg'=>'Votre demande a été enregistré avec succès. Veuillez attendre sa validation!'];
+        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
+        return redirect()->route('dashboard')->with($parametre);
+    }
+
+    public static function saveModel($request, $type, $affection=null){
         $demande = new Demande();
         $demande->objetdemande = $request->objetdemande;
         $demande->datedeb = $request->datedeb;
         $demande->datefin = $request->datefin;
-        $demande->voiture_id = $request->voiture_id;
-        $demande->user_id = Auth::user()->id;
-
-        if($request->check == "on"){
-            $demande->chauffeur_id = $request->chauffeur_id;
+        if( $affection != null ){
+            $demande->affecter_id = $affection;
         }else{
-            $demande->chauffeur_id = NULL;
+            $demande->affecter_id = $request->chauffeur_id;
         }
-
+        $demande->type = $type;
+        $demande->user_id = Auth::user()->id;
         $status = $demande->save();
-
-        if( $status ) $parametre = ['status'=>true, 'msg'=>'Votre demande a été enregistré avec succès. Veuillez attendre sa validation!'];
-        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
-        return redirect()->route('demandes')->with($parametre);
+        return $status;
     }
 
     /**
@@ -86,9 +113,15 @@ class DemandeController extends Controller
      * @param  \App\Models\Demande  $demande
      * @return \Illuminate\Http\Response
      */
-    public function edit(Demande $demande)
+    public function edit($id)
     {
-        //
+        $demandes = Demande::find($id);
+        $authorId = Auth::id();
+        $id = User::find($authorId)->structure->id;
+        $voiture = Voiture::all()->where('dispo', '=', 'Disponible', 'AND', 'structure_id', '=', $id);
+        $chauffeur = Chauffeur::all()->where('disp', '=', 'Disponible', 'AND', 'structure_id', '=', $id);
+
+        return view('demandes.edit', compact('demandes','voiture', 'chauffeur'));
     }
 
     /**
