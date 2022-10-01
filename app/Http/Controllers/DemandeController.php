@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Session;
 use App\Models\User;
 use App\Models\Demande;
+use Illuminate\Support\Facades\DB;
 use App\Models\Voiture;
 use App\Models\Chauffeur;
+use App\Models\MissionUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -57,10 +59,17 @@ class DemandeController extends Controller
 
     public function createReparation()
     {
-        $authorId = Auth::id();
+        $authorId = Auth::user()->id;
         $id = User::find($authorId)->structure->id;
-        $voiture = Voiture::all();
-        return view('demandes.addReparation', compact('voiture'));
+        $voiture = MissionUser::all()->where('user_id', $authorId);
+        $voituredemande = DB::table('demandes')
+            ->join('voitures', 'voitures.id', '=', 'demandes.affecter_id')
+            ->select('voitures.*')
+            ->where('demandes.type', '=', 'voiture', 'AND', 'demandes.user_id', '=', $authorId,)
+            ->where('demandes.status', '=', 'Approuvée')
+            ->get();
+            //dd($voituredemande);
+        return view('demandes.addReparation', compact('voiture', 'voituredemande'));
     }
 
     public function createChauffeur()
@@ -121,7 +130,6 @@ class DemandeController extends Controller
         $voiture = Voiture::all()->where('dispo', '=', 'Disponible', 'AND', 'structure_id', '=', $id);
         return view('demandes.addVoiture', compact('voiture','demande'));
     }
-
     public function updateDemandeChauffeur( $id ){
         $demande = Demande::find($id);
         $chauffeur = Chauffeur::all()->where('disp', '=', 'Disponible', 'AND', 'structure_id', '=', $id);

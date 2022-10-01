@@ -78,8 +78,6 @@ Route::post('savechauffeurs/{id}', [MissionUserController::class, 'store']);
 
 
 Route::get('chauffeurs', [ChauffeurController::class, 'index'])->name('chauffeurs');
-Route::get('createchauffeurs', [ChauffeurController::class, 'create']);
-Route::post('storechauffeurs', [ChauffeurController::class, 'store']);
 
 Route::get('garages', [GarageController::class, 'index'])->name('garages');
 Route::get('addgarage', [GarageController::class, 'create']);
@@ -94,7 +92,6 @@ Route::get('reparations', [ReparerController::class, 'create']);
 Route::post('createreparation', [ReparerController::class, 'store']);
 
 // Route::get('notif', [NotificationController::class, 'index']);
-
 });
 Route::get('login', [AuthController::class, 'index'])->name('login');
 Route::post('loginusers', [AuthController::class, 'create']);

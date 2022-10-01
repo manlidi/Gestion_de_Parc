@@ -1,5 +1,5 @@
-<?php 
-namespace App\Http\Controllers; 
+<?php
+namespace App\Http\Controllers;
 use App\Models\Voiture;
 use App\Models\Chauffeur;
 ?>
@@ -46,7 +46,7 @@ use App\Models\Chauffeur;
                                                     @if( ($item->type == 'voiture') || $item->type == 'reparation' )
                                                         <strong>{{ Voiture::find($item->affecter_id)->marque }} ( {{ Voiture::find($item->affecter_id)->immatriculation }} )</strong>
                                                     @else
-                                                        <strong>{{ Chauffeur::find($item->affecter_id)->nom_cva }} {{ Chauffeur::find($item->affecter_id)->prenom_cva }} </strong>
+                                                        <strong>{{ Chauffeur::find($item->affecter_id)->nom_cva ?? '---'}}</strong>
                                                     @endif
                                                 </td>
                                                 <td>{{ $item->datedeb ?? '--' }}</td>
@@ -57,7 +57,7 @@ use App\Models\Chauffeur;
                                         @endforeach
                                     </tbody>
                                 </table>
-                                @else  
+                                @else
                                     <div class="alert alert-warning">
                                         Pas de demande !
                                     </div>

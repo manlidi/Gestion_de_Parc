@@ -13,7 +13,7 @@
         @endif
         @if (Auth::user() && Auth::user()->role == 'Administrateur')
             <li class="nav-item">
-                
+
                 <ul>
                     <li class="nav-item">
                         <a class="nav-link collapsed" href="{{ url('structures') }}">
@@ -88,7 +88,7 @@
                 </a>
             </li>
         @endif
-        @if (Auth::user() && Auth::user()->role == 'Utilisateur')
+        @if (Auth::user() && (Auth::user()->role == 'Utilisateur' || Auth::user()->role == 'Chauffeur'))
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('demandeApprouve') }}">
                     <i class="bi bi-book"></i>

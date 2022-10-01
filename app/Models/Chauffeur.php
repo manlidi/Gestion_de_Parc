@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Structure;
+use App\Models\MissionUser;
+use App\Models\Demande;
 
 class Chauffeur extends Model
 {
@@ -12,10 +14,30 @@ class Chauffeur extends Model
 
     protected $fillable = [
         'nom_cva',
-        'prenom_cva',
-        'tel',
-        'adresse',
+        'email',
+        'role',
+        'password',
         'structure_id'
+    ];
+
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
     ];
 
     public function structure(){
@@ -24,5 +46,9 @@ class Chauffeur extends Model
 
     public function mission_users(){
         return $this->hasMany(MissionUser::class);
+    }
+
+    public function demandes(){
+        return $this->hasMany(Demande::class);
     }
 }

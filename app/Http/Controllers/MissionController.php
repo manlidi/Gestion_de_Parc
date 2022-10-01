@@ -104,14 +104,6 @@ class MissionController extends Controller
         $mission->etat = "Fait";
         $mission->update();
 
-        $chauffeur = DB::table('mission_users')
-            ->join('chauffeurs', 'chauffeurs.id', '=', 'mission_users.chauffeur_id')
-            ->join('missions', 'missions.id', '=', 'mission_users.mission_id')
-            ->select('chauffeurs.*')
-            ->where('missions.id', $id)
-            ->get();
-        dd($chauffeur);
-
         $mission = Mission::all();
         return view('missions.all', compact('mission'));
     }

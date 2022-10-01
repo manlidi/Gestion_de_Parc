@@ -12,6 +12,12 @@ use Illuminate\Support\Facades\Auth;
             <section class="section dashboard">
                 <div class="row">
                     <div class="col-lg-12">
+                        @if (session('status'))
+                            <div class="alert alert-success" role="alert">
+                                <span class="font-medium">{{ session('msg') }}</span>
+                            </div>
+                        @endif
+                        <br><br>
                         <div class="row">
                             <a href="{{ url('structures') }}" class="col-xxl-4 col-md-3">
                                 <div class="card info-card revenue-card">
@@ -205,16 +211,13 @@ use Illuminate\Support\Facades\Auth;
                                         </div>
                                     @endif
                                 </div>
-
                             </div>
+
                         </div>
-
                     </div>
-                </div>
 
+                </div>
             </div>
         </section>
-
     </main>
     @endif
-@endsection

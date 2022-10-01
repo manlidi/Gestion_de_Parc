@@ -23,18 +23,12 @@
                                         @csrf
                                         <div class="col-12">
                                             <input type="email" class="form-control" name="email" id="email"
-                                                placeholder="Email" autofocus>
-                                            @if ($errors->has('email'))
-                                                <span class="text-danger">{{ $errors->first('email') }}</span>
-                                            @endif
+                                                placeholder="Email" required>
                                         </div>
 
                                         <div class="col-12">
                                             <input type="password" class="form-control" name="password" id="password"
                                                 placeholder="Mot de passe">
-                                            @if ($errors->has('password'))
-                                                <span class="text-danger">{{ $errors->first('password') }}</span>
-                                            @endif
                                         </div>
 
                                         <div class="col-12">
