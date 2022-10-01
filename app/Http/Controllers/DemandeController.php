@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Session;
 use App\Models\User;
 use App\Models\Demande;
+use Illuminate\Support\Facades\DB;
 use App\Models\Voiture;
 use App\Models\Chauffeur;
+use App\Models\MissionUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -44,16 +46,27 @@ class DemandeController extends Controller
         return view('demandes.addVoiture', compact('voiture', 'chauffeur'));
     }
 
+    public function createReparation()
+    {
+        $authorId = Auth::user()->id;
+        $id = User::find($authorId)->structure->id;
+        $voiture = MissionUser::all()->where('user_id', $authorId);
+        $voituredemande = DB::table('demandes')
+            ->join('voitures', 'voitures.id', '=', 'demandes.affecter_id')
+            ->select('voitures.*')
+            ->where('demandes.type', '=', 'voiture', 'AND', 'demandes.user_id', '=', $authorId,)
+            ->where('demandes.status', '=', 'Approuvée')
+            ->get();
+            //dd($voituredemande);
+        return view('demandes.addReparation', compact('voiture', 'voituredemande'));
+    }
+
     public function createChauffeur()
     {
         $authorId = Auth::id();
         $id = User::find($authorId)->structure->id;
         $chauffeur = Chauffeur::all()->where('disp', '=', 'Disponible', 'AND', 'structure_id', '=', $id);
         return view('demandes.addChauffeur', compact('chauffeur'));
-    }
-
-    public function createReparation(){
-        return "ok";
     }
 
     /**
@@ -74,6 +87,9 @@ class DemandeController extends Controller
         if( $type == 'chauffeur' ){
             $status = self::saveModel($request, $type);
         }
+        if( $type == 'reparation' ){
+            $status = self::saveModel($request, $type, $request->voiture_id);
+        }
 
         if( $status ) $parametre = ['status'=>true, 'msg'=>'Votre demande a été enregistré avec succès. Veuillez attendre sa validation!'];
         else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
@@ -83,8 +99,10 @@ class DemandeController extends Controller
     public static function saveModel($request, $type, $affection=null){
         $demande = new Demande();
         $demande->objetdemande = $request->objetdemande;
-        $demande->datedeb = $request->datedeb;
-        $demande->datefin = $request->datefin;
+        if( isset($demande->datedeb) ){
+            $demande->datedeb = $request->datedeb;
+            $demande->datefin = $request->datefin;
+        }
         if( $affection != null ){
             $demande->affecter_id = $affection;
         }else{
@@ -115,13 +133,7 @@ class DemandeController extends Controller
      */
     public function edit($id)
     {
-        $demandes = Demande::find($id);
-        $authorId = Auth::id();
-        $id = User::find($authorId)->structure->id;
-        $voiture = Voiture::all()->where('dispo', '=', 'Disponible', 'AND', 'structure_id', '=', $id);
-        $chauffeur = Chauffeur::all()->where('disp', '=', 'Disponible', 'AND', 'structure_id', '=', $id);
-
-        return view('demandes.edit', compact('demandes','voiture', 'chauffeur'));
+        //
     }
 
     /**

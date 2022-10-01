@@ -14,7 +14,7 @@
                                         placeholder="Objet de la demande" required>
                                 </div>
                                 <div class="col-12">
-                                    <select class="form-select" name="chauffeur_id">
+                                    <select class="form-select" name="chauffeur_id" required>
                                         @if ($chauffeur->count() > 0)
                                             @foreach ($chauffeur as $us)
                                                 <option value="{{ $us->id }}">{{ $us->nom_cva }} {{ $us->prenom_cva }}</option>
@@ -26,11 +26,11 @@
                                 </div>
                                 <div class="col-6">
                                     <label for="">Date début</label>
-                                    <input type="date" class="form-control" name="datedeb" id="datedeb">
+                                    <input type="date" required class="form-control" name="datedeb" id="datedeb">
                                 </div>
                                 <div class="col-6">
                                     <label for="">Date fin</label>
-                                    <input type="date" class="form-control" name="datefin" id="datefin">
+                                    <input type="date" required class="form-control" name="datefin" id="datefin">
                                 </div>
                                 <div class="text-left">
                                     <button type="submit" class="btn btn-primary">Envoyer la demande</button>

@@ -41,7 +41,7 @@ use App\Models\Chauffeur;
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $item->objetdemande }}</td>
-                                                <td><span class="text-primary">{{ ucfirst($item->type) }}</span></td>
+                                                <td><span class="<?php if( $item->type == 'reparation' ) echo 'text-danger'; else echo 'text-primary'; ?>">{{ ucfirst($item->type) }}</span></td>
                                                 <td>
                                                     @if( ($item->type == 'voiture') || $item->type == 'reparation' )
                                                         <strong>{{ Voiture::find($item->affecter_id)->marque }} ( {{ Voiture::find($item->affecter_id)->immatriculation }} )</strong>
@@ -49,8 +49,8 @@ use App\Models\Chauffeur;
                                                         <strong>{{ Chauffeur::find($item->affecter_id)->nom_cva ?? '---'}}</strong>
                                                     @endif
                                                 </td>
-                                                <td>{{ $item->datedeb }}</td>
-                                                <td>{{ $item->datefin }}</td>
+                                                <td>{{ $item->datedeb ?? '--' }}</td>
+                                                <td>{{ $item->datefin ?? '--' }}</td>
                                                 <td><span class="badge bg-danger">{{ $item->status }}</span></td>
                                                 <td><a class="btn btn-outline-info btn-sm" href="">Valider</a></td>
                                             </tr>

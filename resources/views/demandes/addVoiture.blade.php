@@ -10,11 +10,11 @@
                             <form class="row g-3 needs-validation" method="POST" action="{{ route('saveDemande',['type'=>'voiture']) }}">
                                 @csrf
                                 <div class="col-12">
-                                    <input type="text" name="objetdemande" id="objetdemande" class="form-control"
+                                    <input type="text" name="objetdemande" id="objetdemande" required class="form-control"
                                         placeholder="Objet de la demande" required>
                                 </div>
                                 <div class="col-12">
-                                    <select class="form-select" name="voiture_id">
+                                    <select class="form-select" name="voiture_id" required>
                                         @if ($voiture->count() > 0)
                                             @foreach ($voiture as $us)
                                                 <option value="{{ $us->id }}">{{ $us->marque }}</option>
@@ -41,11 +41,11 @@
                                 </div>
                                 <div class="col-6">
                                     <label for="">Date début</label>
-                                    <input type="date" class="form-control" name="datedeb" id="datedeb">
+                                    <input type="date" class="form-control" required name="datedeb" id="datedeb">
                                 </div>
                                 <div class="col-6">
                                     <label for="">Date fin</label>
-                                    <input type="date" class="form-control" name="datefin" id="datefin">
+                                    <input type="date" class="form-control" required name="datefin" id="datefin">
                                 </div>
                                 <div class="text-left">
                                     <button type="submit" class="btn btn-primary">Envoyer la demande</button>

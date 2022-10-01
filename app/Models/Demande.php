@@ -24,4 +24,12 @@ class Demande extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+
+    public function chauffeur(){
+        return $this->belongsTo(Chauffeur::class);
+    }
+
+    public function voiture(){
+        return $this->belongsTo(Voiture::class);
+    }
 }

@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Structure;
+use App\Models\MissionUser;
+use App\Models\Demande;
 
 class Chauffeur extends Model
 {
@@ -44,5 +46,9 @@ class Chauffeur extends Model
 
     public function mission_users(){
         return $this->hasMany(MissionUser::class);
+    }
+
+    public function demandes(){
+        return $this->hasMany(Demande::class);
     }
 }

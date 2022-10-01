@@ -32,7 +32,6 @@ Route::get('demanderVoiture', [DemandeController::class, 'createVoiture'])->name
 Route::get('demanderChauffeur', [DemandeController::class, 'createChauffeur'])->name('demanderChauffeur');
 Route::get('demanderReparation', [DemandeController::class, 'createReparation'])->name('demanderReparation');
 Route::post('saveDemande/{type}', [DemandeController::class, 'store'])->name('saveDemande');
-Route::get('editdemandes/{id}', [DemandeController::class, 'edit'])->name('editdemandes');
 
 
 Route::middleware(['auth', 'role:Administrateur'])->group(function () {
