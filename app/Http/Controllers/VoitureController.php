@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Voiture;
 use App\Models\Piece;
 use App\Models\Assurance;
+use App\Models\Structure;
 class VoitureController extends Controller
 {
     /**
@@ -27,7 +28,8 @@ class VoitureController extends Controller
      */
     public function create()
     {
-        return view('voitures.add');
+        $structure = Structure::all();
+        return view('voitures.add', compact('structure'));
     }
 
     /**
@@ -49,6 +51,7 @@ class VoitureController extends Controller
             'kilmax' => 'required',
             'connsommation' => 'required',
             'coutaquisition' => 'required',
+            'structure_id' => 'required',
         ]);
 
         $data = $request->all();
@@ -77,6 +80,7 @@ class VoitureController extends Controller
             'kilmax' => $data['kilmax'],
             'connsommation' => $data['connsommation'],
             'coutaquisition' => $data['coutaquisition'],
+            'structure_id' => $data['structure_id'],
         ]);
     }
 

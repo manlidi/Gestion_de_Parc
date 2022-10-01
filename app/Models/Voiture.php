@@ -6,7 +6,9 @@ use App\Models\Assurance;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Piece;
+use App\Models\MissionUser;
 use App\Models\Demande;
+use App\Models\Structure;
 
 class Voiture extends Model
 {
@@ -24,8 +26,12 @@ class Voiture extends Model
         'connsommation',
         'coutaquisition',
         'mouvement',
-        'assurance_id'
+        'structure_id'
     ];
+
+    public function structure(){
+        return $this->belongsTo(Structure::class);
+    }
 
     public function assurances(){
         return $this->hasMany(Assurance::class);

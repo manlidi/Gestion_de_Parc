@@ -28,7 +28,7 @@
 
                                         <div class="col-12">
                                             <input type="password" class="form-control" name="password" id="password"
-                                                placeholder="Mot de passe">
+                                                placeholder="Mot de passe" required>
                                         </div>
 
                                         <div class="col-12">

@@ -32,14 +32,20 @@
                                         <div class="col-12">
                                             <select class="form-select" name="role" required>
                                                 <option selected>Sélectionner votre role</option>
-                                                <option value="Chauffeur">Chauffeur</option>
+                                                <option value="Administrateur">Administrateur</option>
                                                 <option value="Utilisateur">Utilisateur</option>
                                             </select>
+                                            @if ($errors->has('role'))
+                                            <span class="text-danger">{{ $errors->first('role') }}</span>
+                                        @endif
                                         </div>
 
                                         <div class="col-12">
                                             <input type="email" class="form-control" name="email" id="email"
                                                 placeholder="Email" required>
+                                                @if ($errors->has('email'))
+                                            <span class="text-danger">{{ $errors->first('email') }}</span>
+                                        @endif
                                         </div>
 
                                         <div class="col-12">
@@ -61,6 +67,9 @@
                                         <div class="col-12">
                                             <input type="password" class="form-control" name="password" id="password"
                                                 placeholder="Mot de passe" required>
+                                                @if ($errors->has('password'))
+                                            <span class="text-danger">{{ $errors->first('password') }}</span>
+                                        @endif
                                         </div>
 
                                         <div class="col-12">

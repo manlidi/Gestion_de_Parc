@@ -26,7 +26,8 @@ class ChauffeurController extends Controller
      */
     public function create()
     {
-        //
+        $structures = Structure::all();
+        return view('chauffeurs.add', compact('structures'));
     }
 
     /**
@@ -37,7 +38,7 @@ class ChauffeurController extends Controller
      */
     public function store(Request $request)
     {
-        /*$chauffeurs = new Chauffeur();
+        $chauffeurs = new Chauffeur();
         $chauffeurs->nom_cva = $request->nom_cva;
         $chauffeurs->prenom_cva = $request->prenom_cva;
         $chauffeurs->tel = $request->tel;
@@ -47,7 +48,7 @@ class ChauffeurController extends Controller
 
         if( $status ) $parametre = ['status'=>true, 'msg'=>'Chauffeur Enrégistré avec succès'];
         else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
-        return redirect()->route('chauffeurs')->with($parametre);*/
+        return redirect()->route('chauffeurs')->with($parametre);
     }
 
     /**

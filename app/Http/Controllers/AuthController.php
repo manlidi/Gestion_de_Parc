@@ -54,20 +54,6 @@ class AuthController extends Controller
      */
     public function store(Request $request)
     {
-        if($request->role == "Chauffeur"){
-            $cva = new Chauffeur;
-            $cva->nom_cva = $request->name;
-            $cva->role = $request->role;
-            $cva->email = $request->email;
-            $cva->password = Hash::make($request->password);
-            $cva->structure_id = $request->structure_id;
-            $status = $cva->save();
-
-            if( $status ) $parametre = ['status'=>true, 'msg'=>'Chauffeur Enrégistré avec succès'];
-            else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
-            return redirect()->route('dashboard')->with($parametre);
-
-        }else if($request->role == "Utilisateur"){
             $user = new User;
             $user->name = $request->name;
             $user->role = $request->role;
@@ -79,7 +65,6 @@ class AuthController extends Controller
             if( $status ) $parametre = ['status'=>true, 'msg'=>'Utilisateur Enrégistré avec succès'];
             else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
             return redirect()->route('dashboard')->with($parametre);
-        }
     }
 
 

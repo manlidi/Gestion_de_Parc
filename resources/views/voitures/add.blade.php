@@ -86,6 +86,21 @@
                                         <span class="text-danger">{{ $errors->first('coutaquisition') }}</span>
                                     @endif
                                 </div>
+                                <div class="col-md-6">
+                                    <select class="form-select" name="structure_id" required>
+                                        <option selected>Sélectionner votre structure</option>
+                                        @if ($structure->count() > 0)
+                                            @foreach ($structure as $us)
+                                                <option value="{{ $us->id }}">{{ $us->nomStructure }}</option>
+                                            @endforeach
+                                        @else
+                                            <option value="">Pas de Structure</option>
+                                        @endif
+                                    </select>
+                                    @if ($errors->has('structure_id'))
+                                        <span class="text-danger">{{ $errors->first('structure_id') }}</span>
+                                    @endif
+                                </div>
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                     <button type="reset" class="btn btn-secondary">Reset</button>

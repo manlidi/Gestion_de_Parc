@@ -15,6 +15,7 @@
                                             <th scope="col">N°</th>
                                             <th scope="col">Marque</th>
                                             <th scope="col">Immatriculation</th>
+                                            <th scope="col">Structure</th>
                                             <th scope="col">Position</th>
                                             <th scope="col">Disponibilité</th>
                                         </tr>
@@ -28,6 +29,7 @@
                                                     <a style="color: red" href="{{ url('addassurance/' . $item->id) }}">Ajouter une assurance</a>
                                                 </td>
                                                 <td>{{ $item->immatriculation }}</td>
+                                                <td>{{ $item->structure->nomStructure ?? '---' }}</td>
                                                 <td><b style="color: green">{{ $item->mouvement }}</b></td>
                                                 <td>
                                                     @if ($item->dispo == 'Disponible')

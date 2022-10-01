@@ -24,4 +24,8 @@ class Structure extends Model
         return $this->hasMany(Chauffeur::class);
     }
 
+    public function voitures(){
+        return $this->hasMany(Voiture::class);
+    }
+
 }
