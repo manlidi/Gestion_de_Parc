@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('demandes', function (Blueprint $table) {
             $table->id();
             $table->string('objetdemande');
-            $table->date('datedeb');
-            $table->date('datefin');
+            $table->date('datedeb')->nullable()->default(NULL);
+            $table->date('datefin')->nullable()->default(NULL);
             $table->integer('affecter_id')->nullable()->default(NULL);
             $table->string('type');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');

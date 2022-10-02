@@ -3,43 +3,41 @@
     <main id="main" class="main">
         <section class="section">
             <div class="row">
-                <div class="col-lg-12">
-                    <a href="{{ url('addchauffeur') }}" class="btn btn-primary">Ajouter un chauffeur</a><br><br>
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            <span class="font-medium">{{ session('msg') }}</span>
-                        </div>
-                    @endif
-                    <br><br>
+                <div class="pb-4"><a href="{{ url('addchauffeur') }}" class="btn btn-primary">Ajouter un chauffeur</a></div>
+                <div class="col-sm-12">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Liste des chauffeurs</h5>
+                            @if (session('status'))
+                                <div class="alert alert-success" role="alert">
+                                    <span class="font-medium">{{ session('msg') }}</span>
+                                </div>
+                            @endif
+                            <hr>
                             <div class="table-responsive">
                                 <table class="table table-responsive datatable">
                                     <thead>
                                         <tr>
                                             <th scope="col">#</th>
-                                            <th scope="col">Nom du chauffeur</th>
-                                            <th scope="col">Prénoms du chauffeur</th>
-                                            <th scope="col">Téléphone du chauffeur</th>
-                                            <th scope="col">Adresse du chauffeur</th>
-                                            <th scope="col">Structure du chauffeur</th>
-                                            <th scope="col">Disponiblité du chauffeur</th>
+                                            <th scope="col">Nom & Prénoms</th>
+                                            <th scope="col">Téléphone</th>
+                                            <th scope="col">Adresse</th>
+                                            <th scope="col">Structure</th>
+                                            <th scope="col">Disponiblité</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @forelse($chauffeurs as $item)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $item->nom_cva }}</td>
-                                                <td>{{ $item->prenom_cva }}</td>
-                                                <td>{{ $item->tel }}</td>
-                                                <td>{{ $item->adresse }}</td>
+                                                <td>{{ $item->name }}</td>
+                                                <td>{{ $item->chauffeur->tel }}</td>
+                                                <td>{{ $item->chauffeur->adresse }}</td>
                                                 <td>{{ $item->structure->nomStructure }}</td>
-                                                <td>@if ($item->disp == "Disponible")
-                                                    <b style="color: blue">{{ $item->disp }}</b>
+                                                <td>@if ($item->chauffeur->disp == "Disponible")
+                                                    <b style="color: blue">{{ $item->chauffeur->disp }}</b>
                                                 @else
-                                                <b style="color: red">{{ $item->disp }}</b>
+                                                <b style="color: red">{{ $item->chauffeur->disp }}</b>
                                                 @endif</td>
                                             </tr>
                                         @empty

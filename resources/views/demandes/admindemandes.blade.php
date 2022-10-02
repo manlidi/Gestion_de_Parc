@@ -75,6 +75,9 @@ use App\Models\Chauffeur;
                                                             <span class="badge bg-danger p-2">En attente de <br>disponibilité</span>
                                                         @endif
                                                     @endif
+                                                    @if($item->type == 'reparation')
+                                                        <span class="badge bg-warning p-1">{{ $item->status }}</span>
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     @if($item->type == 'chauffeur')
@@ -94,6 +97,10 @@ use App\Models\Chauffeur;
                                                             <button class="btn btn-outline-info disabled btn-sm">Valider</button>
                                                             <a class="btn btn-outline-danger btn-sm" href="{{ route('rejeterDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rejeter</a>
                                                         @endif
+                                                    @endif
+                                                    @if($item->type == 'reparation')
+                                                        <a class="btn btn-outline-info btn-sm" href="{{ route('validerDemande', ['id'=>$item->id, 'type' => $item->type]) }}">Valider</a>
+                                                        <a class="btn btn-outline-danger btn-sm" href="{{ route('rejeterDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rejeter</a>
                                                     @endif
                                                 </td>
                                             </tr>

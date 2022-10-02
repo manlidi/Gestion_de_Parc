@@ -13,22 +13,20 @@ class Chauffeur extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nom_cva',
-        'prenom_cva',
+        'user_id',
         'tel',
         'adresse',
-        'structure_id'
     ];
 
     public function structure(){
         return $this->belongsTo(Structure::class);
     }
 
-    public function mission_users(){
-        return $this->hasMany(MissionUser::class);
-    }
-
     public function demandes(){
         return $this->hasMany(Demande::class);
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class);
     }
 }

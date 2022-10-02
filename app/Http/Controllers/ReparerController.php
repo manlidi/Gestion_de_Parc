@@ -19,12 +19,12 @@ class ReparerController extends Controller
     public function index()
     {
         $repare = DB::table('reparers')
-            ->join('pieces', 'pieces.id', '=', 'reparers.piece_id')
             ->join('voitures', 'voitures.id', '=', 'reparers.voiture_id')
             ->join('garages', 'garages.id', '=', 'reparers.garage_id')
-            ->select('reparers.panne', 'reparers.datereparation', 'voitures.marque', 'garages.nomgarage', 'pieces.nompiece')
+            ->join('demandes', 'demandes.id', '=', 'reparers.demande_id')
+            ->where('status', '=', 'Approuvée')
+            ->select('*')
             ->get();
-        //$repare = Reparer::all();
         return view('reparer.all', compact('repare'));
     }
 
@@ -37,8 +37,7 @@ class ReparerController extends Controller
     {
         $garage = Garage::all();
         $voiture = Voiture::all();
-        $piece = Piece::all();
-        return view('reparer.add', compact('garage', 'piece', 'voiture'));
+        return view('reparer.add', compact('garage', 'voiture'));
     }
 
     /**

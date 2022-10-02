@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Chauffeur;
-use Illuminate\Support\Facades\DB;
-use App\Models\MissionUser;
+use App\Models\User;
 use App\Models\Mission;
 use App\Models\Voiture;
+use App\Models\Chauffeur;
+use App\Models\MissionUser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class MissionController extends Controller
 {
@@ -29,7 +31,9 @@ class MissionController extends Controller
      */
     public function create()
     {
-        $voiture = Voiture::all()->where('dispo', '=', 'Disponible');
+        $voiture = Voiture::all()
+            ->where('dispo', '=', 'Disponible')
+            ->where('structure_id','=',User::find(Auth::user()->id)->structure_id);
         return view('missions.add', compact('voiture'));
     }
 
@@ -99,7 +103,7 @@ class MissionController extends Controller
             $voit = Voiture::find($mUser->voiture_id);
             $voit->kilmax -= $request[$voiture];
             $voit->update();
-        } 
+        }
         $mission = Mission::find($id);
         $mission->etat = "Fait";
         $mission->update();
@@ -211,7 +215,7 @@ class MissionController extends Controller
             $mission = Mission::all();
             return view('missions.all', compact('mission'));
         }else{
-            echo 'erreur';
+            return view('missions.all', compact('mission'));
         }
     }
 
@@ -228,7 +232,15 @@ class MissionController extends Controller
     }
 
     public static function getStructureChauffeure($id){
-        $chauffeures = Chauffeur::where('structure_id','=',$id,'AND','disp','=','Disponible')->get()->pluck('id','nom_cva')->toArray();
+        $datas = Chauffeur::all()->where('disp','=','Disponible');
+        $chauffeurUser = array();
+        foreach($datas as $data){
+            $chauffeurUser = array_merge($chauffeurUser, array($data['user_id']));
+        }
+
+        $chauffeures = User::where('structure_id','=',$id)
+            ->whereIn('id',$chauffeurUser)
+            ->get()->pluck('id','name')->toArray();
         return $chauffeures;
     }
 }

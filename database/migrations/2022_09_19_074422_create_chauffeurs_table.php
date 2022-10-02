@@ -15,10 +15,9 @@ return new class extends Migration
     {
         Schema::create('chauffeurs', function (Blueprint $table) {
             $table->id();
-            $table->string('nom_cva');
-            $table->string('prenom_cva');
-            $table->string('tel');
+            $table->string('tel')->unique;
             $table->string('adresse');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('disp')->default('Disponible');
             $table->foreignId('structure_id')->constrained();
             $table->timestamps();

@@ -52,8 +52,10 @@ use App\Models\Chauffeur;
                                                 <td>{{ $item->datedeb ?? '--' }}</td>
                                                 <td>{{ $item->datefin ?? '--' }}</td>
                                                 <td><span class="badge bg-success">{{ $item->status }}</span></td>
-                                                <td>
-                                                    <a class="btn btn-outline-primary btn-sm" href="{{ route('rendreDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rendre</a>
+                                                <td class="text-center">
+                                                    @if( $item->type != 'reparation' )
+                                                        <a class="btn btn-outline-primary btn-sm" href="{{ route('rendreDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rendre</a>
+                                                    @endif
                                                     <a class="btn btn-outline-warning btn-sm" href="{{ route('desapprouverDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Désapprouver</a>
                                                 </td>
                                             </tr>

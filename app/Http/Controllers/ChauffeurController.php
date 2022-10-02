@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\User;
 use App\Models\Chauffeur;
 use App\Models\Structure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ChauffeurController extends Controller
 {
@@ -15,7 +18,7 @@ class ChauffeurController extends Controller
      */
     public function index()
     {
-        $chauffeurs = Chauffeur::all();
+        $chauffeurs = User::all()->where('role','Chauffeur');
         return view('chauffeurs.all', ['chauffeurs' => $chauffeurs]);
     }
 
@@ -26,8 +29,25 @@ class ChauffeurController extends Controller
      */
     public function create()
     {
-        $structures = Structure::all();
-        return view('chauffeurs.add', compact('structures'));
+        $authorStructure = User::find(Auth::user()->id)->structure_id;
+        $datas = Chauffeur::all('user_id')->toArray();
+        $chauffeurUser = array();
+
+        foreach($datas as $data){
+            $chauffeurUser = array_merge($chauffeurUser, array($data['user_id']));
+        }
+        
+        $users = DB::table('users')
+            ->select('*')
+            ->where('structure_id','=',$authorStructure)
+            ->where('role','=','Utilisateur')
+            ->whereNotIn(
+                'id',
+                $chauffeurUser
+            )
+            ->get();
+
+        return view('chauffeurs.add', compact('users'));
     }
 
     /**
@@ -39,12 +59,14 @@ class ChauffeurController extends Controller
     public function store(Request $request)
     {
         $chauffeurs = new Chauffeur();
-        $chauffeurs->nom_cva = $request->nom_cva;
-        $chauffeurs->prenom_cva = $request->prenom_cva;
+        $chauffeurs->user_id = $request->user_id;
         $chauffeurs->tel = $request->tel;
         $chauffeurs->adresse = $request->adresse;
-        $chauffeurs->structure_id = $request->structure_id;
         $status = $chauffeurs->save();
+
+        $user = User::find($request->user_id);
+        $user->role = "Chauffeur";
+        $user->update();
 
         if( $status ) $parametre = ['status'=>true, 'msg'=>'Chauffeur Enrégistré avec succès'];
         else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];

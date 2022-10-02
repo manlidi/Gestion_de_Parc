@@ -14,7 +14,7 @@
                                 <div class="card-body">
 
                                     <div class="pt-4 pb-2">
-                                        <h5 class="card-title text-center pb-0 fs-4">Ajouter une assurance</h5>
+                                        <h5 class="card-title text-center pb-0 fs-4">Ajouter une pièce</h5>
                                     </div>
 
                                     <form class="row g-3 needs-validation" action="{{ url('savepiece') }}" method="post">

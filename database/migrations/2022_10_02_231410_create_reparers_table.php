@@ -16,10 +16,12 @@ return new class extends Migration
         Schema::create('reparers', function (Blueprint $table) {
             $table->id();
             $table->string('panne');
-            $table->date('datereparation');
-            $table->foreignId('garage_id')->constrained();
-            $table->foreignId('voiture_id')->constrained();
-            $table->foreignId('piece_id')->constrained();
+            $table->date('datereparation')->nullable()->default(NULL);
+            $table->foreignId('garage_id')->constrained()->onDelete('cascade');
+            $table->foreignId('voiture_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('demande_id')->constrained()->onDelete('cascade');
+            $table->text('pieces')->default(null);
             $table->timestamps();
         });
     }
@@ -31,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reparers');
+        //
     }
 };

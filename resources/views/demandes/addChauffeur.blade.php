@@ -24,7 +24,7 @@
                                 <select class="form-select" name="chauffeur_id" required>
                                     @if ($chauffeur->count() > 0)
                                         @foreach ($chauffeur as $us)
-                                            <option <?php if( isset( $demande ) ) { if( $demande->affecter_id == $us->id ) echo 'selected'; } ?> value="{{ $us->id }}">{{ $us->nom_cva }} {{ $us->prenom_cva }}
+                                            <option <?php if( isset( $demande ) ) { if( $demande->affecter_id == $us->id ) echo 'selected'; } ?> value="{{ $us->id }}">{{ $us->name }}
                                             </option>
                                         @endforeach
                                     @else

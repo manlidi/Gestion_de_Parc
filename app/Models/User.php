@@ -50,6 +50,10 @@ class User extends Authenticatable
         return $this->belongsTo(Structure::class);
     }
 
+    public function mission_users(){
+        return $this->hasMany(MissionUser::class);
+    }
+
     public function missions(){
         return $this->belongsToMany(Mission::class);
     }
@@ -57,5 +61,13 @@ class User extends Authenticatable
 
     public function demandes(){
         return $this->hasMany(Demande::class);
+    }
+
+    public function chauffeur(){
+        return $this->hasOne(Chauffeur::class);
+    }
+
+    public function reparers(){
+        return $this->hasMany(Reparer::class);
     }
 }

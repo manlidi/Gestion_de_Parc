@@ -12,4 +12,8 @@ class Garage extends Model
     protected $fillable = [
         'nomgarage'
     ];
+
+    public function reparers(){
+        return $this->hasMany(Reparer::class);
+    }
 }

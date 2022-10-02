@@ -30,6 +30,7 @@ Route::get('dashboard', [AuthController::class, 'dashboard'])->name('dashboard')
 Route::get('admin_demandes', [DemandeController::class, 'indexAdmin'])->name('admin_demandes');
 Route::get('adminDemandeApprouve', [DemandeController::class, 'indexAdminApprouve'])->name('adminDemandeApprouve');
 
+Route::get('addReparationDetail/{id}', [DemandeController::class, 'addReparationDetail'])->name('addReparationDetail');
 Route::get('demandeApprouve', [DemandeController::class, 'indexApprouve']);
 Route::get('demanderVoiture', [DemandeController::class, 'createVoiture'])->name('demanderVoiture');
 Route::get('demanderChauffeur', [DemandeController::class, 'createChauffeur'])->name('demanderChauffeur');
@@ -39,7 +40,7 @@ Route::get('rejeterDemande/{id}/{type}', [DemandeController::class, 'rejeterDema
 Route::get('demanderReparation', [DemandeController::class, 'createReparation'])->name('demanderReparation');
 Route::get('validerDemande/{id}/{type}', [DemandeController::class, 'validerDemande'])->name('validerDemande')->whereNumber('id');
 Route::post('saveDemande/{type}', [DemandeController::class, 'store'])->name('saveDemande');
-Route::get('saveDemandeReparation/{id}', [DemandeController::class, 'store'])->name('saveDemandeReparation');
+Route::post('saveDemandeReparation/{id}', [DemandeController::class, 'saveDemandeReparation'])->name('saveDemandeReparation');
 Route::get('updateDemandeVoiture/{id}', [DemandeController::class, 'updateDemandeVoiture'])->name('updateDemandeVoiture');
 Route::get('updateDemandeChauffeur/{id}', [DemandeController::class, 'updateDemandeChauffeur'])->name('updateDemandeChauffeur');
 Route::post('updateDemande/{id}/{type}', [DemandeController::class, 'update'])->name('updateDemande');
@@ -71,10 +72,9 @@ Route::get('missions', [MissionController::class, 'index'])->name('missions');
 Route::get('addmissions', [MissionController::class,'create']);
 Route::post('savemission', [MissionController::class,'store']);
 Route::put('up/{id}', [MissionController::class, 'edit'])->name('up');
-Route::put('del/{id}', [MissionController::class, 'destroy']);
+Route::get('del/{id}', [MissionController::class, 'destroy']);
 
 
-Route::get('rendreVoiture/{id}/{type}/{idMissionUser}', [MissionUserController::class, 'rendreVoiture'])->name(('rendreVoiture'));
 Route::get('det/{id}', [MissionUserController::class, 'index'])->name('det');
 Route::get('rendreAllVoiture/{id}', [MissionUserController::class, 'rendreVoiture'])->name(('rendreAllVoiture'));
 Route::get('addchauf/{id}', [MissionUserController::class, 'create']);

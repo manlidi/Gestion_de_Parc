@@ -207,6 +207,9 @@ use Illuminate\Support\Facades\Auth;
                                                                 <span class="badge bg-danger p-1">Voiture Indisponible</span>
                                                             @endif
                                                         @endif
+                                                        @if($item->type == 'reparation')
+                                                            <span class="badge bg-warning p-1">{{ $item->status }}</span>
+                                                        @endif
                                                     </td>
                                                     <td>
                                                         @if($item->type == 'chauffeur')

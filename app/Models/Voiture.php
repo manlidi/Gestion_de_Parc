@@ -48,4 +48,10 @@ class Voiture extends Model
     public function demandes(){
         return $this->hasMany(Demande::class);
     }
+
+    public function reparers(){
+        return $this->hasMany(Reparer::class);
+    }
+
+    
 }

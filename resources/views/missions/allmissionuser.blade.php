@@ -47,22 +47,19 @@
                                             </th>
                                             <th scope="col">
                                                 Chauffeurs
-                                                @if(! $chauffeurAjouterMission )
-                                                    <button type="button" data-bs-toggle="modal" data-bs-target="#chauffeuremodal<?= $mission->id ?>" class="btn btn-outline-primary btn-sm">Ajouter</button>
+                                                @if( $mission->etat == 'Non fait' )
+                                                    @if(! $chauffeurAjouterMission )
+                                                        <button type="button" data-bs-toggle="modal" data-bs-target="#chauffeuremodal<?= $mission->id ?>" class="btn btn-outline-primary btn-sm">Ajouter</button>
+                                                    @endif
                                                 @endif
                                             </th>
                                             <th scope="col">
-                                                Kilométrage de début
+                                                Km de début
                                                 @if(! $kmDebutAjouterMission )
                                                     <button type="button" data-bs-toggle="modal" data-bs-target="#kmdebmodal<?= $mission->id ?>" class="btn btn-outline-warning btn-sm">Ajouter Km</button>
                                                 @endif
                                             </th>
-                                            <th scope="col">Kilométrage de fin</th>
-                                            @if ($mission->etat == 'Fait')
-                                                <th>
-                                                    Action
-                                                </th>
-                                            @endif
+                                            <th scope="col">Km de fin</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -74,8 +71,8 @@
                                                 </th>
                                                 <td>{{ $affecter->voiture->marque }} ( {{ $affecter->voiture->immatriculation }} )</td>
                                                 <td>
-                                                    @if( ! empty($affecter->chauffeur) )
-                                                        {{ $affecter->chauffeur->nom_cva  }}
+                                                    @if( ! empty($affecter->user) )
+                                                        {{ $affecter->user->name  }}
                                                     @else
                                                         Pas de Chauffeur
                                                     @endif
@@ -94,15 +91,6 @@
                                                         {{ $affecter->kmfin }} km (Non défini)
                                                     @endif
                                                 </td>
-                                                @if ($mission->etat == "Fait")
-                                                <td>
-                                                    @if( $affecter->voiture->dispo == 'Non Disponible')
-                                                        <a href="{{ url('rendreVoiture/' . $mission->id . '/' . $affecter->voiture->id . '/' .$affecter->id) }}"><button type="button" class="btn btn-outline-success btn-sm">Rendre</button></a>
-                                                    @else
-                                                        <button type="button" disabled class="btn btn-success btn-sm">Rendu</button>
-                                                    @endif
-                                                </td>
-                                                @endif
                                             </tr>
                                         <?php $i++; ?>
                                         @endforeach

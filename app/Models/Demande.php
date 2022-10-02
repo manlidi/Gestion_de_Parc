@@ -32,4 +32,8 @@ class Demande extends Model
     public function voiture(){
         return $this->belongsTo(Voiture::class);
     }
+
+    public function reparers(){
+        return $this->hasMany(Reparer::class);
+    }
 }

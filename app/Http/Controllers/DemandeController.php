@@ -7,7 +7,10 @@ use App\Models\Demande;
 use Illuminate\Support\Facades\DB;
 use App\Models\Voiture;
 use App\Models\Chauffeur;
+use App\Models\Garage;
 use App\Models\MissionUser;
+use App\Models\Piece;
+use App\Models\Reparer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -64,17 +67,27 @@ class DemandeController extends Controller
         $voiture = Voiture::all()
             ->where('dispo', '=', 'Disponible')
             ->where('structure_id', '=', $id);
-        $chauffeur = Chauffeur::all()
-            ->where('disp', '=', 'Disponible' )
-            ->where('structure_id', '=', $id);
+        
+        $chauffeur = self::chauffeurDispo();
         return view('demandes.addVoiture', compact('voiture', 'chauffeur'));
+    }
+
+    public function addReparationDetail($id){
+        $voiture = Voiture::find($id);
+        $pieces = Piece::all()->where('voiture_id','=',$id);
+        $garages = Garage::all();
+        return view('demandes.addReparationDetail',compact('voiture','pieces', 'garages'));
     }
 
     public function createReparation()
     {
         $authorId = Auth::user()->id;
-        $id = User::find($authorId)->structure->id;
-        $voiture = MissionUser::all()->where('user_id', $authorId);
+        $voiture = DB::table('mission_users')
+            ->join('voitures','voitures.id','=','mission_users.voiture_id')
+            ->select('mission_users.*','voitures.*')
+            ->where('user_id', '=', $authorId)
+            ->where('mouvement','=','En mission')
+            ->get();
         $voituredemande = DB::table('demandes')
             ->join('voitures', 'voitures.id', '=', 'demandes.affecter_id')
             ->select('voitures.*')
@@ -85,13 +98,21 @@ class DemandeController extends Controller
         return view('demandes.addReparation', compact('voiture', 'voituredemande'));
     }
 
+    public static function chauffeurDispo(){
+        $datas = Chauffeur::all()->where('disp','=','Disponible');
+        $chauffeurUser = array();
+        foreach($datas as $data){
+            $chauffeurUser = array_merge($chauffeurUser, array($data['user_id']));
+        }
+        $chauffeur = User::all()->whereIn('id',$chauffeurUser);
+        return $chauffeur;
+    }
+
     public function createChauffeur()
     {
         $authorId = Auth::id();
         $id = User::find($authorId)->structure->id;
-        $chauffeur = Chauffeur::all()
-            ->where('disp', '=', 'Disponible')
-            ->where('structure_id', '=', $id);
+        $chauffeur = self::chauffeurDispo();
         return view('demandes.addChauffeur', compact('chauffeur'));
     }
 
@@ -134,6 +155,45 @@ class DemandeController extends Controller
         $demande->type = $type;
         $demande->user_id = Auth::user()->id;
         $status = $demande->save();
+        return $status;
+    }
+
+    public function saveDemandeReparation( Request $request, $id ){
+        $voiture = Voiture::find($id);
+        $demande = Demande::create([
+            'objetdemande' => "Réparation (". $voiture->marque ."/". $voiture->immatriculation .")",
+            'affecter_id' => $id,
+            'type' => 'reparation',
+            'user_id' => Auth::user()->id
+        ]);
+
+        $data = [
+            'panne' => $request['panne'],
+            'garage_id' => $request['garage'],
+            'voiture_id' => $id,
+            'user_id' => Auth::user()->id,
+            'demande_id' => $demande->id
+        ];
+
+        if( isset( $request['pieces'] ) ){
+            $data += ['pieces' => serialize( $request['pieces'] )];
+        }
+
+        $status = Reparer::create($data);
+
+        if( $status ) $parametre = ['status'=>true, 'msg'=>'Votre demande de réparation a été envoyer avec succès. Veuillez attendre sa validation !'];
+        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de la demande'];
+        return redirect()->route('dashboard')->with($parametre);
+    }
+
+    public static function isdemanderEnReparation($id){
+        $status = false;
+        $demandes = Demande::all()->where('user_id','=',Auth::user()->id)->where('type','=','reparation');
+        foreach($demandes as $demande){
+            if( $demande->affecter_id == $id ){
+                return true;
+            }
+        }
         return $status;
     }
 
@@ -197,6 +257,13 @@ class DemandeController extends Controller
             $chauffeur->update();
         }
 
+        if( $type == 'reparation' ){
+            $voiture = Voiture::find($demande->affecter_id);
+            $voiture->dispo = "Non Disponible";
+            $voiture->mouvement = "Au garage"; 
+            $voiture->update();
+        }
+
         if( $status ) $parametre = ['status'=>true, 'msg'=>'Demande approuvée avec succès !'];
         else $parametre = ['status'=>false, 'msg'=>'Erreur lors de la validation de la demande'];
         return redirect()->route('admin_demandes')->with($parametre);
@@ -220,9 +287,20 @@ class DemandeController extends Controller
             $chauffeur->update();
         }
 
+        if( $type == 'reparation' ){
+            $voiture = Voiture::find($demande->affecter_id);
+            $voiture->dispo = "Disponible"; 
+            $voiture->mouvement = "Au parc";
+            $voiture->update(); 
+
+            $reparation = Reparer::where('demande_id','=',$id)->first();
+            $reparation->datereparation = now();
+            $reparation->update();
+        }
+
         if( $status ) $parametre = ['status'=>true, 'msg'=>'Voiture ou Chauffeur rendu avec succès'];
         else $parametre = ['status'=>false, 'msg'=>'Erreur lors de la soumission'];
-        return redirect()->route('adminDemandeApprouve')->with($parametre);
+        return redirect()->route('listerreparation')->with($parametre);
     }
 
     public function desapprouverDemande( $id, $type ){

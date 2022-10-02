@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('datedeb');
             $table->date('datefin');
             $table->string('etat')->default('Non fait');
+            $table->boolean('rendre')->default(0);
             $table->timestamps();
         });
     }
