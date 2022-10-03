@@ -56,7 +56,7 @@ class ReparerController extends Controller
         $reparation->datereparation = $request->datereparation;
         $status = $reparation->save();
 
-        if( $status ) $parametre = ['status'=>true, 'msg'=>'Membre affecter à la mission avec succès'];
+        if( $status ) $parametre = ['status'=>true, 'msg'=>'Réparation bien ajoutée'];
         else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
         return redirect()->route('listereparation')->with($parametre);
     }

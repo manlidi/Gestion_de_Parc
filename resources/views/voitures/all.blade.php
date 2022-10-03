@@ -8,10 +8,18 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Liste des voitures</h5>
+                            @if (session('status'))
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <span class="font-medium">{{ session('msg') }}</span>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                </div>
+                            @endif
+                            <hr>
                             <div class="table-responsive">
                                 <table class="table table-responsive datatable">
                                     <thead>
-                                        <tr>
+                                        <tr> 
                                             <th scope="col">N°</th>
                                             <th scope="col">Marque</th>
                                             <th scope="col">Immatriculation</th>
@@ -25,8 +33,11 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>
-                                                    <a href="{{ url('detailsvoiture/' . $item->id) }}"><strong>{{ $item->marque }}</strong></a><br>
-                                                    <a style="color: red" href="{{ url('addassurance/' . $item->id) }}">Ajouter une assurance</a>
+                                                    <a
+                                                        href="{{ url('detailsvoiture/' . $item->id) }}"><strong>{{ $item->marque }}</strong></a><br>
+                                                    <a style="color: red"
+                                                        href="{{ url('addassurance/' . $item->id) }}">Ajouter une
+                                                        assurance</a>
                                                 </td>
                                                 <td>{{ $item->immatriculation }}</td>
                                                 <td>{{ $item->structure->nomStructure ?? '---' }}</td>

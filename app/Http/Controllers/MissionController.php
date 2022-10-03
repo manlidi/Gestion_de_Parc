@@ -53,10 +53,11 @@ class MissionController extends Controller
         ]);
 
         $data = $request->all();
-        $check = $this->show($data);
+        $status = $this->show($data);
 
-        $mission = Mission::all();
-        return view('missions.all', compact('mission'));
+        if( $status ) $parametre = ['status'=>true, 'msg'=>'Mission enregistrée avec succès'];
+        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
+        return redirect()->route('missions')->with($parametre);
     }
 
     /**
@@ -106,10 +107,11 @@ class MissionController extends Controller
         }
         $mission = Mission::find($id);
         $mission->etat = "Fait";
-        $mission->update();
+        $status = $mission->update();
 
-        $mission = Mission::all();
-        return view('missions.all', compact('mission'));
+        if( $status ) $parametre = ['status'=>true, 'msg'=>'Mission modifiée avec succès'];
+        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
+        return redirect()->route('missions')->with($parametre);
     }
 
     public static function missionModal($id, $url, $type=null, $userStructureId=null){
@@ -211,9 +213,10 @@ class MissionController extends Controller
     {
         $mission = Mission::find($id);
         if($mission != null){
-            $mission->delete();
-            $mission = Mission::all();
-            return view('missions.all', compact('mission'));
+            $status = $mission->delete();
+            if( $status ) $parametre = ['status'=>true, 'msg'=>'Mission supprimée avec succès'];
+            else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
+            return redirect()->route('missions')->with($parametre);
         }else{
             return view('missions.all', compact('mission'));
         }

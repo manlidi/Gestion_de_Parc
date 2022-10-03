@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Assurance;
 use App\Models\Voiture;
 use Illuminate\Support\Facades\DB;
+use Session;
 
 class AssuranceController extends Controller
 {
@@ -41,10 +42,11 @@ class AssuranceController extends Controller
         ]);
 
         $data = $request->all();
-        $check = $this->store($data);
+        $status = $this->store($data);
 
-        $assurance = Assurance::all()->where('status','=',true);
-        return view('assurances.all', compact('assurance'));
+        if( $status ) $parametre = ['status'=>true, 'msg'=>'Assurance Enrégistré avec succès'];
+        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
+        return redirect()->route('assurance')->with($parametre);
     }
     /**
      * Store a newly created resource in storage.
@@ -60,7 +62,7 @@ class AssuranceController extends Controller
             'datefinA' => $data['datefinA'],
             'voiture_id' => $data['voiture_id']
         ]);
-        
+
         $assurances = Assurance::all()->where('status','=',true, 'AND', 'voiture_id','=',$data['voiture_id']);
         foreach( $assurances as $assurance ){
             $assur = Assurance::find($assurance->id);
@@ -108,10 +110,11 @@ class AssuranceController extends Controller
         $assurance->datedebA = $request->input('datedebA');
         $assurance->datefinA = $request->input('datefinA');
         $assurance->voiture_id = $request->input('voiture_id');
-        $assurance->update();
+        $status = $assurance->update();
 
-        $assurance = Assurance::all();
-        return view('assurances.all', compact('assurance'));
+        if( $status ) $parametre = ['status'=>true, 'msg'=>'Assurance modifiée avec succès'];
+        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
+        return redirect()->route('assurance')->with($parametre);
     }
 
     /**
@@ -124,11 +127,12 @@ class AssuranceController extends Controller
     {
         $assurance = Assurance::find($id);
         if($assurance != null){
-            $assurance->delete();
-            $assurance = Assurance::all();
-            return view('assurances.all', compact('assurance'));
+            $status = $assurance->delete();
+            if( $status ) $parametre = ['status'=>true, 'msg'=>'Assurance supprimée avec succès'];
+            else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
+            return redirect()->route('assurance')->with($parametre);
         }else{
-            echo 'erreur';
+            return redirect()->route('assurance');
         }
     }
 }

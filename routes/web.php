@@ -47,21 +47,21 @@ Route::post('updateDemande/{id}/{type}', [DemandeController::class, 'update'])->
 
 
 Route::middleware(['auth', 'role:Administrateur'])->group(function () {
-Route::get('structures', [StructureController::class, 'index']);
+Route::get('structures', [StructureController::class, 'index'])->name('structures');
 Route::get('addstructures', [StructureController::class, 'show']);
 Route::post('savestructures', [StructureController::class, 'create']);
 Route::get('editstructures/{id}', [StructureController::class, 'edit']);
 Route::put('upstructures/{id}', [StructureController::class, 'update']);
 Route::get('delstructures/{id}', [StructureController::class, 'destroy']);
 
-Route::get('assurance', [AssuranceController::class,'index']);
+Route::get('assurance', [AssuranceController::class,'index'])->name('assurance');
 Route::get('addassurance/{id}', [AssuranceController::class,'create']);
 Route::post('postA', [AssuranceController::class, 'save']);
 Route::get('editass/{id}', [AssuranceController::class, 'edit']);
 Route::put('updateass/{id}', [AssuranceController::class, 'update']);
 Route::get('deleteass/{id}', [AssuranceController::class, 'destroy']);
 
-Route::get('voitures', [VoitureController::class,'index']);
+Route::get('voitures', [VoitureController::class,'index'])->name('voitures');
 Route::get('addvoitures', [VoitureController::class,'create']);
 Route::post('savevoitures', [VoitureController::class,'store']);
 Route::get('get/piece/{id}',[VoitureController::class,"piece"]);

@@ -8,6 +8,14 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Liste des structures</h5>
+                            @if (session('status'))
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <span class="font-medium">{{ session('msg') }}</span>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                </div>
+                            @endif
+                            <hr>
                             <table class="table table-responsive datatable">
                                 <thead>
                                     <tr>

@@ -55,10 +55,11 @@ class VoitureController extends Controller
         ]);
 
         $data = $request->all();
-        $check = $this->show($data);
+        $status = $this->show($data);
 
-        $voiture = Voiture::all();
-        return view('voitures.all', compact('voiture'));
+        if( $status ) $parametre = ['status'=>true, 'msg'=>'Voiture enregistée avec succès'];
+        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
+        return redirect()->route('voitures')->with($parametre);
     }
 
     /**

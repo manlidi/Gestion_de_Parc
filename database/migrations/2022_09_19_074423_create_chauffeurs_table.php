@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('adresse');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('disp')->default('Disponible');
-            $table->foreignId('structure_id')->constrained();
             $table->timestamps();
         });
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Piece;
 use App\Models\Voiture;
 
@@ -26,7 +27,7 @@ class PieceController extends Controller
      */
     public function create()
     {
-        $voiture = Voiture::all();
+        $voiture = Voiture::all()->where('structure_id', '=', Auth::user()->structure_id);
         return view('pieces.add', compact('voiture'));
     }
 

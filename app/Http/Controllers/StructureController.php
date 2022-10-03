@@ -30,10 +30,11 @@ class StructureController extends Controller
         ]);
 
         $data = $request->all();
-        $check = $this->store($data);
+        $status = $this->store($data);
 
-        $structure = Structure::all();
-        return view('structures.all', compact('structure'));
+        if( $status ) $parametre = ['status'=>true, 'msg'=>'Structure enregistée avec succès'];
+        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
+        return redirect()->route('structures')->with($parametre);
     }
 
     /**
@@ -85,10 +86,11 @@ class StructureController extends Controller
         $structure = Structure::find($id);
         $structure->nomStructure = $request->input('nomStructure');
         $structure->localisation = $request->input('localisation');
-        $structure->update();
+        $status = $structure->update();
 
-        $structure = Structure::all();
-        return view('structures.all', compact('structure'));
+        if( $status ) $parametre = ['status'=>true, 'msg'=>'Structure modifiée avec succès'];
+        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
+        return redirect()->route('structures')->with($parametre);
     }
 
     /**
@@ -101,11 +103,12 @@ class StructureController extends Controller
     {
         $structure = Structure::find($id);
         if($structure != null){
-            $structure->delete();
-            $structure = Structure::all();
-            return view('structures.all', compact('structure'));
+            $status = $structure->delete();
+            if( $status ) $parametre = ['status'=>true, 'msg'=>'Structure supprimée avec succès'];
+            else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
+            return redirect()->route('structures')->with($parametre);
         }else{
-            echo 'erreur';
+            return redirect()->route('structures')->with($parametre);
         }
     }
 }

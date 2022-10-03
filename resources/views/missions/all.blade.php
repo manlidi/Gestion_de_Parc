@@ -9,12 +9,14 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Liste des missions</h5>
-                                @if (session('status'))
-                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                        <span class="font-medium">{{ session('msg') }}</span>
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>
-                                @endif
+                            @if (session('status'))
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <span class="font-medium">{{ session('msg') }}</span>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                </div>
+                            @endif
+                            <hr>
                             <div class="table-responsive">
                                 <table class="table table-responsive datatable">
                                     <thead>
@@ -35,27 +37,33 @@
                                                 </td>
                                                 <td>{{ $item->datedeb }}</td>
                                                 <td>{{ $item->datefin }}</td>
-                                                <td><b class="<?php if( $item->etat == 'Fait' ) echo 'text-success'; else echo 'text-warning'; ?>">{{ $item->etat }}</b></td>
+                                                <td><b class="<?php if ($item->etat == 'Fait') {
+                                                    echo 'text-success';
+                                                } else {
+                                                    echo 'text-warning';
+                                                } ?>">{{ $item->etat }}</b></td>
                                                 <td class="text-center">
                                                     @if ($item->etat == 'Non fait')
                                                         <button class="btn btn-outline-primary btn-sm" type="button"
-                                                            data-bs-toggle="modal" data-bs-target="#modal<?= $item->id ?>">En Cours<br>Fait ?</button>
-                                                            <?= MissionController::missionModal($item->id, route('up',['id'=> $item->id ]))?>
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#modal<?= $item->id ?>">En Cours<br>Fait
+                                                            ?</button>
+                                                        <?= MissionController::missionModal($item->id, route('up', ['id' => $item->id])) ?>
                                                     @else
-                                                        <?php 
+                                                        <?php
                                                             if( MissionUserController::voitureRendu($item->id) ){
                                                                 ?>
-                                                                <a class="btn btn-outline-danger"
-                                                                    onclick="return confirm('Supprimer vraiment?')"
-                                                                    href="{{ url('del/' . $item->id) }}">Supprimer
-                                                                </a>
-                                                                <?php
+                                                        <a class="btn btn-outline-danger"
+                                                            onclick="return confirm('Supprimer vraiment?')"
+                                                            href="{{ url('del/' . $item->id) }}">Supprimer
+                                                        </a>
+                                                        <?php
                                                             }else{
                                                                 ?>
-                                                                <a class="btn btn-outline-warning"
-                                                                    href="{{ url('det/' . $item->id) }}">Rendre Voiture
-                                                                </a>
-                                                                <?php
+                                                        <a class="btn btn-outline-warning"
+                                                            href="{{ url('det/' . $item->id) }}">Rendre Voiture
+                                                        </a>
+                                                        <?php
                                                             }
                                                         ?>
                                                     @endif

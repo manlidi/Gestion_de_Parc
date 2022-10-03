@@ -88,7 +88,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <select class="form-select" name="structure_id" required>
-                                        <option selected>Sélectionner votre structure</option>
+                                        <option selected>Structure auquelle appartient la voiture</option>
                                         @if ($structure->count() > 0)
                                             @foreach ($structure as $us)
                                                 <option value="{{ $us->id }}">{{ $us->nomStructure }}</option>

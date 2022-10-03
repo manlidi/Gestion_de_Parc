@@ -27,6 +27,8 @@ return new class extends Migration
             $table->integer('coutaquisition');
             $table->string('mouvement')->default('Au parc');
             $table->string('dispo')->default('Disponible');
+            $table->date('date_last_visite')->default(NULL);
+            $table->boolean('status_visite')->default(false);
             $table->foreignId('structure_id')->constrained();
             $table->timestamps();
         });

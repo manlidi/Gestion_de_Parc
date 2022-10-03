@@ -91,25 +91,25 @@
         @if (Auth::user() && (Auth::user()->role == 'Utilisateur' || Auth::user()->role == 'Chauffeur'))
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('demandeApprouve') }}">
-                    <i class="bi bi-book"></i>
+                    <i class="bi bi-shield-check"></i>
                     <span>Demandes Approuvées</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('demanderVoiture') }}">
-                    <i class="bi bi-book"></i>
+                    <i class="bi bi-truck"></i>
                     <span>Demander Une Voiture</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('demanderChauffeur') }}">
-                    <i class="bi bi-book"></i>
+                    <i class="bi bi-person"></i>
                     <span>Demander Un Chauffeur</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('demanderReparation') }}">
-                    <i class="bi bi-book"></i>
+                    <i class="bi bi-wrench"></i>
                     <span>Demande De Réparation</span>
                 </a>
             </li>

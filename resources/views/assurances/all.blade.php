@@ -7,6 +7,14 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Liste des assurances</h5>
+                            @if (session('status'))
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <span class="font-medium">{{ session('msg') }}</span>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                </div>
+                            @endif
+                            <hr>
                             <div class="table-responsive">
                                 <table class="table able-responsive datatable">
                                     <thead>
@@ -28,8 +36,10 @@
                                                 <td>{{ $item->datefinA }}</td>
                                                 <td>{{ $item->voiture->marque }}</td>
                                                 <td>
-                                                    <a href="{{ url('editass/'.$item->id) }}" class="btn btn-warning">Modifier</a>
-                                                    <a href="{{ url('deleteass/'.$item->id) }}" class="btn btn-danger">Supprimer</a>
+                                                    <a href="{{ url('editass/' . $item->id) }}"
+                                                        class="btn btn-warning">Modifier</a>
+                                                    <a href="{{ url('deleteass/' . $item->id) }}"
+                                                        class="btn btn-danger">Supprimer</a>
                                                 </td>
                                             </tr>
                                         @empty
