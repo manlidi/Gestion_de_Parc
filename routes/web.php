@@ -108,7 +108,7 @@ Route::middleware(['auth', 'role:Administrateur'])->group(function () {
     Route::get('reparations', [ReparerController::class, 'create']);
     Route::post('createreparation', [ReparerController::class, 'store']);
 
-    // Route::get('notif', [NotificationController::class, 'index']);
+    Route::get('notif', [NotificationController::class, 'index'])->name('notif');
 });
 Route::get('login', [AuthController::class, 'index'])->name('login');
 Route::post('loginusers', [AuthController::class, 'create']);

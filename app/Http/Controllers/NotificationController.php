@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use DateTime;
+use App\Models\Assurance;
 use App\Models\Notification;
+use App\Models\Voiture;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class NotificationController extends Controller
@@ -11,18 +14,33 @@ class NotificationController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $week=date("Y-m-d", strtotime ("+1 week"));
-        $today=date("Y-m-d");
+        $assurences = self::assuranceNotif();
+        return view('notification.all', compact('assurences'));
+    }
 
-        $select = DB::table('voitures')
-            ->join('assurances', 'assurances.voitures_id', '=', 'voitures.id')
-            ->select('*')
-            ->where('datefinA', '>', $today, 'AND', 'datefinA', '<', $week)
-            ->get();
+    public static function assuranceNotif(){
+        $date2 = new DateTime(date('Y-m-d'));
+        $datas = array();
+        $notifs = array();
+        $assurances = Assurance::all()
+            ->where('status','=',true );
+
+        foreach($assurances as $assurance){
+            $date1 = new DateTime($assurance->datefinA);
+            $jourRestant = $date2->diff($date1)->format("%a");
+            if( $jourRestant <= 7 ){
+                $datas += array( $assurance->voiture_id => array($jourRestant, $assurance->datefinA) );
+            }
+        }
+
+        foreach( $datas as $id => $info ){
+            $voiture = Voiture::find($id);
+            $notifs += array($id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'datefinA' => $info[1], 'jourRestant' => $info[0]));
+        }
+        return $notifs;
     }
 
     /**

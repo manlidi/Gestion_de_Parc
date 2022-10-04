@@ -52,23 +52,25 @@ class AssuranceController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(array $data)
     {
+        $assurances = Assurance::all()
+            ->where('status','=',true )
+            ->where('voiture_id','=',$data['voiture_id']);
+            
+        foreach( $assurances as $assurance ){
+            $assur = Assurance::find($assurance->id);
+            $assur->status = false;
+            $assur->update();
+        }
+        
         return Assurance::create([
             'societeAssurance' => $data['societeAssurance'],
             'datedebA' => $data['datedebA'],
             'datefinA' => $data['datefinA'],
             'voiture_id' => $data['voiture_id']
         ]);
-
-        $assurances = Assurance::all()->where('status','=',true, 'AND', 'voiture_id','=',$data['voiture_id']);
-        foreach( $assurances as $assurance ){
-            $assur = Assurance::find($assurance->id);
-            $assur->status = false;
-            $assur->update();
-        }
 
     }
 

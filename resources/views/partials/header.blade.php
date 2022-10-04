@@ -27,7 +27,7 @@
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
                         <li class="dropdown-header">
                             You have 4 new notifications
-                            <a href="{{url('notif')}}"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+                            <a href="{{ route('notif') }}"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
                         </li>
                         <li>
                             <hr class="dropdown-divider">

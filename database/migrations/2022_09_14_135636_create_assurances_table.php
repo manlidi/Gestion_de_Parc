@@ -19,7 +19,6 @@ return new class extends Migration
             $table->date('datedebA');
             $table->date('datefinA');
             $table->boolean('status')->default(true);
-            $table->boolean('notif')->default(false);
             $table->foreignId('voiture_id')->constrained();
             $table->timestamps();
         });
