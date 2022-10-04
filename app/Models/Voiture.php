@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-use App\Models\Assurance;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Piece;
-use App\Models\MissionUser;
+use App\Models\Visite;
 use App\Models\Demande;
+use App\Models\Assurance;
 use App\Models\Structure;
+use App\Models\MissionUser;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Voiture extends Model
 {
@@ -51,6 +52,10 @@ class Voiture extends Model
 
     public function reparers(){
         return $this->hasMany(Reparer::class);
+    }
+
+    public function visites(){
+        return $this->hasMany(Visite::class);
     }
 
     

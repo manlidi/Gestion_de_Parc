@@ -13,6 +13,8 @@ use App\Http\Controllers\PieceController;
 use App\Http\Controllers\ReparerController;
 use App\Http\Controllers\DemandeController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\VisiteController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,7 +26,9 @@ use App\Http\Controllers\NotificationController;
 |
 */
 
-Route::get('/', function () {return view('layout.index');});
+Route::get('/', function () {
+    return view('layout.index');
+});
 Route::get('dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
 
 Route::get('admin_demandes', [DemandeController::class, 'indexAdmin'])->name('admin_demandes');
@@ -47,59 +51,64 @@ Route::post('updateDemande/{id}/{type}', [DemandeController::class, 'update'])->
 
 
 Route::middleware(['auth', 'role:Administrateur'])->group(function () {
-Route::get('structures', [StructureController::class, 'index'])->name('structures');
-Route::get('addstructures', [StructureController::class, 'show']);
-Route::post('savestructures', [StructureController::class, 'create']);
-Route::get('editstructures/{id}', [StructureController::class, 'edit']);
-Route::put('upstructures/{id}', [StructureController::class, 'update']);
-Route::get('delstructures/{id}', [StructureController::class, 'destroy']);
+    Route::get('structures', [StructureController::class, 'index'])->name('structures');
+    Route::get('addstructures', [StructureController::class, 'show']);
+    Route::post('savestructures', [StructureController::class, 'create']);
+    Route::get('editstructures/{id}', [StructureController::class, 'edit']);
+    Route::put('upstructures/{id}', [StructureController::class, 'update']);
+    Route::get('delstructures/{id}', [StructureController::class, 'destroy']);
 
-Route::get('assurance', [AssuranceController::class,'index'])->name('assurance');
-Route::get('addassurance/{id}', [AssuranceController::class,'create']);
-Route::post('postA', [AssuranceController::class, 'save']);
-Route::get('editass/{id}', [AssuranceController::class, 'edit']);
-Route::put('updateass/{id}', [AssuranceController::class, 'update']);
-Route::get('deleteass/{id}', [AssuranceController::class, 'destroy']);
+    Route::get('assurance', [AssuranceController::class, 'index'])->name('assurance');
+    Route::get('addassurance/{id}', [AssuranceController::class, 'create']);
+    Route::post('postA', [AssuranceController::class, 'save']);
+    Route::get('editass/{id}', [AssuranceController::class, 'edit']);
+    Route::put('updateass/{id}', [AssuranceController::class, 'update']);
+    Route::get('deleteass/{id}', [AssuranceController::class, 'destroy']);
 
-Route::get('voitures', [VoitureController::class,'index'])->name('voitures');
-Route::get('addvoitures', [VoitureController::class,'create']);
-Route::post('savevoitures', [VoitureController::class,'store']);
-Route::get('get/piece/{id}',[VoitureController::class,"piece"]);
-Route::get('detailsvoiture/{id}',[VoitureController::class,"details"]);
-Route::put('remisevoiture',[VoitureController::class,"upe"]);
+    Route::get('voitures', [VoitureController::class, 'index'])->name('voitures');
+    Route::get('addvoitures', [VoitureController::class, 'create']);
+    Route::post('savevoitures', [VoitureController::class, 'store']);
+    Route::get('get/piece/{id}', [VoitureController::class, "piece"]);
+    Route::get('detailsvoiture/{id}', [VoitureController::class, "details"]);
+    Route::put('remisevoiture', [VoitureController::class, "upe"]);
 
-Route::get('missions', [MissionController::class, 'index'])->name('missions');
-Route::get('addmissions', [MissionController::class,'create']);
-Route::post('savemission', [MissionController::class,'store']);
-Route::put('up/{id}', [MissionController::class, 'edit'])->name('up');
-Route::get('del/{id}', [MissionController::class, 'destroy']);
-
-
-Route::get('det/{id}', [MissionUserController::class, 'index'])->name('det');
-Route::get('rendreAllVoiture/{id}', [MissionUserController::class, 'rendreVoiture'])->name(('rendreAllVoiture'));
-Route::get('addchauf/{id}', [MissionUserController::class, 'create']);
-Route::put('addKmDebut/{id}', [MissionUserController::class, 'addKmDebut'])->name('addKmDebut');
-Route::put('addChauffeure/{id}', [MissionUserController::class, 'addChauffeure'])->name('addChauffeure');
-Route::post('savechauffeurs/{id}', [MissionUserController::class, 'store']);
+    Route::get('missions', [MissionController::class, 'index'])->name('missions');
+    Route::get('addmissions', [MissionController::class, 'create']);
+    Route::post('savemission', [MissionController::class, 'store']);
+    Route::put('up/{id}', [MissionController::class, 'edit'])->name('up');
+    Route::get('del/{id}', [MissionController::class, 'destroy']);
 
 
-Route::get('chauffeurs', [ChauffeurController::class, 'index'])->name('chauffeurs');
-Route::get('addchauffeur', [ChauffeurController::class, 'create']);
-Route::post('storechauffeurs', [ChauffeurController::class, 'store']);
+    Route::get('det/{id}', [MissionUserController::class, 'index'])->name('det');
+    Route::get('rendreAllVoiture/{id}', [MissionUserController::class, 'rendreVoiture'])->name(('rendreAllVoiture'));
+    Route::get('addchauf/{id}', [MissionUserController::class, 'create']);
+    Route::put('addKmDebut/{id}', [MissionUserController::class, 'addKmDebut'])->name('addKmDebut');
+    Route::put('addChauffeure/{id}', [MissionUserController::class, 'addChauffeure'])->name('addChauffeure');
+    Route::post('savechauffeurs/{id}', [MissionUserController::class, 'store']);
 
-Route::get('garages', [GarageController::class, 'index'])->name('garages');
-Route::get('addgarage', [GarageController::class, 'create']);
-Route::post('savegarage', [GarageController::class, 'store']);
 
-Route::get('pieces', [PieceController::class, 'index'])->name('pieces');
-Route::get('createpiece', [PieceController::class, 'create']);
-Route::post('savepiece', [PieceController::class, 'store']);
+    Route::get('chauffeurs', [ChauffeurController::class, 'index'])->name('chauffeurs');
+    Route::get('addchauffeur', [ChauffeurController::class, 'create']);
+    Route::post('storechauffeurs', [ChauffeurController::class, 'store']);
 
-Route::get('listereparation', [ReparerController::class, 'index'])->name('listereparation');
-Route::get('reparations', [ReparerController::class, 'create']);
-Route::post('createreparation', [ReparerController::class, 'store']);
+    Route::post('terminerVisteAll', [VisiteController::class, 'terminerVisteStore'])->name('terminerVisteAll');
+    Route::post('terminerViste/{id}', [VisiteController::class, 'terminerVisteStore'])->name('terminerViste');
+    Route::get('terminerViste/{id}', [VisiteController::class, 'terminerViste'])->name('terminerViste');
+    Route::post('actionVoiture', [VisiteController::class, 'actionVoiture'])->name('actionVoiture');
 
-// Route::get('notif', [NotificationController::class, 'index']);
+    Route::get('garages', [GarageController::class, 'index'])->name('garages');
+    Route::get('addgarage', [GarageController::class, 'create']);
+    Route::post('savegarage', [GarageController::class, 'store']);
+
+    Route::get('pieces', [PieceController::class, 'index'])->name('pieces');
+    Route::get('createpiece', [PieceController::class, 'create']);
+    Route::post('savepiece', [PieceController::class, 'store']);
+
+    Route::get('listereparation', [ReparerController::class, 'index'])->name('listereparation');
+    Route::get('reparations', [ReparerController::class, 'create']);
+    Route::post('createreparation', [ReparerController::class, 'store']);
+
+    // Route::get('notif', [NotificationController::class, 'index']);
 });
 Route::get('login', [AuthController::class, 'index'])->name('login');
 Route::post('loginusers', [AuthController::class, 'create']);
