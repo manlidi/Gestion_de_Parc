@@ -18,7 +18,8 @@ class NotificationController extends Controller
     public function index()
     {
         $assurences = self::assuranceNotif();
-        return view('notification.all', compact('assurences'));
+        $visites = self::visiteNotif();
+        return view('notification.all', compact('assurences','visites'));
     }
 
     public static function assuranceNotif(){
@@ -41,6 +42,22 @@ class NotificationController extends Controller
             $notifs += array($id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'datefinA' => $info[1], 'jourRestant' => $info[0]));
         }
         return $notifs;
+    }
+
+    public static function visiteNotif(){
+        $date2 = new DateTime(date('Y-m-d'));
+        $datas = array();
+        $voitures = Voiture::all()
+            ->where('status_visite','=',false);
+
+        foreach($voitures as $voiture){
+            $date1 = new DateTime($voiture->date_next_visite);
+            $jourRestant = $date2->diff($date1)->format("%a");
+            if( $jourRestant <= 7 ){
+                $datas += array( $voiture->id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'date_next_visite' => $voiture->date_next_visite, 'jourRestant' => $jourRestant) );
+            }
+        }
+        return $datas;
     }
 
     /**
