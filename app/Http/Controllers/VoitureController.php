@@ -52,6 +52,7 @@ class VoitureController extends Controller
             'connsommation' => 'required',
             'coutaquisition' => 'required',
             'structure_id' => 'required',
+            'date_next_visite' => 'required'
         ]);
 
         $data = $request->all();
@@ -82,6 +83,7 @@ class VoitureController extends Controller
             'connsommation' => $data['connsommation'],
             'coutaquisition' => $data['coutaquisition'],
             'structure_id' => $data['structure_id'],
+            'date_next_visite' => $data['date_next_visite']
         ]);
     }
 

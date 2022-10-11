@@ -28,7 +28,7 @@
                                                     <option value="visiteTechnique">Visite Technique</option>
                                                     <option value="visiteTechniqueAll">Toutes en Visite Technique</option>
                                                     <option value="visiteTechniqueAllTermine">Terminer toutes les visites</option>
-                                                    <option value="delete">Delete</option>
+                                                    <option value="delete">Supprimer</option>
                                                 </select>
                                             </div>
                                             <div class="col-sm-1 m-0 p-0"><button type="submit" class="btn btn-outline-primary">Appliquer</button></div>
@@ -50,7 +50,7 @@
                                                     <td>
                                                         @if( $item->mouvement != 'En visite technique' )
                                                             <input name="voitures[]" value="{{ $item->id }}" type="checkbox">
-                                                        @else  
+                                                        @else
                                                             <input checked type="checkbox">
                                                         @endif
                                                     </td>
@@ -65,14 +65,14 @@
                                                     <td>{{ $item->structure->nomStructure ?? '---' }}</td>
                                                     <td>
                                                         @if ($item->mouvement == 'En visite technique')
-                                                            <b class="text-danger">{{ $item->mouvement }}</b>   
+                                                            <b class="text-danger">{{ $item->mouvement }}</b>
                                                         @else
-                                                            <b class="text-success">{{ $item->mouvement }}</b> 
+                                                            <b class="text-success">{{ $item->mouvement }}</b>
                                                         @endif
                                                     </td>
                                                     <td>
                                                         @if ($item->mouvement == 'En visite technique')
-                                                            <a href="{{ route('terminerViste',['id'=>$item->id]) }}"><button type="button" class="btn btn-outline-primary btn-sm">Visite terminée</button></a>   
+                                                            <a href="{{ route('terminerViste',['id'=>$item->id]) }}"><button type="button" class="btn btn-outline-primary btn-sm">Visite terminée</button></a>
                                                         @else
                                                             @if ($item->dispo == 'Disponible')
                                                                 <b class="text-primary">{{ $item->dispo }}</b>

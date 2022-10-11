@@ -16,7 +16,7 @@
                             @endif
                             <hr>
                             <div class="table-responsive">
-                                <table class="table able-responsive datatable">
+                                <table class="table table-responsive datatable">
                                     <thead>
                                         <tr>
                                             <th scope="col">#</th>

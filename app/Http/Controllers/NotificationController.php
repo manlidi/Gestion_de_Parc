@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use DateTime;
 use App\Models\Assurance;
 use App\Models\Notification;
+use App\Models\Piece;
 use App\Models\Voiture;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +19,9 @@ class NotificationController extends Controller
     public function index()
     {
         $assurences = self::assuranceNotif();
-        return view('notification.all', compact('assurences'));
+        $pieces = self::pieceNotif();
+
+        return view('notification.all', compact('assurences', 'pieces'));
     }
 
     public static function assuranceNotif(){
@@ -39,6 +42,31 @@ class NotificationController extends Controller
         foreach( $datas as $id => $info ){
             $voiture = Voiture::find($id);
             $notifs += array($id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'datefinA' => $info[1], 'jourRestant' => $info[0]));
+        }
+        return $notifs;
+    }
+
+    public static function pieceNotif(){
+        $date2 = new DateTime(date('Y-m-d'));
+        $datas = array();
+        $notifs = array();
+        $pieces = DB::table('pieces')
+            ->join('voitures', 'voitures.id', '=', 'pieces.voiture_id')
+            ->select('*')
+            ->get();
+
+        foreach($pieces as $piece){
+            $date1 = new DateTime($piece->datefin);
+            $jourRestant = $date2->diff($date1)->format("%a");
+            if( $jourRestant <= 7 ){
+                $datas += array( $piece->voiture_id => array($jourRestant, $piece->datefin) );
+                $nom = $piece->nompiece;
+            }
+        }
+
+        foreach( $datas as $id => $info ){
+            $voiture = Voiture::find($id);
+            $notifs += array($id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'nompiece' => $nom, 'datefin' => $info[1], 'jourRestant' => $info[0]));
         }
         return $notifs;
     }

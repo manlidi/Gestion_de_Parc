@@ -101,6 +101,13 @@
                                         <span class="text-danger">{{ $errors->first('structure_id') }}</span>
                                     @endif
                                 </div>
+                                <div class="col-12">
+                                    <label for="">Date de la prochaine visite technique</label>
+                                    <input type="date" name="date_next_visite" id="date_next_visite" class="form-control">
+                                    @if ($errors->has('date_next_visite'))
+                                        <span class="text-danger">{{ $errors->first('date_next_visite') }}</span>
+                                    @endif
+                                </div>
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                     <button type="reset" class="btn btn-secondary">Reset</button>

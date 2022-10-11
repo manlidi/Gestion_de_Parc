@@ -6,7 +6,7 @@
                 <div class="col-lg-12">
                     <div class="card mb-3">
                         <div class="card-body">
-                            <h5 class="card-title">Notifications Assurances Voiture</h5>
+                            <h5 class="card-title">Vos Notifications</h5>
                             @if( count($assurences) > 0 )
                                 @foreach ($assurences as $key => $assurence)
                                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -21,13 +21,24 @@
                                         </div>
                                     </div>
                                 @endforeach
-                            @else 
+                            @else
                                 <div class="alert border-warning alert-dismissible fade show" role="alert">
                                     Pas de notification
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             @endif
-                                
+                            @if( count($pieces) > 0 )
+                                @foreach ($pieces as $key => $piece)
+                                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <i class="bi bi-exclamation-triangle me-1"></i>
+                                                La piece <strong class="text-primary">{{ $piece['nompiece'] }}</strong> de la voiture <strong class="text-primary">{{ $piece['marque'] }}</strong> immatriculé <strong class="text-primary">{{ $piece['immatriculation'] }}</strong> expire dans moins d'une semaine précisement le <strong class="text-primary">{{ $piece['datefin'] }}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @endif
                         </div>
                     </div>
                 </div>
