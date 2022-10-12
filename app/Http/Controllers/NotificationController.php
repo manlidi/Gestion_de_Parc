@@ -20,9 +20,8 @@ class NotificationController extends Controller
     {
         $assurences = self::assuranceNotif();
         $pieces = self::pieceNotif();
-        $visites = self::visiteNotif();
-        return view('notification.all', compact('assurences','visites','pieces'));
 
+        return view('notification.all', compact('assurences', 'pieces'));
     }
 
     public static function assuranceNotif(){
@@ -35,12 +34,8 @@ class NotificationController extends Controller
         foreach($assurances as $assurance){
             $date1 = new DateTime($assurance->datefinA);
             $jourRestant = $date2->diff($date1)->format("%a");
-            if( $date2 < $date1 ){
-                if( $jourRestant <= 7 ){
-                    $datas += array( $assurance->voiture_id => array($jourRestant, $assurance->datefinA) );
-                }
-            }else{
-                $datas += array( $assurance->voiture_id => array(($jourRestant/(-1)), $assurance->datefinA) );
+            if( $jourRestant <= 7 ){
+                $datas += array( $assurance->voiture_id => array($jourRestant, $assurance->datefinA) );
             }
         }
 
@@ -52,52 +47,30 @@ class NotificationController extends Controller
     }
 
     public static function pieceNotif(){
-        $week=date("Y-m-d", strtotime ("+1 week"));
-        $today=date("Y-m-d");
+        $date2 = new DateTime(date('Y-m-d'));
         $datas = array();
         $notifs = array();
-
-        $pieces = Piece::all()->where('datefin', '>', $today, 'AND', 'datefin', '<', $week);
+        $pieces = DB::table('pieces')
+            ->join('voitures', 'voitures.id', '=', 'pieces.voiture_id')
+            ->select('*')
+            ->get();
 
         foreach($pieces as $piece){
-            $datas += array( $piece->voiture_id => array($piece->datefin, $piece->voiture_id) );
-            $nom = $piece->nompiece;
+            $date1 = new DateTime($piece->datefin);
+            $jourRestant = $date2->diff($date1)->format("%a");
+            if( $jourRestant <= 7 ){
+                $datas += array( $piece->voiture_id => array($jourRestant, $piece->datefin) );
+                $nom = $piece->nompiece;
+            }
         }
 
         foreach( $datas as $id => $info ){
             $voiture = Voiture::find($id);
-            $notifs += array($id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'nompiece' => $nom, 'datefin' => $info[0]));
+            $notifs += array($id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'nompiece' => $nom, 'datefin' => $info[1], 'jourRestant' => $info[0]));
         }
-
         return $notifs;
     }
 
-    public static function visiteNotif(){
-        $date2 = new DateTime(date('Y-m-d'));
-        $datas = array();
-        $voitures = Voiture::all()
-            ->where('status_visite','=',false);
-
-        foreach($voitures as $voiture){
-            $date1 = new DateTime($voiture->date_next_visite);
-            $jourRestant = $date2->diff($date1)->format("%a");
-            
-            if( $date2 < $date1 ){
-                if( $jourRestant <= 7 ){
-                    $datas += array( $voiture->id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'date_next_visite' => $voiture->date_next_visite, 'jourRestant' => $jourRestant) );
-                }
-            }else{
-                $datas += array( $voiture->id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'date_next_visite' => $voiture->date_next_visite, 'jourRestant' => ($jourRestant/(-1))) );
-            }
-        }
-        return $datas;
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
