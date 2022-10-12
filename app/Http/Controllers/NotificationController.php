@@ -63,7 +63,6 @@ class NotificationController extends Controller
             $datas += array( $piece->voiture_id => array($piece->datefin, $piece->voiture_id) );
             $nom = $piece->nompiece;
         }
-        dd($datas);
 
         foreach( $datas as $id => $info ){
             $voiture = Voiture::find($id);
