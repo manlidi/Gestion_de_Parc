@@ -52,21 +52,27 @@ class NotificationController extends Controller
     }
 
     public static function pieceNotif(){
-        $week=date("Y-m-d", strtotime ("+1 week"));
-        $today=date("Y-m-d");
+        $date2 = new DateTime(date('Y-m-d'));
         $datas = array();
         $notifs = array();
 
-        $pieces = Piece::all()->where('datefin', '>', $today, 'AND', 'datefin', '<', $week);
+        $pieces = Piece::all();
 
         foreach($pieces as $piece){
-            $datas += array( $piece->voiture_id => array($piece->datefin, $piece->voiture_id) );
-            $nom = $piece->nompiece;
+            $date1 = new DateTime($piece->datefin);
+            $jourRestant = $date2->diff($date1)->format("%a");
+            if( $date2 < $date1 ){
+                if( $jourRestant <= 7 ){
+                    $datas += array( $piece->id => array($jourRestant, $piece->datefin, $piece->nompiece, $piece->voiture_id) );
+                }
+            }else{
+                $datas += array( $piece->id => array(($jourRestant/(-1)), $piece->datefin, $piece->nompiece, $piece->voiture_id) );
+            }
         }
 
         foreach( $datas as $id => $info ){
-            $voiture = Voiture::find($id);
-            $notifs += array($id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'nompiece' => $nom, 'datefin' => $info[0]));
+            $voiture = Voiture::find($info[3]);
+            $notifs += array($id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'datefin' => $info[1], 'jourRestant' => $info[0], 'nompiece' =>$info[2]));
         }
 
         return $notifs;

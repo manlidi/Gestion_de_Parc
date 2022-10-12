@@ -43,7 +43,7 @@
                                                         immatriculé <strong
                                                             class="text-primary">{{ $assurence['immatriculation'] }}</strong>
                                                             @if( $assurence['jourRestant'] < 0 )
-                                                                est expirée depuis {{ ($assurence['jourRestant'] * (-1)) }}
+                                                                est expirée depuis {{ ($assurence['jourRestant'] * (-1)) }} jour
                                                             @else
                                                                 expire dans moins d'une semaine
                                                             @endif
@@ -70,8 +70,6 @@
                                     @else
                                         <div class="alert border-warning alert-dismissible fade show" role="alert">
                                             Pas de notification
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                aria-label="Close"></button>
                                         </div>
                                     @endif
                                 </div>
@@ -114,8 +112,6 @@
                                     @else
                                         <div class="alert border-warning alert-dismissible fade show" role="alert">
                                             Pas de notification
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                aria-label="Close"></button>
                                         </div>
                                     @endif
                                 </div>
@@ -123,47 +119,31 @@
                                     aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
                                     @if (count($pieces) > 0)
                                         @foreach ($pieces as $key => $piece)
-                                            @if ($piece['datefin'] > now())
-                                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                                    <div class="row">
-                                                        <div class="col-sm-12">
-                                                            <i class="bi bi-exclamation-triangle me-1"></i>
-                                                            La piece <strong
-                                                                class="text-primary">{{ $piece['nompiece'] }}</strong>
-                                                            de la
-                                                            voiture <strong
-                                                                class="text-primary">{{ $piece['marque'] }}</strong>
-                                                            immatriculé <strong
-                                                                class="text-primary">{{ $piece['immatriculation'] }}</strong>
-                                                            expire dans moins d'une semaine précisement le <strong
-                                                                class="text-primary">{{ $piece['datefin'] }}</strong>
-                                                        </div>
+                                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <i class="bi bi-exclamation-triangle me-1"></i>
+                                                        La piece <strong
+                                                            class="text-primary">{{ $piece['nompiece'] }}</strong>
+                                                        de la
+                                                        voiture <strong
+                                                            class="text-primary">{{ $piece['marque'] }}</strong>
+                                                        immatriculé <strong
+                                                            class="text-primary">{{ $piece['immatriculation'] }}</strong>
+                                                            @if( $piece['jourRestant'] < 0 )
+                                                                est expirée depuis {{ ($piece['jourRestant'] * (-1)) }} jour
+                                                            @else
+                                                                expire dans moins d'une semaine
+                                                            @endif
+                                                        précisement le <strong
+                                                            class="text-primary">{{ $piece['datefin'] }}</strong>
                                                     </div>
                                                 </div>
-                                            @else
-                                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                    <div class="row">
-                                                        <div class="col-sm-12">
-                                                            <i class="bi bi-exclamation-triangle me-1"></i>
-                                                            La piece <strong
-                                                                class="text-primary">{{ $piece['nompiece'] }}</strong>
-                                                            de la
-                                                            voiture <strong
-                                                                class="text-primary">{{ $piece['marque'] }}</strong>
-                                                            immatriculé <strong
-                                                                class="text-primary">{{ $piece['immatriculation'] }}</strong>
-                                                            a déjà expiré depuis le <strong
-                                                                class="text-primary">{{ $piece['datefin'] }}</strong>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @endif
+                                            </div>
                                         @endforeach
                                     @else
                                         <div class="alert border-warning alert-dismissible fade show" role="alert">
                                             Pas de notification
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                aria-label="Close"></button>
                                         </div>
                                     @endif
                                 </div>
