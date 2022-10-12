@@ -27,6 +27,7 @@ class Voiture extends Model
         'connsommation',
         'coutaquisition',
         'mouvement',
+        'date_next_visite',
         'structure_id'
     ];
 
@@ -58,5 +59,5 @@ class Voiture extends Model
         return $this->hasMany(Visite::class);
     }
 
-    
+
 }

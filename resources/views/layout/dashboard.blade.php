@@ -104,7 +104,6 @@ use Illuminate\Support\Facades\Auth;
                                                     <th scope="col">#</th>
                                                     <th scope="col">Marque</th>
                                                     <th scope="col">Immatriculation</th>
-                                                    <th scope="col">Etat</th>
                                                     <th scope="col">Position</th>
                                                     <th scope="col">Disponibilité</th>
                                                 </tr>
@@ -117,7 +116,6 @@ use Illuminate\Support\Facades\Auth;
                                                                 href="{{ url('detailsvoiture/' . $item->id) }}">{{ $item->marque }}</a>
                                                         </td>
                                                         <td>{{ $item->immatriculation }}</td>
-                                                        <td>{{ $item->etat }}</td>
                                                         <td><b style="color: green">{{ $item->mouvement }}</b></td>
                                                         <td>
                                                             @if ($item->dispo == 'Disponible')
