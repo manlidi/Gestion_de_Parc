@@ -32,8 +32,12 @@ class NotificationController extends Controller
         foreach($assurances as $assurance){
             $date1 = new DateTime($assurance->datefinA);
             $jourRestant = $date2->diff($date1)->format("%a");
-            if( $jourRestant <= 7 ){
-                $datas += array( $assurance->voiture_id => array($jourRestant, $assurance->datefinA) );
+            if( $date2 < $date1 ){
+                if( $jourRestant <= 7 ){
+                    $datas += array( $assurance->voiture_id => array($jourRestant, $assurance->datefinA) );
+                }
+            }else{
+                $datas += array( $assurance->voiture_id => array(($jourRestant/(-1)), $assurance->datefinA) );
             }
         }
 
@@ -53,8 +57,13 @@ class NotificationController extends Controller
         foreach($voitures as $voiture){
             $date1 = new DateTime($voiture->date_next_visite);
             $jourRestant = $date2->diff($date1)->format("%a");
-            if( $jourRestant <= 7 ){
-                $datas += array( $voiture->id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'date_next_visite' => $voiture->date_next_visite, 'jourRestant' => $jourRestant) );
+            
+            if( $date2 < $date1 ){
+                if( $jourRestant <= 7 ){
+                    $datas += array( $voiture->id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'date_next_visite' => $voiture->date_next_visite, 'jourRestant' => $jourRestant) );
+                }
+            }else{
+                $datas += array( $voiture->id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'date_next_visite' => $voiture->date_next_visite, 'jourRestant' => ($jourRestant/(-1))) );
             }
         }
         return $datas;

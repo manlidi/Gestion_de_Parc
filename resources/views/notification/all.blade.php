@@ -37,13 +37,27 @@
                                                             class="text-primary">{{ $assurence['marque'] }}</strong>
                                                         immatriculé <strong
                                                             class="text-primary">{{ $assurence['immatriculation'] }}</strong>
-                                                        expire dans moins d'une semaine précisement le <strong
+                                                            @if( $assurence['jourRestant'] < 0 )
+                                                                est expirée depuis {{ ($assurence['jourRestant'] * (-1)) }}
+                                                            @else
+                                                                expire dans moins d'une semaine
+                                                            @endif
+                                                         précisement le <strong
                                                             class="text-primary">{{ $assurence['datefinA'] }}</strong>
                                                     </div>
                                                     <div class="col-sm-4 text-right">
-                                                        <a href="{{ url('addassurance/' . $key) }}"><button type="button"
-                                                                class="btn btn-outline-primary">{{ $assurence['jourRestant'] }}
-                                                                jour restant <strong>Assurer</strong></button></a>
+                                                        <a href="{{ url('addassurance/' . $key) }}">
+                                                            @if( $assurence['jourRestant'] < 0 )
+                                                                <button type="button"
+                                                                    class="btn btn-outline-danger">{{ $assurence['jourRestant'] }}
+                                                                    jour déjà <strong>Assurer Now</strong></button>
+                                                                </a>
+                                                            @else
+                                                                <button type="button"
+                                                                    class="btn btn-outline-primary">{{ $assurence['jourRestant'] }}
+                                                                    jour restant <strong>Assurer</strong></button>
+                                                                </a>
+                                                            @endif
                                                     </div>
                                                 </div>
                                             </div>
@@ -68,13 +82,26 @@
                                                             class="text-primary">{{ $visite['marque'] }}</strong>
                                                         immatriculé <strong
                                                             class="text-primary">{{ $visite['immatriculation'] }}</strong>
-                                                        est dans moins d'une semaine précisement le <strong
+                                                            @if( $visite['jourRestant'] < 0 )
+                                                                est passée il y a {{ ($visite['jourRestant'] * (-1)) }}
+                                                            @else
+                                                             est dans moins d'une semaine
+                                                            @endif
+                                                             précisement le <strong
                                                             class="text-primary">{{ $visite['date_next_visite'] }}</strong>
                                                     </div>
                                                     <div class="col-sm-4 text-right">
-                                                        <a href="{{ url('voitures') }}"><button type="button"
+                                                        <a href="{{ url('voitures') }}">
+                                                            @if( $visite['jourRestant'] < 0 )
+                                                                <button type="button"
+                                                                class="btn btn-outline-danger">{{ $visite['jourRestant'] }}
+                                                                jour déjà <strong>Aller en Visite Now</strong></button>
+                                                            @else
+                                                                <button type="button"
                                                                 class="btn btn-outline-primary">{{ $visite['jourRestant'] }}
-                                                                jour restant <strong>Aller en Visite</strong></button></a>
+                                                                jour restant <strong>Aller en Visite</strong></button>
+                                                            @endif
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
