@@ -20,8 +20,9 @@ class NotificationController extends Controller
     {
         $assurences = self::assuranceNotif();
         $pieces = self::pieceNotif();
+        $visites = self::visiteNotif();
+        return view('notification.all', compact('assurences','visites','pieces'));
 
-        return view('notification.all', compact('assurences', 'pieces'));
     }
 
     public static function assuranceNotif(){
@@ -47,28 +48,41 @@ class NotificationController extends Controller
     }
 
     public static function pieceNotif(){
-        $date2 = new DateTime(date('Y-m-d'));
+        $week=date("Y-m-d", strtotime ("+1 week"));
+        $today=date("Y-m-d");
         $datas = array();
         $notifs = array();
-        $pieces = DB::table('pieces')
-            ->join('voitures', 'voitures.id', '=', 'pieces.voiture_id')
-            ->select('*')
-            ->get();
+
+        $pieces = Piece::all()->where('datefin', '>', $today, 'AND', 'datefin', '<', $week);
 
         foreach($pieces as $piece){
-            $date1 = new DateTime($piece->datefin);
-            $jourRestant = $date2->diff($date1)->format("%a");
-            if( $jourRestant <= 7 ){
-                $datas += array( $piece->voiture_id => array($jourRestant, $piece->datefin) );
-                $nom = $piece->nompiece;
-            }
+            $datas += array( $piece->voiture_id => array($piece->datefin, $piece->voiture_id) );
+            $nom = $piece->nompiece;
         }
+        dd($datas);
 
         foreach( $datas as $id => $info ){
             $voiture = Voiture::find($id);
-            $notifs += array($id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'nompiece' => $nom, 'datefin' => $info[1], 'jourRestant' => $info[0]));
+            $notifs += array($id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'nompiece' => $nom, 'datefin' => $info[0]));
         }
+
         return $notifs;
+    }
+
+    public static function visiteNotif(){
+        $date2 = new DateTime(date('Y-m-d'));
+        $datas = array();
+        $voitures = Voiture::all()
+            ->where('status_visite','=',false);
+
+        foreach($voitures as $voiture){
+            $date1 = new DateTime($voiture->date_next_visite);
+            $jourRestant = $date2->diff($date1)->format("%a");
+            if( $jourRestant <= 7 ){
+                $datas += array( $voiture->id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'date_next_visite' => $voiture->date_next_visite, 'jourRestant' => $jourRestant) );
+            }
+        }
+        return $datas;
     }
 
     /**
