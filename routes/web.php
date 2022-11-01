@@ -91,8 +91,6 @@ Route::middleware(['auth', 'role:Administrateur'])->group(function () {
     Route::get('addchauffeur', [ChauffeurController::class, 'create']);
     Route::post('storechauffeurs', [ChauffeurController::class, 'store']);
 
-    Route::post('terminerVisteAll', [VisiteController::class, 'terminerVisteStore'])->name('terminerVisteAll');
-    Route::post('terminerViste/{id}', [VisiteController::class, 'terminerVisteStore'])->name('terminerViste');
     Route::get('terminerViste/{id}', [VisiteController::class, 'terminerViste'])->name('terminerViste');
     Route::post('actionVoiture', [VisiteController::class, 'actionVoiture'])->name('actionVoiture');
 

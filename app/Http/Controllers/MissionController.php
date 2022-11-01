@@ -102,7 +102,8 @@ class MissionController extends Controller
             $mUser->update();
 
             $voit = Voiture::find($mUser->voiture_id);
-            $voit->kilmax += $request[$voiture];
+            $voit->kmvidange += $request[$voiture];
+            $voit->kilmax -= $request[$voiture];
             $voit->update();
         }
         $mission = Mission::find($id);

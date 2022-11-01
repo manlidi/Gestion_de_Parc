@@ -74,88 +74,10 @@ class NotificationController extends Controller
     }
 
     public static function visiteNotif(){
-        $date2 = new DateTime(date('Y-m-d'));
-        $datas = array();
         $voitures = Voiture::all()
-            ->where('status_visite','=',false);
+            ->where('status_visite','=',false)
+            ->where('kmvidange', '>=', 1000);
 
-        foreach($voitures as $voiture){
-            $date1 = new DateTime($voiture->date_next_visite);
-            $jourRestant = $date2->diff($date1)->format("%a");
-
-            if( $date2 < $date1 ){
-                if( $jourRestant <= 7 ){
-                    $datas += array( $voiture->id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'date_next_visite' => $voiture->date_next_visite, 'jourRestant' => $jourRestant) );
-                }
-            }else{
-                $datas += array( $voiture->id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'date_next_visite' => $voiture->date_next_visite, 'jourRestant' => ($jourRestant/(-1))) );
-            }
-        }
-        return $datas;
-    }
-
-    public function vidangeNotif(){
-        $voitures = Voiture::all()->where('kilmax', '>', 900)->where('kilmax', '<=', 1000);
-    }
-
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return $voitures;
     }
 }
