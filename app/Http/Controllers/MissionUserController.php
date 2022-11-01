@@ -20,7 +20,7 @@ class MissionUserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index($id)
-    {
+    {           
         $chauffeurAjouterMission = MissionUserController::chauffeurAjouterMission($id);
         $kmDebutAjouterMission = MissionUserController::kmDebutAjouterMission($id);
         $voitureRendu = MissionUserController::voitureRendu($id);

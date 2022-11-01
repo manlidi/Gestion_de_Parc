@@ -23,7 +23,6 @@ class Voiture extends Model
         'dureeVie',
         'numchassis',
         'etat',
-        'kilmax',
         'connsommation',
         'coutaquisition',
         'mouvement',

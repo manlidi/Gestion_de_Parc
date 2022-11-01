@@ -66,13 +66,6 @@
                                     @endif
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="text" name="kilmax" id="kilmax" class="form-control"
-                                        placeholder="Kilomètre maximal à atteindre">
-                                        @if ($errors->has('kilmax'))
-                                        <span class="text-danger">{{ $errors->first('kilmax') }}</span>
-                                    @endif
-                                </div>
-                                <div class="col-12">
                                     <input type="number" min="1" name="connsommation" id="connsommation"
                                         class="form-control" placeholder="Consommation en litre de la voiture">
                                     @if ($errors->has('connsommation'))

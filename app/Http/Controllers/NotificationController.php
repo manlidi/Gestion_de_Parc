@@ -20,8 +20,9 @@ class NotificationController extends Controller
     {
         $assurences = self::assuranceNotif();
         $pieces = self::pieceNotif();
+        $visites = self::visiteNotif();
 
-        return view('notification.all', compact('assurences', 'pieces'));
+        return view('notification.all', compact('assurences', 'pieces', 'visites'));
     }
 
     public static function assuranceNotif(){
@@ -50,25 +51,51 @@ class NotificationController extends Controller
         $date2 = new DateTime(date('Y-m-d'));
         $datas = array();
         $notifs = array();
-        $pieces = DB::table('pieces')
-            ->join('voitures', 'voitures.id', '=', 'pieces.voiture_id')
-            ->select('*')
-            ->get();
+
+        $pieces = Piece::all();
 
         foreach($pieces as $piece){
             $date1 = new DateTime($piece->datefin);
             $jourRestant = $date2->diff($date1)->format("%a");
-            if( $jourRestant <= 7 ){
-                $datas += array( $piece->voiture_id => array($jourRestant, $piece->datefin) );
-                $nom = $piece->nompiece;
+            if( $date2 < $date1 ){
+                if( $jourRestant <= 7 ){
+                    $datas += array( $piece->id => array($jourRestant, $piece->datefin, $piece->nompiece, $piece->voiture_id) );
+                }
+            }else{
+                $datas += array( $piece->id => array(($jourRestant/(-1)), $piece->datefin, $piece->nompiece, $piece->voiture_id) );
             }
         }
 
         foreach( $datas as $id => $info ){
-            $voiture = Voiture::find($id);
-            $notifs += array($id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'nompiece' => $nom, 'datefin' => $info[1], 'jourRestant' => $info[0]));
+            $voiture = Voiture::find($info[3]);
+            $notifs += array($id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'datefin' => $info[1], 'jourRestant' => $info[0], 'nompiece' =>$info[2]));
         }
         return $notifs;
+    }
+
+    public static function visiteNotif(){
+        $date2 = new DateTime(date('Y-m-d'));
+        $datas = array();
+        $voitures = Voiture::all()
+            ->where('status_visite','=',false);
+
+        foreach($voitures as $voiture){
+            $date1 = new DateTime($voiture->date_next_visite);
+            $jourRestant = $date2->diff($date1)->format("%a");
+
+            if( $date2 < $date1 ){
+                if( $jourRestant <= 7 ){
+                    $datas += array( $voiture->id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'date_next_visite' => $voiture->date_next_visite, 'jourRestant' => $jourRestant) );
+                }
+            }else{
+                $datas += array( $voiture->id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'date_next_visite' => $voiture->date_next_visite, 'jourRestant' => ($jourRestant/(-1))) );
+            }
+        }
+        return $datas;
+    }
+
+    public function vidangeNotif(){
+        $voitures = Voiture::all()->where('kilmax', '>', 900)->where('kilmax', '<=', 1000);
     }
 
     public function create()

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('dureeVie');
             $table->integer('numchassis');
             $table->string('etat');
-            $table->integer('kilmax');
+            $table->integer('kilmax')->default(0);
             $table->string('connsommation');
             $table->integer('coutaquisition');
             $table->string('mouvement')->default('Au parc');

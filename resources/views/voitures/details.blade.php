@@ -20,7 +20,7 @@
                                                 <th scope="col">Date Début service</th>
                                                 <th scope="col">Durée de vie</th>
                                                 <th scope="col">Numéro chassis</th>
-                                                <th scope="col">Kilomètre maximal</th>
+                                                <th scope="col">Kilomètre parcouru</th>
                                                 <th scope="col">Consommation en litre</th>
                                                 <th scope="col">Cout d'acquisition</th>
                                             </tr>
