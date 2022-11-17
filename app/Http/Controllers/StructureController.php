@@ -108,7 +108,8 @@ class StructureController extends Controller
             else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
             return redirect()->route('structures')->with($parametre);
         }else{
-            return redirect()->route('structures')->with(['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement']);
+            $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
+            return redirect()->route('structures')->with($parametre);
         }
     }
 }

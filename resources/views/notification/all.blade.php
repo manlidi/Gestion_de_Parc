@@ -87,29 +87,17 @@
                                                 <div class="row">
                                                     <div class="col-sm-8">
                                                         <i class="bi bi-exclamation-triangle me-1"></i>
-                                                        La prochaine vitsite technique de la voiture <strong
+                                                       La voiture <strong
                                                             class="text-primary">{{ $visite['marque'] }}</strong>
-                                                        immatriculé <strong
-                                                            class="text-primary">{{ $visite['immatriculation'] }}</strong>
-                                                            @if( $visite['jourRestant'] < 0 )
-                                                                est passée il y a {{ ($visite['jourRestant'] * (-1)) }}
-                                                            @else
-                                                             est dans moins d'une semaine
-                                                            @endif
-                                                             précisement le <strong
-                                                            class="text-primary">{{ $visite['date_next_visite'] }}</strong>
+                                                        immatriculé <strong class="text-primary">{{ $visite['immatriculation'] }}</strong>
+                                                        doit aller en visite technique car son kilomettrage a atteint 
+                                                             <strong
+                                                            class="text-primary">{{ $visite['kmvidange'] }}</strong> depuis la dernière visite technique.
                                                     </div>
                                                     <div class="col-sm-4 text-right">
                                                         <a href="{{ url('voitures') }}">
-                                                            @if( $visite['jourRestant'] < 0 )
-                                                                <button type="button"
-                                                                class="btn btn-outline-danger">{{ $visite['jourRestant'] }}
-                                                                jour déjà <strong>Aller en Visite Now</strong></button>
-                                                            @else
-                                                                <button type="button"
-                                                                class="btn btn-outline-primary">{{ $visite['jourRestant'] }}
-                                                                jour restant <strong>Aller en Visite</strong></button>
-                                                            @endif
+                                                            <button type="button"
+                                                            class="btn btn-outline-primary"><strong>Aller en Visite Now</strong></button>
                                                         </a>
                                                     </div>
                                                 </div>

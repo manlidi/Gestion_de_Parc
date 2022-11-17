@@ -18,7 +18,6 @@ return new class extends Migration
             $table->date('datevisite')->nullable();
             $table->integer('kmvidange')->nullable();
             $table->foreignId('voiture_id')->constrained()->onDelete('cascade');
-            $table->boolean('status')->default(False);
             $table->timestamps();
         });
     }
