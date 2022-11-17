@@ -21,8 +21,9 @@ class NotificationController extends Controller
         $assurences = self::assuranceNotif();
         $pieces = self::pieceNotif();
         $visites = self::visiteNotif();
+        $vidanges = self::vidangeNotif();
 
-        return view('notification.all', compact('assurences', 'pieces', 'visites'));
+        return view('notification.all', compact('assurences', 'pieces', 'visites', 'vidanges'));
     }
 
     public static function assuranceNotif(){
@@ -95,67 +96,9 @@ class NotificationController extends Controller
     }
 
     public function vidangeNotif(){
-        $voitures = Voiture::all()->where('kilmax', '>', 900)->where('kilmax', '<=', 1000);
-    }
-
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        $voitures = Voiture::all()
+            ->where('status_vidange','=',false)
+            ->where('kmvidange', '>=', 1000);
+        return $voitures;
     }
 }

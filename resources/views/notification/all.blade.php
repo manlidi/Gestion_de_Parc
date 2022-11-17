@@ -28,6 +28,12 @@
                                         Notifications Piece Véhicule <span
                                             class="badge bg-secondary text-light">{{ count($pieces) }}</span>
                                     </button>
+                                    <button type="button" id="flush-headingFoor" data-bs-toggle="collapse"
+                                        data-bs-target="#flush-collapseFoor" aria-expanded="false"
+                                        aria-controls="flush-collapseFoor" class="btn btn-outline-primary collapsed mb-2">
+                                        Notifications Vidange <span
+                                            class="badge bg-secondary text-light">{{ count($vidanges) }}</span>
+                                    </button>
                                 </h5>
                                 <hr>
                                 <div id="flush-collapseOne" class="accordion-collapse collapse"
@@ -137,6 +143,30 @@
                                                             @endif
                                                         précisement le <strong
                                                             class="text-primary">{{ $piece['datefin'] }}</strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <div class="alert border-warning alert-dismissible fade show" role="alert">
+                                            Pas de notification
+                                        </div>
+                                    @endif
+                                </div>
+                                <div id="flush-collapseFoor" class="accordion-collapse collapse"
+                                    aria-labelledby="flush-headingFoor" data-bs-parent="#accordionFlushExample">
+                                    @if (count($vidanges) > 0)
+                                        @foreach ($vidanges as $key => $vidange)
+                                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <i class="bi bi-exclamation-triangle me-1"></i>
+                                                        La voiture <strong
+                                                        class="text-primary">{{ $vidange['marque'] }}</strong>
+                                                        immatriculé <strong class="text-primary">{{ $vidange['immatriculation'] }}</strong>
+                                                        doit aller en vidange car son kilomettrage a atteint 
+                                                             <strong
+                                                            class="text-primary">{{ $vidange['kmvidange'] }}</strong> depuis le dernier vidange.
                                                     </div>
                                                 </div>
                                             </div>

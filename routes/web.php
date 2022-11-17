@@ -94,6 +94,7 @@ Route::middleware(['auth', 'role:Administrateur'])->group(function () {
     Route::post('terminerVisteAll', [VisiteController::class, 'terminerVisteStore'])->name('terminerVisteAll');
     Route::post('terminerViste/{id}', [VisiteController::class, 'terminerVisteStore'])->name('terminerViste');
     Route::get('terminerViste/{id}', [VisiteController::class, 'terminerViste'])->name('terminerViste');
+    Route::get('terminerVidange/{id}', [VisiteController::class, 'terminerVidange'])->name('terminerVidange');
     Route::post('actionVoiture', [VisiteController::class, 'actionVoiture'])->name('actionVoiture');
 
     Route::get('garages', [GarageController::class, 'index'])->name('garages');

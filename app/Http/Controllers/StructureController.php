@@ -33,7 +33,7 @@ class StructureController extends Controller
         $status = $this->store($data);
 
         if( $status ) $parametre = ['status'=>true, 'msg'=>'Structure enregistée avec succès'];
-        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
+        else $parametre = ['status'=>true, 'msg'=>'Erreur lors de l\'enregistrement'];
         return redirect()->route('structures')->with($parametre);
     }
 
@@ -108,7 +108,7 @@ class StructureController extends Controller
             else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
             return redirect()->route('structures')->with($parametre);
         }else{
-            return redirect()->route('structures')->with($parametre);
+            return redirect()->route('structures')->with(['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement']);
         }
     }
 }

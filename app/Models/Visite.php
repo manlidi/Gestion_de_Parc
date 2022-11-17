@@ -12,6 +12,7 @@ class Visite extends Model
 
     protected $fillable = [
         'datevisite',
+        'kmvidange',
         'voiture_id',
         'status'
     ];
