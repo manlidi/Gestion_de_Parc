@@ -48,7 +48,7 @@ class VisiteController extends Controller
         }else{
             if ($request['actionVoiture'] == 'visiteTechniqueAllTermine') {
                 $voitures = Voiture::all()->where('mouvement', '=', 'En visite technique');
-        
+                
                 if( count($voitures) > 0 ){
                     $type = 'all';
                     return view('visite.valideVisite', compact('voitures', 'type'));
