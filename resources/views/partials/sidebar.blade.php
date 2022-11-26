@@ -13,8 +13,10 @@
         @endif
         @if (Auth::user() && Auth::user()->role == 'Administrateur')
             <li class="nav-item">
-
-                <ul>
+                <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-file-plus"></i><span>Ajout</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     <li class="nav-item">
                         <a class="nav-link collapsed" href="{{ url('structures') }}">
                             <i class="bi bi-circle"></i>
@@ -49,24 +51,24 @@
                             <span>Chauffeurs</span>
                         </a>
                     </li>
+
+                    <li>
+                        <a href="{{ url('garages') }}">
+                            <i class="bi bi-circle"></i><span>Garages</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('pieces') }}">
+                            <i class="bi bi-circle"></i><span>Pieces</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
-
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-wrench"></i><span>Réparation</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="{{ url('garages') }}">
-                            <i class="bi bi-circle"></i><span>Ajouter un garage</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ url('pieces') }}">
-                            <i class="bi bi-circle"></i><span>Ajouter une piece</span>
-                        </a>
-                    </li>
                     <li>
                         <a href="{{ url('listereparation') }}">
                             <i class="bi bi-circle"></i><span>Liste des reparations</span>
@@ -78,19 +80,19 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('admin_demandes') }}">
                     <i class="bi bi-eye"></i>
-                    <span>Voir les demandes</span>
+                    <span>Demandes non approuvées des utilisateurs</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('adminDemandeApprouve') }}">
-                    <i class="bi bi-eye"></i>
-                    <span>Demandes Approuvées</span>
+                    <i class="bi bi-patch-check"></i>
+                    <span>Demandes Approuvées des utilisateurs</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('register') }}">
                     <i class="bi bi-card-list"></i>
-                    <span>Register</span>
+                    <span>Enregistrement d'utilisateurs</span>
                 </a>
             </li>
 
@@ -99,19 +101,19 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('demandeApprouve') }}">
                     <i class="bi bi-shield-check"></i>
-                    <span>Demandes Approuvées</span>
+                    <span>Vos demandes Approuvées</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('demanderVoiture') }}">
                     <i class="bi bi-truck"></i>
-                    <span>Demander Une Voiture</span>
+                    <span>Demande de Voiture</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('demanderChauffeur') }}">
                     <i class="bi bi-person"></i>
-                    <span>Demander Un Chauffeur</span>
+                    <span>Demande de Chauffeur</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -125,7 +127,7 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('login') }}">
                     <i class="bi bi-box-arrow-in-right"></i>
-                    <span>Login</span>
+                    <span>Connexion</span>
                 </a>
             </li>
         @endif
