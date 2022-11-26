@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('nompiece');
             $table->date('datefin');
-            $table->foreignId('voiture_id')->constrained();
             $table->timestamps();
         });
     }

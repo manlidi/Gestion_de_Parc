@@ -43,10 +43,6 @@ class Voiture extends Model
         return $this->hasMany(Assurance::class);
     }
 
-    public function pieces(){
-        return $this->hasMany(Piece::class);
-    }
-
     public function mission_users(){
         return $this->hasMany(MissionUser::class);
     }

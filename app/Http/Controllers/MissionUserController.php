@@ -32,7 +32,7 @@ class MissionUserController extends Controller
         return view('missions.allmissionuser', compact('mission', 'userStructureId', 'chauffeurAjouterMission', 'kmDebutAjouterMission', 'voitureRendu'));
     }
 
-    public function rendreVoiture($id)
+    public static function rendreVoiture($id)
     {
         $missions = Mission::find($id)->mission_users;
         $status = true;
@@ -51,18 +51,13 @@ class MissionUserController extends Controller
                 $chauffeur->disp = "Disponible";
                 $chauffeur->update();
             }
-            if (!$status) {
-                $parametre = ['status' => true, 'msg' => 'Erreur lors de la soumission'];
-                return redirect()->route('det', ['id' => $id])->with($parametre);
-            }
         }
 
         $mission = Mission::find($id);
         $mission->rendre = true;
         $mission->update();
 
-        $parametre = ['status' => true, 'msg' => 'Les voitures ont été rendue avec succès'];
-        return redirect()->route('missions')->with($parametre);
+        return true;
     }
 
     public function addKmDebut(Request $request, $id)

@@ -12,11 +12,8 @@ class Piece extends Model
 
     protected $fillable = [
         'nompiece',
-        'datefin',
-        'voiture_id'
+        'datefin'
     ];
 
-    public function voiture(){
-        return $this->belongsTo(Voiture::class);
-    }
+    
 }

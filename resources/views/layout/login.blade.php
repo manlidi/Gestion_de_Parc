@@ -7,7 +7,7 @@
             <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
                 <div class="container">
                     <div class="row justify-content-center">
-                        <div class="col-lg-5 col-md-6 d-flex flex-column align-items-center justify-content-center">
+                        <div class="d-flex flex-column align-items-center justify-content-center">
 
                             <div class="card mb-3">
 
@@ -19,9 +19,10 @@
                                                 aria-label="Close"></button>
                                         </div>
                                     @endif
-                                    <div class="pt-4 pb-2">
-                                        <h5 class="card-title text-center pb-0 fs-4">Connexion</h5>
-                                    </div>
+                                    <div>
+                                        <h3 class="p-0 m-0"><img src="{{ asset('logo/i.png') }}" style="width: 170px;" alt="Esgis_logo"></h3>
+                                        <h5 class="card-title p-0 m-0  fs-4">Connexion</h5>
+                                    </div><hr>
                                     @if (\Session::has('message'))
                                         <div class="alert alert-info">{{ \Session::get('message') }}</div>
                                     @endif

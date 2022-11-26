@@ -74,7 +74,7 @@ class DemandeController extends Controller
 
     public function addReparationDetail($id){
         $voiture = Voiture::find($id);
-        $pieces = Piece::all()->where('voiture_id','=',$id);
+        $pieces = Piece::all();
         $garages = Garage::all();
         return view('demandes.addReparationDetail',compact('voiture','pieces', 'garages'));
     }
@@ -303,7 +303,7 @@ class DemandeController extends Controller
 
         if( $status ) $parametre = ['status'=>true, 'msg'=>'Voiture ou Chauffeur rendu avec succès'];
         else $parametre = ['status'=>false, 'msg'=>'Erreur lors de la soumission'];
-        return redirect()->route('listerreparation')->with($parametre);
+        return redirect()->route('listereparation')->with($parametre);
     }
 
     public function desapprouverDemande( $id, $type ){

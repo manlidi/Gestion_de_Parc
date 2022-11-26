@@ -44,11 +44,7 @@
                                                 } ?>">{{ $item->etat }}</b></td>
                                                 <td class="text-center">
                                                     @if ($item->etat == 'Non fait')
-                                                        <button class="btn btn-outline-primary btn-sm" type="button"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#modal<?= $item->id ?>">En Cours<br>Fait
-                                                            ?</button>
-                                                        <?= MissionController::missionModal($item->id, route('up', ['id' => $item->id])) ?>
+                                                        <button class="btn btn-success btn-sm" disabled>En cours</button>
                                                     @else
                                                         <?php
                                                             if( MissionUserController::voitureRendu($item->id) ){
@@ -60,9 +56,12 @@
                                                         <?php
                                                             }else{
                                                                 ?>
-                                                        <a class="btn btn-outline-warning"
-                                                            href="{{ url('det/' . $item->id) }}">Rendre Voiture
-                                                        </a>
+                                                                <button class="btn btn-primary btn-sm" type="button"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#modal<?= $item->id ?>">Rendre les voitures
+                                                                </button>
+                                                            <?= MissionController::missionModal($item->id, route('up', ['id' => $item->id])) ?>
+
                                                         <?php
                                                             }
                                                         ?>

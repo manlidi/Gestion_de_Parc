@@ -52,7 +52,6 @@ Route::get('updateDemandeVoiture/{id}', [DemandeController::class, 'updateDemand
 Route::get('updateDemandeChauffeur/{id}', [DemandeController::class, 'updateDemandeChauffeur'])->name('updateDemandeChauffeur');
 Route::post('updateDemande/{id}/{type}', [DemandeController::class, 'update'])->name('updateDemande');
 
-
 Route::middleware(['auth', 'role:Administrateur'])->group(function () {
     Route::get('structures', [StructureController::class, 'index'])->name('structures');
     Route::get('addstructures', [StructureController::class, 'show'])->name('addstructures');
@@ -113,11 +112,13 @@ Route::middleware(['auth', 'role:Administrateur'])->group(function () {
     Route::post('createreparation', [ReparerController::class, 'store']);
 
     Route::get('notif', [NotificationController::class, 'index'])->name('notif');
+
+    Route::get('register', [AuthController::class, 'show'])->name('registerUser');
+    Route::post('registerusers', [AuthController::class, 'store']);
 });
+
+Route::get('updatePass/{id}', [AuthController::class, 'updatePass'])->name('updatePass');
 Route::get('login', [AuthController::class, 'index'])->name('login');
-Route::get('validation', [AuthController::class, 'validation'])->name('validation');
+Route::get('validationCompte/{email}/{token}', [AuthController::class, 'validation'])->name('validation');
 Route::post('loginusers', [AuthController::class, 'create']);
-Route::get('register', [AuthController::class, 'show']);
-Route::post('registerusers', [AuthController::class, 'store']);
-Route::post('savepassword', [AuthController::class, 'savepassword']);
 Route::get('signout', [AuthController::class, 'destroy']);

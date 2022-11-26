@@ -7,6 +7,7 @@ use App\Models\Mission;
 use App\Models\Voiture;
 use App\Models\Chauffeur;
 use App\Models\MissionUser;
+use App\Models\Piece;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +21,7 @@ class MissionController extends Controller
      */
     public function index()
     {
+        self::finishMission();
         $mission = Mission::all();
         return view('missions.all', compact('mission'));
     }
@@ -49,10 +51,12 @@ class MissionController extends Controller
             'objetmission' => 'required',
             'datedeb' => 'required',
             'datefin' => 'required',
+            'voitures' => 'required',
             'datefin'    =>  'required|date|after:datedeb'
         ]);
 
         $data = $request->all();
+
         $status = $this->show($data);
 
         if( $status ) $parametre = ['status'=>true, 'msg'=>'Mission enregistrée avec succès'];
@@ -87,6 +91,19 @@ class MissionController extends Controller
         }
     }
 
+    public static function finishMission(){
+        $missions = Mission::all()->where('etat','=','Non fait');
+        if( count( $missions ) > 0 ){
+            foreach( $missions as $mission ){
+                if( $mission->datefin < (date('Y-m-d')) ){
+                    $m = Mission::find( $mission->id );
+                    $m->etat = 'Fait';
+                    $m->update();
+                }
+            }
+        }
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -101,17 +118,17 @@ class MissionController extends Controller
             $mUser->kmfin = $request[$voiture];
             $mUser->update();
 
+            $kmdiff = (($mUser->kmfin) - ($mUser->kmdeb));
             $voit = Voiture::find($mUser->voiture_id);
-            $voit->kmvidange += $request[$voiture];
+            $voit->kmvidange += $kmdiff;
             $voit->kilmax -= $request[$voiture];
             $voit->update();
         }
-        $mission = Mission::find($id);
-        $mission->etat = "Fait";
-        $status = $mission->update();
+        MissionUserController::rendreVoiture($id);
+        // $mission = Mission::find($id);
+        // $status = $mission->update();
 
-        if( $status ) $parametre = ['status'=>true, 'msg'=>'Mission modifiée avec succès'];
-        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
+        $parametre = ['status'=>true, 'msg'=>'Mission modifiée avec succès'];
         return redirect()->route('missions')->with($parametre);
     }
 

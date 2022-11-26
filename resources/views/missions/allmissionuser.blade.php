@@ -16,11 +16,6 @@
                                     (<span class="text-success">Terminé</span>)
                                 @endif
                             </strong>
-                            @if ($mission->etat == 'Non fait')
-                                <button class="btn btn-outline-danger btn-sm" type="button"
-                                    data-bs-toggle="modal" data-bs-target="#modal<?= $mission->id ?>">Cliquez Pour Terminer</button>
-                                    <?= MissionController::missionModal($mission->id, route('up',['id'=> $mission->id ]))?>
-                            @endif
                         </h5>
                         @if (session('status'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -38,9 +33,7 @@
                                             <th scope="col">
                                                 Voitures
                                                 @if ($mission->etat == 'Fait')
-                                                    @if(! $voitureRendu)
-                                                        <a href="{{ url('rendreAllVoiture/' . $mission->id) }}"><button type="button" class="btn btn-outline-success btn-sm">Rendre Toutes</button></a>
-                                                    @else
+                                                    @if($voitureRendu)
                                                         <button type="button" disabled class="btn btn-success btn-sm">Rendu</button>
                                                     @endif
                                                 @endif

@@ -10,15 +10,15 @@ use Illuminate\Queue\SerializesModels;
 class RegisterMail extends Mailable
 {
     use Queueable, SerializesModels;
-
+    public $contenu;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($contenu)
     {
-        //
+        $this->contenu = $contenu;
     }
 
     /**
@@ -28,8 +28,8 @@ class RegisterMail extends Mailable
      */
     public function build()
     {
-        return $this->from('mariesantanna114@gmail.com')
-                    ->subject('Mon objet personnalisé')
+        return $this->subject('VALIDATION COMPTE (MP)')
+                    ->from('mdtech3007@gmail.com', 'MINISTERE DU PLAN')
                     ->view('layout.mail');
     }
 }
