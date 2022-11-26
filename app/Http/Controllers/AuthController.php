@@ -71,6 +71,10 @@ class AuthController extends Controller
         return view('layout.validation');
     }
 
+
+
+    
+
     public function savepassword(Request $request){
         $user = User::all()->where('email', '=', $request->email);
         foreach($user as $u){
