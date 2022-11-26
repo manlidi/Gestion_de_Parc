@@ -24,7 +24,7 @@ class Voiture extends Model
         'numchassis',
         'etat',
         'connsommation',
-        'kilmax',
+        'kilmax', 
         'coutaquisition',
         'mouvement',
         'date_next_visite',

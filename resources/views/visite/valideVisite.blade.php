@@ -13,7 +13,7 @@
                 @if ($type == 'all')
                     <form class="row g-3" method="POST" action="{{ route('terminerVisteAll') }}">
                 @else
-                    <form class="row g-3" method="POST" action="{{ route('terminerViste',['id'=>$voiture->id]) }}">
+                    <form class="row g-3" method="POST" action="{{ route('terminerVisteAl',['id'=>$voiture->id]) }}">
                 @endif
                     @csrf
                     <div class="col-6"><strong>Voiture</strong></div>

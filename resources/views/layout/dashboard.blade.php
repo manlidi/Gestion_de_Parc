@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use App\Models\Voiture;
 use App\Models\Chauffeur;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 ?>
 @extends('master')
@@ -185,7 +186,7 @@ use Illuminate\Support\Facades\Auth;
                                                         @if( ($item->type == 'voiture') || $item->type == 'reparation' )
                                                             <strong>{{ Voiture::find($item->affecter_id)->marque }} ( {{ Voiture::find($item->affecter_id)->immatriculation }} )</strong>
                                                         @else
-                                                            <strong>{{ Chauffeur::find($item->affecter_id)->nom_cva }} {{ Chauffeur::find($item->affecter_id)->prenom_cva }} </strong>
+                                                            <strong>{{ User::find($item->affecter_id)->name ?? '--' }}</strong>
                                                         @endif
                                                     </td>
                                                     <td>{{ $item->datedeb ?? '--' }}</td>

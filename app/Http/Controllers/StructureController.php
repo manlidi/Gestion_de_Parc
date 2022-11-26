@@ -29,6 +29,14 @@ class StructureController extends Controller
             'localisation' => 'required'
         ]);
 
+        $struct = Structure::all();
+        foreach($struct as $s){
+            if($s->nomStructure == $request->nomStructure){
+                $parametre = ['status'=>true, 'msg'=>'Cette structure existe déja !'];
+                return redirect()->route('addstructures')->with($parametre);
+            }
+        }
+
         $data = $request->all();
         $status = $this->store($data);
 

@@ -1,19 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\StructureController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\AssuranceController;
-use App\Http\Controllers\VoitureController;
-use App\Http\Controllers\MissionController;
-use App\Http\Controllers\MissionUserController;
-use App\Http\Controllers\ChauffeurController;
-use App\Http\Controllers\GarageController;
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\PieceController;
-use App\Http\Controllers\ReparerController;
-use App\Http\Controllers\DemandeController;
-use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\GarageController;
 use App\Http\Controllers\VisiteController;
+use App\Http\Controllers\DemandeController;
+use App\Http\Controllers\MissionController;
+use App\Http\Controllers\ReparerController;
+use App\Http\Controllers\VoitureController;
+use App\Http\Controllers\AssuranceController;
+use App\Http\Controllers\ChauffeurController;
+use App\Http\Controllers\StructureController;
+use App\Http\Controllers\MissionUserController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,8 @@ use App\Http\Controllers\VisiteController;
 Route::get('/', function () {
     return view('layout.index');
 });
+
+Route::get('mail', [MailController::class, 'index'])->name('mail');
 Route::get('dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
 
 Route::get('admin_demandes', [DemandeController::class, 'indexAdmin'])->name('admin_demandes');
@@ -52,7 +55,7 @@ Route::post('updateDemande/{id}/{type}', [DemandeController::class, 'update'])->
 
 Route::middleware(['auth', 'role:Administrateur'])->group(function () {
     Route::get('structures', [StructureController::class, 'index'])->name('structures');
-    Route::get('addstructures', [StructureController::class, 'show']);
+    Route::get('addstructures', [StructureController::class, 'show'])->name('addstructures');
     Route::post('savestructures', [StructureController::class, 'create']);
     Route::get('editstructures/{id}', [StructureController::class, 'edit']);
     Route::put('upstructures/{id}', [StructureController::class, 'update']);
@@ -92,6 +95,7 @@ Route::middleware(['auth', 'role:Administrateur'])->group(function () {
     Route::post('storechauffeurs', [ChauffeurController::class, 'store']);
 
     Route::post('terminerVisteAll', [VisiteController::class, 'terminerVisteStore'])->name('terminerVisteAll');
+    Route::post('terminerVisteAl/{id}', [VisiteController::class, 'terminerVisteStores'])->name('terminerVisteAl');
     Route::get('terminerViste/{id}', [VisiteController::class, 'terminerViste'])->name('terminerViste');
     Route::get('terminerVidange/{id}', [VisiteController::class, 'terminerVidange'])->name('terminerVidange');
     Route::post('actionVoiture', [VisiteController::class, 'actionVoiture'])->name('actionVoiture');
@@ -111,7 +115,9 @@ Route::middleware(['auth', 'role:Administrateur'])->group(function () {
     Route::get('notif', [NotificationController::class, 'index'])->name('notif');
 });
 Route::get('login', [AuthController::class, 'index'])->name('login');
+Route::get('validation', [AuthController::class, 'validation'])->name('validation');
 Route::post('loginusers', [AuthController::class, 'create']);
 Route::get('register', [AuthController::class, 'show']);
 Route::post('registerusers', [AuthController::class, 'store']);
+Route::post('savepassword', [AuthController::class, 'savepassword']);
 Route::get('signout', [AuthController::class, 'destroy']);

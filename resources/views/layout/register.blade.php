@@ -15,7 +15,7 @@
                                 <div class="card-body">
 
                                     <div class="pt-4 pb-2">
-                                        <h5 class="card-title text-center pb-0 fs-4">S'inscrire</h5>
+                                        <h5 class="card-title text-center pb-0 fs-4">Enregistrer un utilisateur</h5>
                                     </div>
 
                                     <form class="row g-3 needs-validation" action="{{ url('registerusers') }}"
@@ -31,7 +31,7 @@
 
                                         <div class="col-12">
                                             <select class="form-select" name="role" required>
-                                                <option selected>Sélectionner votre role</option>
+                                                <option selected>Sélectionner le role</option>
                                                 <option value="Administrateur">Administrateur</option>
                                                 <option value="Utilisateur">Utilisateur</option>
                                             </select>
@@ -50,7 +50,7 @@
 
                                         <div class="col-12">
                                             <select class="form-select" name="structure_id" required>
-                                                <option selected>Sélectionner votre structure</option>
+                                                <option selected>Sélectionner la structure</option>
                                                 @if ($structures->count() > 0)
                                                     @foreach ($structures as $us)
                                                         <option value="{{ $us->id }}">{{ $us->nomStructure }}</option>
@@ -65,20 +65,7 @@
                                         </div>
 
                                         <div class="col-12">
-                                            <input type="password" class="form-control" name="password" id="password"
-                                                placeholder="Mot de passe" required>
-                                                @if ($errors->has('password'))
-                                            <span class="text-danger">{{ $errors->first('password') }}</span>
-                                        @endif
-                                        </div>
-
-                                        <div class="col-12">
-                                            <button class="btn btn-primary w-100" type="submit">S'inscrire</button>
-                                        </div>
-                                        <div class="col-12">
-                                            <p class="small mb-0">Vous avez déjà un compte? <a
-                                                    href="{{ url('login') }}">Connecter
-                                                    vous</a></p>
+                                            <button class="btn btn-primary w-100" type="submit">Enregistrer</button>
                                         </div>
                                     </form>
 

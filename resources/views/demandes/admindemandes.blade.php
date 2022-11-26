@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use App\Models\Voiture;
 use App\Models\Chauffeur;
+use App\Models\User;
 ?>
 @extends('master')
 @section('content')
@@ -42,7 +43,7 @@ use App\Models\Chauffeur;
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $item->objetdemande }}</td>
                                                 <td>
-                                                    <span 
+                                                    <span
                                                         class="<?php if ($item->type == 'reparation') {
                                                             echo 'text-danger';
                                                         } elseif ($item->type == 'chauffeur') {
@@ -55,7 +56,7 @@ use App\Models\Chauffeur;
                                                     @if( ($item->type == 'voiture') || $item->type == 'reparation' )
                                                         <strong>{{ Voiture::find($item->affecter_id)->marque }} ( {{ Voiture::find($item->affecter_id)->immatriculation }} )</strong>
                                                     @else
-                                                        <strong>{{ Chauffeur::find($item->affecter_id)->nom_cva ?? '---'}}</strong>
+                                                        <strong>{{ User::find($item->affecter_id)->name ?? '---'}}</strong>
                                                     @endif
                                                 </td>
                                                 <td>{{ $item->datedeb ?? '--' }}</td>

@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
-use Session;
-use Hash;
-use App\Models\Structure;
 use App\Models\User;
-use App\Models\Voiture;
-use App\Models\Mission;
-use App\Models\Chauffeur;
-use Illuminate\Support\Facades\DB;
 use App\Models\Demande;
+use App\Models\Mission;
+use App\Models\Voiture;
+use App\Models\Chauffeur;
+use App\Models\Structure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -58,7 +58,7 @@ class AuthController extends Controller
             $user->name = $request->name;
             $user->role = $request->role;
             $user->email = $request->email;
-            $user->password = Hash::make($request->password);
+            //$user->password = Hash::make($request->password);
             $user->structure_id = $request->structure_id;
             $status = $user->save();
 
@@ -67,6 +67,22 @@ class AuthController extends Controller
             return redirect()->route('dashboard')->with($parametre);
     }
 
+    public function validation(){
+        return view('layout.validation');
+    }
+
+    public function savepassword(Request $request){
+        $user = User::all()->where('email', '=', $request->email);
+        foreach($user as $u){
+            dd($u->passoword, $request->password);
+            $u->password = Hash::make($request->password);
+            $status = $u->update();
+        }
+
+        if( $status ) $parametre = ['status'=>true, 'msg'=>'Compte valider avec succès! Veuillez vous connecter'];
+        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
+        return redirect()->route('login')->with($parametre);
+    }
 
     public function dashboard(){
         if(Auth::check()){

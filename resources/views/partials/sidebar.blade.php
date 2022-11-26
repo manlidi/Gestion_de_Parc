@@ -87,8 +87,15 @@
                     <span>Demandes Approuvées</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url('register') }}">
+                    <i class="bi bi-card-list"></i>
+                    <span>Register</span>
+                </a>
+            </li>
+
         @endif
-        @if (Auth::user() && (Auth::user()->role == 'Utilisateur' || Auth::user()->role == 'Chauffeur'))
+        @if (Auth::user())
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('demandeApprouve') }}">
                     <i class="bi bi-shield-check"></i>
@@ -115,12 +122,6 @@
             </li>
         @endif
         @if (!Auth::user())
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ url('register') }}">
-                    <i class="bi bi-card-list"></i>
-                    <span>Register</span>
-                </a>
-            </li>
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('login') }}">

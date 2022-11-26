@@ -19,7 +19,7 @@ class VisiteController extends Controller
                         'datevisite' => $date,
                         'voiture_id' => $voiture
                     ]);
-    
+
                     $voit = Voiture::find($voiture);
                     $voit->dispo = "Non disponible";
                     $voit->mouvement = "En visite technique";
@@ -36,7 +36,7 @@ class VisiteController extends Controller
                         'kmvidange' => $voit->kmvidange,
                         'voiture_id' => $voiture
                     ]);
-    
+
                     $voit->dispo = "Non disponible";
                     $voit->mouvement = "En vidange";
                     $voit->status_vidange = true;
@@ -44,11 +44,11 @@ class VisiteController extends Controller
                 }
                 return self::returnUrl();
             }
-            
+
         }else{
             if ($request['actionVoiture'] == 'visiteTechniqueAllTermine') {
                 $voitures = Voiture::all()->where('mouvement', '=', 'En visite technique');
-                
+
                 if( count($voitures) > 0 ){
                     $type = 'all';
                     return view('visite.valideVisite', compact('voitures', 'type'));
@@ -57,7 +57,7 @@ class VisiteController extends Controller
                     return redirect()->route('voitures')->with($parametre);
                 }
             }
-    
+
             if ($request['actionVoiture'] == 'vidangeAllTermine') {
                 $voitures = Voiture::all()->where('mouvement', '=', 'En vidange');
                 foreach( $voitures as $voiture ){
@@ -96,6 +96,19 @@ class VisiteController extends Controller
     }
 
     public function terminerVisteStore(Request $request, $id = null)
+    {
+        if ($id != null) {
+            self::modelSaveVisite($id, $request[$id]);
+        } else {
+            foreach( $request['voitures'] as $id ){
+                self::modelSaveVisite($id, $request[$id]);
+            }
+        }
+        $parametre = ['status' => true, 'msg' => 'Visite technique terminée avec succès', 'class'=>'success'];
+        return redirect()->route('voitures')->with($parametre);
+    }
+
+    public function terminerVisteStores(Request $request, $id)
     {
         if ($id != null) {
             self::modelSaveVisite($id, $request[$id]);
