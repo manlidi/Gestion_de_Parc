@@ -48,7 +48,7 @@
                                         <span class="text-danger">{{ $errors->first('dureeVie') }}</span>
                                     @endif
                                 </div>
-                                <div class="col-12">
+                                <div class="col-md-6">
                                     <input type="number" min="1" name="numchassis" id="numchassis"
                                         class="form-control" placeholder="Numéro de chassis">
                                     @if ($errors->has('numchassis'))
@@ -63,6 +63,13 @@
                                     </select>
                                     @if ($errors->has('etat'))
                                         <span class="text-danger">{{ $errors->first('etat') }}</span>
+                                    @endif
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" name="kilmax" id="kilmax" class="form-control"
+                                        placeholder="Kilomètre maximal à atteindre">
+                                        @if ($errors->has('kilmax'))
+                                        <span class="text-danger">{{ $errors->first('kilmax') }}</span>
                                     @endif
                                 </div>
                                 <div class="col-md-6">
