@@ -43,10 +43,30 @@ class AuthController extends Controller
 
         $login = $request->only('email','password');
         if(Auth::attempt($login)){
+            $user = Auth::user();
+            $user->remember_token = null;
+            $user->update();
             return redirect()->intended('dashboard')->with('message','Connecter');
-        }
-        return redirect('/login')->with('message', 'Une erreur est survenue lors de la connexion!');
+        }else{
+            $u = User::all()->where('email','=', $request->email)->first();
+            $user = User::find($u->id);
+            $user->remember_token += 1; 
+            if( $user->remember_token >= 3 ){
+                $email = $user->email;
+                $pass = $this->genererToken();
+                $user->password = Hash::make($pass);
 
+                $urlUser = url('/') . "/validationCompte/$email/$pass";
+                $this->sendMailUser( $user->email, $urlUser, $user->name );
+                $user->update();
+                return redirect('/login')->with('message', 'Votre compte est bloqué. Consulter vos mail');
+            }
+            $user->update();
+            return redirect('/login')->with('message', 'Une erreur est survenue lors de la connexion!');
+        }
+
+        // $urlUser = url('/') . "/validationCompte/$email/$pass";
+        //     $send = $this->sendMailUser( $user->email, $urlUser, $user->name );
     }
 
     /**
