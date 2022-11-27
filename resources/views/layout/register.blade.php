@@ -8,13 +8,14 @@
             <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
                 <div class="container">
                     <div class="row justify-content-center">
-                        <div class="col-lg-5 col-md-6 d-flex flex-column align-items-center justify-content-center">
+                        <div class="d-flex flex-column align-items-center justify-content-center">
 
                             <div class="card mb-3">
 
                                 <div class="card-body">
 
-                                    <div class="pt-4 pb-2">
+                                    <div class="text-center">
+                                        <h3><img src="{{ asset('logo/i.png') }}" style="width: 170px;" alt="Esgis_logo"></h3>
                                         <h5 class="card-title text-center pb-0 fs-4">Enregistrer un utilisateur</h5>
                                     </div>
 

@@ -121,8 +121,7 @@
                 </a>
             </li>
         @endif
-        @if (!Auth::user())
-
+        @if ((!Auth::user()) && (! request()->routeIs('validation')))
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('login') }}">
                     <i class="bi bi-box-arrow-in-right"></i>

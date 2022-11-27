@@ -8,11 +8,14 @@ use App\Models\Mission;
 use App\Models\Voiture;
 use App\Models\Chauffeur;
 use App\Models\Structure;
+use App\Mail\RegisterMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\Rules;
 
 class AuthController extends Controller
 {
@@ -54,34 +57,73 @@ class AuthController extends Controller
      */
     public function store(Request $request)
     {
+        $pass = $this->genererToken();
             $user = new User;
             $user->name = $request->name;
             $user->role = $request->role;
             $user->email = $request->email;
-            //$user->password = Hash::make($request->password);
+            $user->password = Hash::make($pass);
             $user->structure_id = $request->structure_id;
-            $status = $user->save();
 
-            if( $status ) $parametre = ['status'=>true, 'msg'=>'Utilisateur Enrégistré avec succès'];
-            else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
+            $email = $user->email;
+
+            $urlUser = url('/') . "/validationCompte/$email/$pass";
+            $send = $this->sendMailUser( $user->email, $urlUser, $user->name );
+            if( $send ){
+                $status = $user->save();
+                if( $status ) $parametre = ['status'=>true, 'msg'=>'Utilisateur Enrégistré avec succès', 'class'=>'success'];
+                else $parametre = ['status'=>true, 'msg'=>'Erreur lors de l\'enregistrement', 'class'=>'warning'];
+            }else{
+                $parametre = ['status'=>true, 'msg'=>'Erreur! Nous n\'avons pas pu envoyer l\'email de validation. Réessayer', 'class'=>'warning'];
+                return redirect()->route('registerUser')->with($parametre);
+            }
             return redirect()->route('dashboard')->with($parametre);
     }
 
-    public function validation(){
-        return view('layout.validation');
+    public function genererToken($taille = 10){
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $key = '';
+        for ($i = 0; $i < $taille; $i++) {
+            $key .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $key;
     }
 
-    public function savepassword(Request $request){
-        $user = User::all()->where('email', '=', $request->email);
-        foreach($user as $u){
-            dd($u->passoword, $request->password);
-            $u->password = Hash::make($request->password);
-            $status = $u->update();
-        }
+    public function sendMailUser($senderEmail, $url, $name){
+        $contenu = [
+            'titre' => 'Validation Compte (MP)',
+            'nom' => $name,
+            'url' => $url
+        ];
 
-        if( $status ) $parametre = ['status'=>true, 'msg'=>'Compte valider avec succès! Veuillez vous connecter'];
-        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
-        return redirect()->route('login')->with($parametre);
+        return Mail::to($senderEmail)->send(new RegisterMail($contenu));
+    }
+
+    public function validation($email, $tok){
+        $token =  csrf_token();
+        if(Auth::attempt(['email' => $email, 'password' => $tok])){
+            $user = Auth::user();
+            Session::flush();
+            Auth::logout();
+            return view('layout.validation', compact('user', 'token'));
+        }else{
+            return view('layout.errorPage');
+        }
+    }
+
+    public function updatePass(Request $request, $id){
+        $request->validate([
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        $user = User::find($id);
+        $user->password = Hash::make($request->password);
+        $status = $user->update();
+
+        if( $status )
+        return redirect()->route('login')->with(['status'=>true, 'msg'=>'Compte valider avec succès! Veuillez vous connecter']);
+        else return view('layout.errorPage');
     }
 
     public function dashboard(){

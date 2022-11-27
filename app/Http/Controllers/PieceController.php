@@ -27,8 +27,7 @@ class PieceController extends Controller
      */
     public function create()
     {
-        $voiture = Voiture::all()->where('structure_id', '=', Auth::user()->structure_id);
-        return view('pieces.add', compact('voiture'));
+        return view('pieces.add');
     }
 
     /**
@@ -42,7 +41,6 @@ class PieceController extends Controller
         $piece = new Piece();
         $piece->nompiece = $request->nompiece;
         $piece->datefin = $request->datefin;
-        $piece->voiture_id = $request->voiture_id;
         $status = $piece->save();
 
         if( $status ) $parametre = ['status'=>true, 'msg'=>'Pièce Enrégistré avec succès'];
