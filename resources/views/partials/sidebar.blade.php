@@ -74,46 +74,46 @@
                     </li>
                 </ul>
             </li>
-
+            @endif
             <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ url('admin_demandes') }}">
-                    <i class="bi bi-eye"></i>
-                    <span>Voir les demandes</span>
+                <a class="nav-link collapsed" data-bs-target="#demandes" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-wrench"></i><span>Demandes</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
+                <ul id="demandes" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    @if (Auth::user() && Auth::user()->role == 'Administrateur')
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="{{ url('admin_demandes') }}">
+                            <i class="bi bi-eye"></i>
+                            <span>Demandes en Attente</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="{{ url('adminDemandeApprouve') }}">
+                            <i class="bi bi-eye"></i>
+                            <span>Demandes Approuvées</span>
+                        </a>
+                    </li>
+                    @endif
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="{{ url('demandeApprouve') }}">
+                            <i class="bi bi-shield-check"></i>
+                            <span>Listes De Mes Demandes</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="{{ url('demanderVoiture') }}">
+                            <i class="bi bi-truck"></i>
+                            <span>Demander Une Voiture</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="{{ url('demanderReparation') }}">
+                            <i class="bi bi-wrench"></i>
+                            <span>Demande De Réparation</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ url('adminDemandeApprouve') }}">
-                    <i class="bi bi-eye"></i>
-                    <span>Demandes Approuvées</span>
-                </a>
-            </li>
-        @endif
-        @if (Auth::user() && (Auth::user()->role == 'Utilisateur' || Auth::user()->role == 'Chauffeur'))
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ url('demandeApprouve') }}">
-                    <i class="bi bi-shield-check"></i>
-                    <span>Demandes Approuvées</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ url('demanderVoiture') }}">
-                    <i class="bi bi-truck"></i>
-                    <span>Demander Une Voiture</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ url('demanderChauffeur') }}">
-                    <i class="bi bi-person"></i>
-                    <span>Demander Un Chauffeur</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ url('demanderReparation') }}">
-                    <i class="bi bi-wrench"></i>
-                    <span>Demande De Réparation</span>
-                </a>
-            </li>
-        @endif
         @if (!Auth::user())
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('register') }}">
