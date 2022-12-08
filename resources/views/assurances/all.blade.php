@@ -38,8 +38,6 @@
                                                 <td>
                                                     <a href="{{ url('editass/' . $item->id) }}"
                                                         class="btn btn-warning">Modifier</a>
-                                                    <a href="{{ url('deleteass/' . $item->id) }}"
-                                                        class="btn btn-danger">Supprimer</a>
                                                 </td>
                                             </tr>
                                         @empty

@@ -51,7 +51,7 @@ class DemandeController extends Controller
             ->where('users.structure_id', '=', User::find(Auth::user()->id)->structure_id)
             ->where('status', '=', 'Non Approuvée')
             ->get();
-            
+
         return view('demandes.admindemandes', compact('demande'));
     }
 
@@ -62,11 +62,12 @@ class DemandeController extends Controller
      */
     public function createVoiture()
     {
-        $authorId = Auth::id();
-        $id = User::find($authorId)->structure->id;
+        //$authorId = Auth::user()->id;
+        //$id = User::find($authorId)->structure->id;
+        //dd($id);
         $voiture = Voiture::all()
-            ->where('dispo', '=', 'Disponible')
-            ->where('structure_id', '=', $id);
+            ->where('dispo', '=', 'Disponible');
+            //->where('structure_id', '=', $id);
 
         $chauffeur = self::chauffeurDispo();
         return view('demandes.addVoiture', compact('voiture', 'chauffeur'));
@@ -125,11 +126,7 @@ class DemandeController extends Controller
     public function store(Request $request, $type)
     {
         if( $type == 'voiture' ){
-            $status = self::saveModel($request, $type, $request->voiture_id);
-
-            if($request->check == "on"){
-                self::saveModel($request, 'chauffeur');
-            }
+            $status = self::saveModel($request, $type);
         }
         if( $type == 'chauffeur' ){
             $status = self::saveModel($request, $type);
@@ -140,17 +137,13 @@ class DemandeController extends Controller
         return redirect()->route('dashboard')->with($parametre);
     }
 
-    public static function saveModel($request, $type, $affection=null){
+    public static function saveModel($request, $type){
         $demande = new Demande();
         $demande->objetdemande = $request->objetdemande;
+        $demande->descdemande = $request->descdemande;
+        $demande->checks = $request->checks;
         $demande->datedeb = $request->datedeb;
         $demande->datefin = $request->datefin;
-
-        if( $affection != null ){
-            $demande->affecter_id = $affection;
-        }else{
-            $demande->affecter_id = $request->chauffeur_id;
-        }
 
         $demande->type = $type;
         $demande->user_id = Auth::user()->id;
@@ -239,8 +232,76 @@ class DemandeController extends Controller
         return redirect()->route('dashboard')->with($parametre);
     }
 
-    public function validerDemande($id, $type){
-        $demande = Demande::find($id);
+    public static function modal($id, $url, $type=null){
+        $chauffeurs = self::chauffeurDispo();
+        $voitures = Voiture::all()->where('dispo','=','Disponible');
+        ?>
+        <div class="modal fade" id="validerdemande<?= $id ?>" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Veuillez affecter les voitures/chauffeures</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="<?= $url ?>" method="post">
+                        <div class="row g-3">
+                            <input type="hidden" name="_token" value="<?= csrf_token() ?>" />
+                            <?=  method_field('PUT'); ?>
+                            <div class="col-sm-12">
+                                <label for="">Veuillez choisir les voitures</label>
+                                <select class="form-control selectpicker" multiple data-live-search="true" name="voitures[]" id="voitures">
+                                    <?php
+                                    if($voitures->count() > 0){
+                                        foreach ($voitures as $us){
+                                            ?>
+                                                <option value="<?= $us->id ?>"><?= $us->marque ?></option>
+                                           <?php
+                                        }
+                                    }else{
+                                        ?>
+                                            <option value="">Pas de voiture disponible</option>
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="col-sm-12">
+                                <label for="">Veuillez choisir les chauffeures</label>
+                                <select class="form-control selectpicker" multiple data-live-search="true" name="chauffeures[]" id="chauffeures">
+                                    <?php
+                                    if($chauffeurs->count() > 0){
+                                        foreach ($chauffeurs as $us){
+                                            ?>
+                                                <option value="<?= $us->id ?>"><?= $us->name ?></option>
+                                            <?php
+                                        }   
+                                    }else{
+                                        ?>
+                                            <option value="">Pas de chauffeur disponible</option>
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
+    <?php
+    }
+
+    public function validerDemande(Request $request, $id, $type){
+        dd($request->voitures, $request->chauffeures);
+
+        /*$demande = Demande::find($id);
+        $demande->affecter_id = $request->voitures;
         $demande->status = "Approuvée";
         $status = $demande->update();
 
@@ -251,16 +312,16 @@ class DemandeController extends Controller
             $voiture->update();
         }
 
-        if( $type == 'chauffeur' ){
+        /*if( $type == 'chauffeur' ){
             $chauffeurs = Chauffeur::all()->where('user_id', '=', $demande->affecter_id);
             foreach($chauffeurs as $chauffeur){
                 //dd($chauffeur->disp);
                 $chauffeur->disp = "Non Disponible";
                 $chauffeur->update();
             }
-        }
+        }*/
 
-        if( $type == 'reparation' ){
+        /*if( $type == 'reparation' ){
             $voiture = Voiture::find($demande->affecter_id);
             $voiture->dispo = "Non Disponible";
             $voiture->mouvement = "Au garage";
@@ -269,7 +330,7 @@ class DemandeController extends Controller
 
         if( $status ) $parametre = ['status'=>true, 'msg'=>'Demande approuvée avec succès !'];
         else $parametre = ['status'=>false, 'msg'=>'Erreur lors de la validation de la demande'];
-        return redirect()->route('admin_demandes')->with($parametre);
+        return redirect()->route('admin_demandes')->with($parametre);*/
     }
 
     public function rendreDemande( $id, $type ){

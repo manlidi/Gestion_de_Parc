@@ -15,6 +15,8 @@ class Demande extends Model
     protected $fillable = [
         'user_id',
         'objetdemande',
+        'descdemande',
+        'checks',
         'datedeb',
         'datefin',
         'affecter_id',

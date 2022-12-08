@@ -53,20 +53,6 @@
                     </ul><!-- End Profile Dropdown Items -->
                 </li><!-- End Profile Nav -->
             @elseif (Auth::user() && Auth::user()->role == 'Administrateur'){
-                <li class="nav-item dropdown">
-
-                    <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                        <i class="bi bi-bell"></i>
-                        <span class="badge bg-primary badge-number"></span>
-                    </a>
-
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-                        <li class="dropdown-header">
-                            Vos notifications
-                            <a href="{{ route('notif') }}"><span class="badge rounded-pill bg-primary p-2 ms-2">Voir toutes</span></a>
-                        </li>
-                    </ul>
-                </li>
                 <li class="nav-item dropdown pe-3">
 
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#"

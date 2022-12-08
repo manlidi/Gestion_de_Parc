@@ -19,37 +19,17 @@
                                 <input type="text" name="objetdemande" id="objetdemande" value="{{ isset($demande->objetdemande) ? $demande->objetdemande : old('objetdemande') }}" required class="form-control" placeholder="Objet de la demande" required>
                             </div>
                             <div class="col-12">
-                                <select class="form-select" name="voiture_id" required>
-                                    @if ($voiture->count() > 0)
-                                        @foreach ($voiture as $us)
-                                            <option value="{{ $us->id }}" <?php if( isset( $demande ) ) { if( $demande->affecter_id == $us->id ) echo 'selected'; } ?> >{{ $us->marque }}</option>
-                                        @endforeach
-                                    @else
-                                        <option value="">Pas de voiture disponible</option>
-                                    @endif
-                                </select>
+                                <input type="text" name="descdemande" id="descdemande" value="{{ isset($demande->descdemande) ? $demande->descdemande : old('descdemande') }}" required class="form-control" placeholder="Description de la demande" required>
                             </div>
-                            @if(! isset($demande))
-                                <div class="col-sm-12">
-                                    <div class="form-check">
-                                        <label class="form-check-label text-primary">Voulez-vous un chauffeur ?</label><br>
-                                        <input class="form-check-input" name="check" type="checkbox"> Oui
-                                    </div>
-                                    <select class="form-select pt-2" name="chauffeur_id" style="display: none">
-                                        @if ($chauffeur->count() > 0)
-                                            @foreach ($chauffeur as $us)
-                                                <option value="{{ $us->id }}">{{ $us->name }}
-                                                </option>
-                                            @endforeach
-                                        @else
-                                            <option value="">Pas de chauffeur disponible</option>
-                                        @endif
-                                    </select>
+                            <div class="col-sm-12">
+                                <div class="form-check">
+                                    <label class="form-check-label text-primary">Voulez-vous un chauffeur ?</label><br>
+                                    <input class="form-check-input" name="checks" type="checkbox"> Oui
                                 </div>
-                            @endif
+                            </div>
                             <div class="col-6">
                                 <label for="">Date début</label>
-                                <input type="date" value="{{ isset($demande->datedeb) ? $demande->datedeb : old('datedeb') }}" class="form-control" required name="datedeb" id="datedeb">
+                                <input type="date" value="{{ isset($demande->datedeb) ? $demande->datedeb : old('datedeb') }}" class="form-control" required name="datedeb" id="datedeb"> 
                             </div>
                             <div class="col-6">
                                 <label for="">Date fin</label>

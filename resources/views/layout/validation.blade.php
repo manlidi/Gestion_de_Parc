@@ -48,8 +48,7 @@
                                                 @if ($errors->has('password_confirmation'))
                                                     <span class="text-danger">{{ $errors->first('password_confirmation') }}</span>
                                                 @endif
-                                        </div>
-
+                                        </div>                                    
                                         <div class="col-12">
                                             <button class="btn btn-primary w-100" type="submit">Enregistrer</button>
                                         </div>

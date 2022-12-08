@@ -29,8 +29,9 @@ use App\Models\User;
                                         <tr>
                                             <th scope="col">#</th>
                                             <th scope="col">Objet De La Demande</th>
+                                            <th scope="col">Description De La Demande</th>
                                             <th scope="col">Type</th>
-                                            <th scope="col">Demande</th>
+                                            <th scope="col">Chauffeur</th>
                                             <th scope="col">Date début</th>
                                             <th scope="col">Date de fin</th>
                                             <th scope="col">Status</th>
@@ -42,6 +43,7 @@ use App\Models\User;
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $item->objetdemande }}</td>
+                                                <td>{{ $item->descdemande }}</td>
                                                 <td>
                                                     <span
                                                         class="<?php if ($item->type == 'reparation') {
@@ -53,61 +55,34 @@ use App\Models\User;
                                                         } ?>">{{ ucfirst($item->type) }}
                                                     </span>
                                                 <td>
-                                                    @if( ($item->type == 'voiture') || $item->type == 'reparation' )
-                                                        <strong>{{ Voiture::find($item->affecter_id)->marque }} ( {{ Voiture::find($item->affecter_id)->immatriculation }} )</strong>
+                                                    @if($item->checks == 'on')
+                                                        <strong class="text-success">Oui</strong>
                                                     @else
-                                                        <strong>{{ User::find($item->affecter_id)->name ?? '---'}}</strong>
+                                                        <strong class="text-danger">Non</strong>
                                                     @endif
                                                 </td>
                                                 <td>{{ $item->datedeb ?? '--' }}</td>
                                                 <td>{{ $item->datefin ?? '--' }}</td>
                                                 <td>
-                                                    @if($item->type == 'chauffeur')
-                                                        @if( DemandeController::chauffeurIsDispo($item->affecter_id) )
-                                                            <span class="badge bg-warning p-1">{{ $item->status }}</span>
-                                                        @else
-                                                            <span class="badge bg-danger p-2">En attente de <br>disponibilité</span>
-                                                        @endif
-                                                    @endif
-                                                    @if($item->type == 'voiture')
-                                                        @if( DemandeController::voitureIsDispo($item->affecter_id) )
-                                                            <span class="badge bg-warning p-1">{{ $item->status }}</span>
-                                                        @else
-                                                            <span class="badge bg-danger p-2">En attente de <br>disponibilité</span>
-                                                        @endif
-                                                    @endif
-                                                    @if($item->type == 'reparation')
-                                                        <span class="badge bg-warning p-1">{{ $item->status }}</span>
-                                                    @endif
+                                                    <span class="badge bg-warning p-1">{{ $item->status }}</span>
                                                 </td>
                                                 <td>
-                                                    @if($item->type == 'chauffeur')
-                                                        @if( DemandeController::chauffeurIsDispo($item->affecter_id) )
-                                                            <a class="btn btn-outline-info btn-sm" href="{{ route('validerDemande', ['id'=>$item->id, 'type' => $item->type]) }}">Valider</a>
-                                                            <a class="btn btn-outline-danger btn-sm" href="{{ route('rejeterDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rejeter</a>
-                                                        @else
-                                                            <button class="btn btn-outline-info disabled btn-sm">Valider</button>
-                                                            <a class="btn btn-outline-danger btn-sm" href="{{ route('rejeterDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rejeter</a>
-                                                        @endif
-                                                    @endif
                                                     @if($item->type == 'voiture')
-                                                        @if( DemandeController::voitureIsDispo($item->affecter_id) )
-                                                            <a class="btn btn-outline-info btn-sm" href="{{ route('validerDemande', ['id'=>$item->id, 'type' => $item->type]) }}">Valider</a>
-                                                            <a class="btn btn-outline-danger btn-sm" href="{{ route('rejeterDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rejeter</a>
-                                                        @else
-                                                            <button class="btn btn-outline-info disabled btn-sm">Valider</button>
-                                                            <a class="btn btn-outline-danger btn-sm" href="{{ route('rejeterDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rejeter</a>
-                                                        @endif
-                                                    @endif
-                                                    @if($item->type == 'reparation')
-                                                        <a class="btn btn-outline-info btn-sm" href="{{ route('validerDemande', ['id'=>$item->id, 'type' => $item->type]) }}">Valider</a>
-                                                        <a class="btn btn-outline-danger btn-sm" href="{{ route('rejeterDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rejeter</a>
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                              <button type="button" data-bs-toggle="modal" data-bs-target="#validerdemande<?= $item->id ?>" class="btn btn-outline-info btn-sm">Valider</button>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <a class="btn btn-outline-danger btn-sm" href="{{ route('rejeterDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rejeter</a>
+                                                            </div>
+                                                        </div>
                                                     @endif
                                                 </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
+                                <?= DemandeController::modal($item->id, route('validerDemande',['id'=> $item->id, 'type'=>$item->type]))?>
                                 @else
                                     <div class="alert alert-warning">
                                         Pas de demande !
