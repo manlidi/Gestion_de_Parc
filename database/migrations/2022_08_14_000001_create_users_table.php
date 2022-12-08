@@ -23,6 +23,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->foreignId('structure_id')->constrained();
             $table->timestamps();
+            $table->unique(['name', 'email']);
         });
     }
 

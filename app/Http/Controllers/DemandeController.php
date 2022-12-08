@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Voiture;
 use App\Models\Chauffeur;
 use App\Models\Garage;
-use App\Models\MissionUser;
 use App\Models\Piece;
 use App\Models\Reparer;
 use Illuminate\Http\Request;
@@ -38,8 +37,8 @@ class DemandeController extends Controller
     public function indexApprouve(){
         $demande = DB::table('demandes')
             ->join('users', 'users.id', '=', 'demandes.user_id')
-            ->select('demandes.*', 'users.structure_id')
-            ->where('users.structure_id', '=', User::find(Auth::user()->id)->structure_id)
+            ->select('demandes.*')
+            ->where('demandes.user_id', '=', Auth::user()->id)
             ->where('status', '=', 'Approuvée')
             ->get();
         return view('demandes.demandeApprouve', compact('demande'));
@@ -52,6 +51,7 @@ class DemandeController extends Controller
             ->where('users.structure_id', '=', User::find(Auth::user()->id)->structure_id)
             ->where('status', '=', 'Non Approuvée')
             ->get();
+            
         return view('demandes.admindemandes', compact('demande'));
     }
 
@@ -67,14 +67,14 @@ class DemandeController extends Controller
         $voiture = Voiture::all()
             ->where('dispo', '=', 'Disponible')
             ->where('structure_id', '=', $id);
-        
+
         $chauffeur = self::chauffeurDispo();
         return view('demandes.addVoiture', compact('voiture', 'chauffeur'));
     }
 
     public function addReparationDetail($id){
         $voiture = Voiture::find($id);
-        $pieces = Piece::all()->where('voiture_id','=',$id);
+        $pieces = Piece::all();
         $garages = Garage::all();
         return view('demandes.addReparationDetail',compact('voiture','pieces', 'garages'));
     }
@@ -246,21 +246,24 @@ class DemandeController extends Controller
 
         if( $type == 'voiture' ){
             $voiture = Voiture::find($demande->affecter_id);
-            $voiture->dispo = "Non Disponible"; 
+            $voiture->dispo = "Non Disponible";
             $voiture->mouvement = "En sortie";
-            $voiture->update(); 
+            $voiture->update();
         }
 
         if( $type == 'chauffeur' ){
-            $chauffeur = Chauffeur::find($demande->affecter_id);
-            $chauffeur->disp = "Non Disponible"; 
-            $chauffeur->update();
+            $chauffeurs = Chauffeur::all()->where('user_id', '=', $demande->affecter_id);
+            foreach($chauffeurs as $chauffeur){
+                //dd($chauffeur->disp);
+                $chauffeur->disp = "Non Disponible";
+                $chauffeur->update();
+            }
         }
 
         if( $type == 'reparation' ){
             $voiture = Voiture::find($demande->affecter_id);
             $voiture->dispo = "Non Disponible";
-            $voiture->mouvement = "Au garage"; 
+            $voiture->mouvement = "Au garage";
             $voiture->update();
         }
 
@@ -276,22 +279,22 @@ class DemandeController extends Controller
 
         if( $type == 'voiture' ){
             $voiture = Voiture::find($demande->affecter_id);
-            $voiture->dispo = "Disponible"; 
+            $voiture->dispo = "Disponible";
             $voiture->mouvement = "Au parc";
-            $voiture->update(); 
+            $voiture->update();
         }
 
         if( $type == 'chauffeur' ){
             $chauffeur = Chauffeur::find($demande->affecter_id);
-            $chauffeur->disp = "Disponible"; 
+            $chauffeur->disp = "Disponible";
             $chauffeur->update();
         }
 
         if( $type == 'reparation' ){
             $voiture = Voiture::find($demande->affecter_id);
-            $voiture->dispo = "Disponible"; 
+            $voiture->dispo = "Disponible";
             $voiture->mouvement = "Au parc";
-            $voiture->update(); 
+            $voiture->update();
 
             $reparation = Reparer::where('demande_id','=',$id)->first();
             $reparation->datereparation = now();
@@ -300,7 +303,7 @@ class DemandeController extends Controller
 
         if( $status ) $parametre = ['status'=>true, 'msg'=>'Voiture ou Chauffeur rendu avec succès'];
         else $parametre = ['status'=>false, 'msg'=>'Erreur lors de la soumission'];
-        return redirect()->route('listerreparation')->with($parametre);
+        return redirect()->route('listereparation')->with($parametre);
     }
 
     public function desapprouverDemande( $id, $type ){
@@ -310,14 +313,14 @@ class DemandeController extends Controller
 
         if( $type == 'voiture' ){
             $voiture = Voiture::find($demande->affecter_id);
-            $voiture->dispo = "Disponible"; 
+            $voiture->dispo = "Disponible";
             $voiture->mouvement = "En sortie";
-            $voiture->update(); 
+            $voiture->update();
         }
 
         if( $type == 'chauffeur' ){
             $chauffeur = Chauffeur::find($demande->affecter_id);
-            $chauffeur->disp = "Disponible"; 
+            $chauffeur->disp = "Disponible";
             $chauffeur->update();
         }
 
@@ -342,9 +345,17 @@ class DemandeController extends Controller
     }
 
     public static function chauffeurIsDispo( $id ){
-        $chauffeur = Chauffeur::find($id);
-        if( $chauffeur->disp == "Disponible" ) return true;
-        else return false;
+        $chauffeurs = DB::table('users')
+        ->join('chauffeurs', 'users.id', '=', 'chauffeurs.user_id')
+        ->select('chauffeurs.*')
+        ->where('chauffeurs.user_id', '=', $id)
+        ->get();
+
+        foreach($chauffeurs as $chauffeur){
+            //dd($chauffeur->disp);
+            if( $chauffeur->disp == "Disponible" ) return true;
+            else return false;
+        }
     }
 
     /**

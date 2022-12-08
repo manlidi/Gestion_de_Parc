@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use App\Models\Voiture;
 use App\Models\Chauffeur;
+use App\Models\User;
 ?>
 @extends('master')
 @section('content')
@@ -56,15 +57,15 @@ use App\Models\Chauffeur;
                                                                     {{ Voiture::find($item->affecter_id)->immatriculation }}
                                                                     )</strong>
                                                             @else
-                                                                <strong>{{ Chauffeur::find($item->affecter_id)->nom_cva }}
-                                                                    {{ Chauffeur::find($item->affecter_id)->prenom_cva }}
+                                                                <strong>
+                                                                    {{ User::find($item->affecter_id)->name }}
                                                                 </strong>
                                                             @endif
                                                         </td>
                                                         <td>{{ $item->datedeb ?? '--' }}</td>
                                                         <td>{{ $item->datefin ?? '--' }}</td>
                                                         <td><span class="badge bg-success">{{ $item->status }}</span></td>
-                                                        
+
                                                     </tr>
                                                 @endforeach
                                             </tbody>

@@ -11,8 +11,10 @@ class Visite extends Model
     use HasFactory;
 
     protected $fillable = [
+        'datevisite',
         'kmvidange',
-        'voiture_id'
+        'voiture_id',
+        'status'
     ];
 
     public function voiture(){

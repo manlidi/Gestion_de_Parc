@@ -46,7 +46,7 @@ use App\Models\Chauffeur;
                                                     @if( ($item->type == 'voiture') || $item->type == 'reparation' )
                                                         <strong>{{ Voiture::find($item->affecter_id)->marque }} ( {{ Voiture::find($item->affecter_id)->immatriculation }} )</strong>
                                                     @else
-                                                        <strong>{{ Chauffeur::find($item->affecter_id)->nom_cva }} {{ Chauffeur::find($item->affecter_id)->prenom_cva }} </strong>
+                                                        <strong>{{ Chauffeur::find($item->affecter_id)->name }}</strong>
                                                     @endif
                                                 </td>
                                                 <td>{{ $item->datedeb ?? '--' }}</td>

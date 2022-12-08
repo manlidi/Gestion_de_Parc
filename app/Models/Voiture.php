@@ -24,12 +24,14 @@ class Voiture extends Model
         'numchassis',
         'etat',
         'connsommation',
-        'kilmax',
+        'kilmax', 
         'coutaquisition',
         'mouvement',
+        'date_next_visite',
         'dispo',
         'kmvidange',
         'status_visite',
+        'status_vidange',
         'structure_id'
     ];
 
@@ -39,10 +41,6 @@ class Voiture extends Model
 
     public function assurances(){
         return $this->hasMany(Assurance::class);
-    }
-
-    public function pieces(){
-        return $this->hasMany(Piece::class);
     }
 
     public function mission_users(){

@@ -34,8 +34,6 @@
                                             <td>
                                                 <a href="{{ url('editstructures/' . $item->id) }}"
                                                     class="btn btn-warning">Modifier</a>
-                                                <a href="{{ url('delstructures/' . $item->id) }}"
-                                                    class="btn btn-danger">Supprimer</a>
                                             </td>
                                         </tr>
                                     @empty

@@ -14,8 +14,6 @@
                                         <th scope="col">#</th>
                                         <th scope="col">Nom de la pièce</th>
                                         <th scope="col">Date de fin d'utilisation</th>
-                                        <th scope="col">Véhicule auquel elle appartient</th>
-                                        <th scope="col">L'immatriculation de véhicule</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -24,8 +22,6 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $item->nompiece }}</td>
                                             <td>{{ $item->datefin }}</td>
-                                            <td>{{ $item->voiture->marque }}</td>
-                                            <td>{{ $item->voiture->immatriculation }}</td>
                                         </tr>
                                     @empty
                                         <tr colspan="7">Pas de piece trouver</tr>

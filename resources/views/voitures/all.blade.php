@@ -9,7 +9,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Liste des voitures</h5>
                             @if (session('status'))
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <div class="alert alert-{{ session('class') }} alert-dismissible fade show" role="alert">
                                     <span class="font-medium">{{ session('msg') }}</span>
                                     <button type="button" class="btn-close" data-bs-dismiss="alert"
                                         aria-label="Close"></button>
@@ -26,8 +26,11 @@
                                                     aria-label="Default select example">
                                                     <option value="">Action Groupées</option>
                                                     <option value="visiteTechnique">Visite Technique</option>
+                                                    <option value="vidange">Vidange</option>
                                                     <option value="visiteTechniqueAll">Toutes en Visite Technique</option>
+                                                    <option value="vidangeAll">Toutes en Vidange</option>
                                                     <option value="visiteTechniqueAllTermine">Terminer toutes les visites</option>
+                                                    <option value="vidangeAllTermine">Terminer toutes les vidanges</option>
                                                     <option value="delete">Supprimer</option>
                                                 </select>
                                             </div>
@@ -48,10 +51,10 @@
                                             @forelse($voiture as $item)
                                                 <tr>
                                                     <td>
-                                                        @if( $item->mouvement != 'En visite technique' )
-                                                            <input name="voitures[]" value="{{ $item->id }}" type="checkbox">
+                                                        @if( ($item->mouvement == 'En visite technique') || ($item->mouvement == 'En vidange') )
+                                                            <input checked type="checkbox" disabled>
                                                         @else
-                                                            <input checked type="checkbox">
+                                                            <input name="voitures[]" value="{{ $item->id }}" type="checkbox">
                                                         @endif
                                                     </td>
                                                     <td>
@@ -64,7 +67,7 @@
                                                     <td>{{ $item->immatriculation }}</td>
                                                     <td>{{ $item->structure->nomStructure ?? '---' }}</td>
                                                     <td>
-                                                        @if ($item->mouvement == 'En visite technique')
+                                                        @if (($item->mouvement == 'En visite technique') || ($item->mouvement == 'En vidange'))
                                                             <b class="text-danger">{{ $item->mouvement }}</b>
                                                         @else
                                                             <b class="text-success">{{ $item->mouvement }}</b>
@@ -73,6 +76,8 @@
                                                     <td>
                                                         @if ($item->mouvement == 'En visite technique')
                                                             <a href="{{ route('terminerViste',['id'=>$item->id]) }}"><button type="button" class="btn btn-outline-primary btn-sm">Visite terminée</button></a>
+                                                        @elseif($item->mouvement == 'En vidange')
+                                                            <a href="{{ route('terminerVidange',['id'=>$item->id]) }}"><button type="button" class="btn btn-outline-warning btn-sm">Vidange terminée</button></a>
                                                         @else
                                                             @if ($item->dispo == 'Disponible')
                                                                 <b class="text-primary">{{ $item->dispo }}</b>

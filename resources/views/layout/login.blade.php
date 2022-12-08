@@ -7,15 +7,22 @@
             <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
                 <div class="container">
                     <div class="row justify-content-center">
-                        <div class="col-lg-5 col-md-6 d-flex flex-column align-items-center justify-content-center">
+                        <div class="d-flex flex-column align-items-center justify-content-center">
 
                             <div class="card mb-3">
 
                                 <div class="card-body">
-
-                                    <div class="pt-4 pb-2">
-                                        <h5 class="card-title text-center pb-0 fs-4">Connexion</h5>
-                                    </div>
+                                    @if (session('status'))
+                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            <span class="font-medium">{{ session('msg') }}</span>
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                aria-label="Close"></button>
+                                        </div>
+                                    @endif
+                                    <div>
+                                        <h3 class="p-0 m-0"><img src="{{ asset('logo/i.png') }}" style="width: 170px;" alt="Esgis_logo"></h3>
+                                        <h5 class="card-title p-0 m-0  fs-4">Connexion</h5>
+                                    </div><hr>
                                     @if (\Session::has('message'))
                                         <div class="alert alert-info">{{ \Session::get('message') }}</div>
                                     @endif
@@ -33,11 +40,6 @@
 
                                         <div class="col-12">
                                             <button class="btn btn-primary w-100" type="submit">Se connecter</button>
-                                        </div>
-                                        <div class="col-12">
-                                            <p class="small mb-0">Vous n'avez pas de compte? <a
-                                                    href="{{url('register')}}">Inscrivez
-                                                    vous</a></p>
                                         </div>
                                     </form>
 

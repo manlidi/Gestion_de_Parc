@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('nomStructure');
             $table->string('localisation');
             $table->timestamps();
+            $table->unique('nomStructure');
         });
     }
 

@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\RegisterMail;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Piece;
-use App\Models\Voiture;
+use Illuminate\Support\Facades\Mail;
 
-class PieceController extends Controller
+class MailController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +15,8 @@ class PieceController extends Controller
      */
     public function index()
     {
-        $piece = Piece::all();
-        return view('pieces.all', compact('piece'));
+        Mail::to('mdtech3007@gmail.com')->send(new RegisterMail());
+        return "ok";
     }
 
     /**
@@ -27,7 +26,7 @@ class PieceController extends Controller
      */
     public function create()
     {
-        return view('pieces.add');
+        //
     }
 
     /**
@@ -38,14 +37,7 @@ class PieceController extends Controller
      */
     public function store(Request $request)
     {
-        $piece = new Piece();
-        $piece->nompiece = $request->nompiece;
-        $piece->datefin = $request->datefin;
-        $status = $piece->save();
-
-        if( $status ) $parametre = ['status'=>true, 'msg'=>'Pièce Enrégistré avec succès'];
-        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
-        return redirect()->route('pieces')->with($parametre);
+        //
     }
 
     /**

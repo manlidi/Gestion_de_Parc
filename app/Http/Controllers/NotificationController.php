@@ -21,8 +21,9 @@ class NotificationController extends Controller
         $assurences = self::assuranceNotif();
         $pieces = self::pieceNotif();
         $visites = self::visiteNotif();
+        $vidanges = self::vidangeNotif();
 
-        return view('notification.all', compact('assurences', 'pieces', 'visites'));
+        return view('notification.all', compact('assurences', 'pieces', 'visites', 'vidanges'));
     }
 
     public static function assuranceNotif(){
@@ -74,10 +75,30 @@ class NotificationController extends Controller
     }
 
     public static function visiteNotif(){
+        $date2 = new DateTime(date('Y-m-d'));
+        $datas = array();
         $voitures = Voiture::all()
-            ->where('status_visite','=',false)
-            ->where('kmvidange', '>=', 1000);
+            ->where('status_visite','=',false);
 
+        foreach($voitures as $voiture){
+            $date1 = new DateTime($voiture->date_next_visite);
+            $jourRestant = $date2->diff($date1)->format("%a");
+
+            if( $date2 < $date1 ){
+                if( $jourRestant <= 7 ){
+                    $datas += array( $voiture->id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'date_next_visite' => $voiture->date_next_visite, 'jourRestant' => $jourRestant) );
+                }
+            }else{
+                $datas += array( $voiture->id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'date_next_visite' => $voiture->date_next_visite, 'jourRestant' => ($jourRestant/(-1))) );
+            }
+        }
+        return $datas;
+    }
+
+    public function vidangeNotif(){
+        $voitures = Voiture::all()
+            ->where('status_vidange','=',false)
+            ->where('kmvidange', '>=', 1000);
         return $voitures;
     }
 }

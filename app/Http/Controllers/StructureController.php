@@ -29,11 +29,19 @@ class StructureController extends Controller
             'localisation' => 'required'
         ]);
 
+        $struct = Structure::all();
+        foreach($struct as $s){
+            if($s->nomStructure == $request->nomStructure){
+                $parametre = ['status'=>true, 'msg'=>'Cette structure existe déja !'];
+                return redirect()->route('addstructures')->with($parametre);
+            }
+        }
+
         $data = $request->all();
         $status = $this->store($data);
 
         if( $status ) $parametre = ['status'=>true, 'msg'=>'Structure enregistée avec succès'];
-        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
+        else $parametre = ['status'=>true, 'msg'=>'Erreur lors de l\'enregistrement'];
         return redirect()->route('structures')->with($parametre);
     }
 

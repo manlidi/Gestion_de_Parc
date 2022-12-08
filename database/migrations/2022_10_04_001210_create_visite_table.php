@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('visites', function (Blueprint $table) {
             $table->id();
-            $table->date('kmvidange');
+            $table->date('datevisite')->nullable();
+            $table->integer('kmvidange')->nullable();
             $table->foreignId('voiture_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });

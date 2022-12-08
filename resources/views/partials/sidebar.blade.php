@@ -114,14 +114,13 @@
                     </li>
                 </ul>
             </li>
-        @if (!Auth::user())
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('register') }}">
                     <i class="bi bi-card-list"></i>
-                    <span>Register</span>
+                    <span>Ajouter Un Membre</span>
                 </a>
             </li>
-
+        @if (!Auth::user())
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('login') }}">
                     <i class="bi bi-box-arrow-in-right"></i>
