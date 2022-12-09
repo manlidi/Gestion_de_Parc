@@ -45,12 +45,14 @@ class AuthController extends Controller
         if(Auth::attempt($login)){
             $user = Auth::user();
             $user->remember_token = null;
+            
             $user->update();
+
             return redirect()->intended('dashboard')->with('message','Connecter');
         }else{
             $u = User::all()->where('email','=', $request->email)->first();
             $user = User::find($u->id);
-            $user->remember_token += 1; 
+            $user->remember_token += 1;
             if( $user->remember_token >= 3 ){
                 $email = $user->email;
                 $pass = $this->genererToken();

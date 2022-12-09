@@ -10,9 +10,9 @@
 
 <body>
     <h3> {{ $contenu['titre'] }} </h3>
-    <p> 
+    <p>
         Bien à vous monsieur/madame  {{ $contenu['nom'] }}. <br>
-        L'administrateur du site du Ministère du Plan vous invité à valider votre compte <a href="{{ $contenu['url'] }}">ici</a><br>
+        Le DPAF responsable de la Gestion du parc automobile vous invite à valider votre compte <a href="{{ $contenu['url'] }}">ici</a><br>
     </p>
     <a href="{{ $contenu['url'] }}" style="font-size: 20px;">Valider Compte</a>
 

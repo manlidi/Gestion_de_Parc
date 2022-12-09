@@ -14,7 +14,7 @@ use App\Models\User;
                     <div class="col-12">
                         <div class="card recent-sales overflow-auto">
                             <div class="card-body">
-                                <h5 class="card-title">Liste des demandes</h5>
+                                <h5 class="card-title">Liste Des Demandes En Attente De Validation</h5>
                                 @if (session('status'))
                                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                                         <i class="bi bi-check-circle me-1"></i>
@@ -29,12 +29,10 @@ use App\Models\User;
                                         <tr>
                                             <th scope="col">#</th>
                                             <th scope="col">Objet De La Demande</th>
+                                            <th scope="col">Avec Chauffeur</th>
                                             <th scope="col">Type</th>
-                                            <th scope="col">Demande</th>
-                                            <th scope="col">Date début</th>
-                                            <th scope="col">Date de fin</th>
-                                            <th scope="col">Status</th>
-                                            <th scope="col">Approuvé</th>
+                                            <th scope="col">Date</th>
+                                            <th scope="col">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -52,56 +50,25 @@ use App\Models\User;
                                                             echo 'text-primary';
                                                         } ?>">{{ ucfirst($item->type) }}
                                                     </span>
+                                                </td>
                                                 <td>
-                                                    @if( ($item->type == 'voiture') || $item->type == 'reparation' )
-                                                        <strong>{{ Voiture::find($item->affecter_id)->marque }} ( {{ Voiture::find($item->affecter_id)->immatriculation }} )</strong>
+                                                    @if($item->addchauffeur)
+                                                        <strong class="text-success">Oui</strong>
                                                     @else
-                                                        <strong>{{ User::find($item->affecter_id)->name ?? '---'}}</strong>
+                                                        <strong class="text-danger">Non</strong>
                                                     @endif
                                                 </td>
-                                                <td>{{ $item->datedeb ?? '--' }}</td>
-                                                <td>{{ $item->datefin ?? '--' }}</td>
+                                                <td>Du {{ $item->datedeb ?? '--' }} Au {{ $item->datefin ?? '--' }}</td>
                                                 <td>
-                                                    @if($item->type == 'chauffeur')
-                                                        @if( DemandeController::chauffeurIsDispo($item->affecter_id) )
-                                                            <span class="badge bg-warning p-1">{{ $item->status }}</span>
-                                                        @else
-                                                            <span class="badge bg-danger p-2">En attente de <br>disponibilité</span>
-                                                        @endif
-                                                    @endif
                                                     @if($item->type == 'voiture')
-                                                        @if( DemandeController::voitureIsDispo($item->affecter_id) )
-                                                            <span class="badge bg-warning p-1">{{ $item->status }}</span>
-                                                        @else
-                                                            <span class="badge bg-danger p-2">En attente de <br>disponibilité</span>
-                                                        @endif
-                                                    @endif
-                                                    @if($item->type == 'reparation')
-                                                        <span class="badge bg-warning p-1">{{ $item->status }}</span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if($item->type == 'chauffeur')
-                                                        @if( DemandeController::chauffeurIsDispo($item->affecter_id) )
-                                                            <a class="btn btn-outline-info btn-sm" href="{{ route('validerDemande', ['id'=>$item->id, 'type' => $item->type]) }}">Valider</a>
-                                                            <a class="btn btn-outline-danger btn-sm" href="{{ route('rejeterDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rejeter</a>
-                                                        @else
-                                                            <button class="btn btn-outline-info disabled btn-sm">Valider</button>
-                                                            <a class="btn btn-outline-danger btn-sm" href="{{ route('rejeterDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rejeter</a>
-                                                        @endif
-                                                    @endif
-                                                    @if($item->type == 'voiture')
-                                                        @if( DemandeController::voitureIsDispo($item->affecter_id) )
-                                                            <a class="btn btn-outline-info btn-sm" href="{{ route('validerDemande', ['id'=>$item->id, 'type' => $item->type]) }}">Valider</a>
-                                                            <a class="btn btn-outline-danger btn-sm" href="{{ route('rejeterDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rejeter</a>
-                                                        @else
-                                                            <button class="btn btn-outline-info disabled btn-sm">Valider</button>
-                                                            <a class="btn btn-outline-danger btn-sm" href="{{ route('rejeterDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rejeter</a>
-                                                        @endif
-                                                    @endif
-                                                    @if($item->type == 'reparation')
-                                                        <a class="btn btn-outline-info btn-sm" href="{{ route('validerDemande', ['id'=>$item->id, 'type' => $item->type]) }}">Valider</a>
-                                                        <a class="btn btn-outline-danger btn-sm" href="{{ route('rejeterDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rejeter</a>
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <a class="btn btn-outline-info btn-sm" href="{{ route('formValide',['id'=>$item->id]) }}">Approuvé</a>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <a onclick="return confirm('Voulez-vous vraiment rejeter cette demande? Si oui cliquez sur Ok')" class="btn btn-outline-danger btn-sm" href="{{ route('rejeterDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rejeter</a>
+                                                            </div>
+                                                        </div>
                                                     @endif
                                                 </td>
                                             </tr>

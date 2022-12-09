@@ -106,7 +106,7 @@ namespace App\Http\Controllers;
         }
     </script>
     <script>
-        $(function() {
+       /* $(function() {
             $(".form-check-input").click(function(event){
                 var x = $(this).is(':checked');
                 if(x == true){

@@ -15,9 +15,11 @@ class Demande extends Model
     protected $fillable = [
         'user_id',
         'objetdemande',
+        'description',
+        'addchauffeur',
+        'nbreVoiture',
         'datedeb',
         'datefin',
-        'affecter_id',
         'type'
     ];
 
