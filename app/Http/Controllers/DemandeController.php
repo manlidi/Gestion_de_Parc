@@ -275,7 +275,7 @@ class DemandeController extends Controller
                                             ?>
                                                 <option value="<?= $us->id ?>"><?= $us->name ?></option>
                                             <?php
-                                        }   
+                                        }
                                     }else{
                                         ?>
                                             <option value="">Pas de chauffeur disponible</option>
@@ -298,7 +298,7 @@ class DemandeController extends Controller
     }
 
     public function validerDemande(Request $request, $id, $type){
-        dd($request->voitures, $request->chauffeures);
+        dd($request->voitures);   
 
         /*$demande = Demande::find($id);
         $demande->affecter_id = $request->voitures;
