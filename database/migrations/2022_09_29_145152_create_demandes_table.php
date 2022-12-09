@@ -24,6 +24,7 @@ return new class extends Migration
             $table->integer('nbreVoiture');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('status')->default('Non Approuvée');
+            $table->boolean('etat')->default(0);
             $table->timestamps();
         });
     }

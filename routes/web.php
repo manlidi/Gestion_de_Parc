@@ -81,13 +81,11 @@ Route::middleware(['auth', 'role:Administrateur'])->group(function () {
     Route::post('savemission', [MissionController::class, 'store']);
     Route::put('up/{id}', [MissionController::class, 'edit'])->name('up');
     Route::get('del/{id}', [MissionController::class, 'destroy']);
+    Route::put('addKm/{id}/{type}', [MissionController::class, 'addKm'])->name('addKm');
 
 
     Route::get('det/{id}', [MissionUserController::class, 'index'])->name('det');
     Route::get('rendreAllVoiture/{id}', [MissionUserController::class, 'rendreVoiture'])->name(('rendreAllVoiture'));
-    Route::get('addchauf/{id}', [MissionUserController::class, 'create']);
-    Route::put('addKmDebut/{id}', [MissionUserController::class, 'addKmDebut'])->name('addKmDebut');
-    Route::put('addChauffeure/{id}', [MissionUserController::class, 'addChauffeure'])->name('addChauffeure');
     Route::post('savechauffeurs/{id}', [MissionUserController::class, 'store']);
 
 

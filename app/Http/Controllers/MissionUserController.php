@@ -60,50 +60,6 @@ class MissionUserController extends Controller
         return true;
     }
 
-    public function addKmDebut(Request $request, $id)
-    {
-        $voitures = $request['voiture'];
-        $status = true;
-        foreach ($voitures as $voiture) {
-            $mUser = MissionUser::find($voiture);
-            $mUser->kmdeb = $request[$voiture];
-            $status = $mUser->update();
-
-            if (!$status) {
-                $parametre = ['status' => true, 'msg' => 'Erreur lors de la soumission'];
-                return redirect()->route('det', ['id' => $id])->with($parametre);
-            }
-        }
-
-        $parametre = ['status' => true, 'msg' => 'Kilométrage de début ajouté avec succès'];
-        return redirect()->route('det', ['id' => $id])->with($parametre);
-    }
-
-    public function addChauffeure(Request $request, $id)
-    {
-        $missions = $request['chauffeur'];
-        $status = true;
-        foreach ($missions as $mission) {
-            $mUser = MissionUser::find($mission);
-            if ($request[$mission] != null) {
-                $mUser->user_id = $request[$mission];
-                $status = $mUser->update();
-
-                $user = User::find($request[$mission]);
-                $chauffeur = Chauffeur::find($user->chauffeur->id);
-                $chauffeur->disp = "Non Disponible";
-                $chauffeur->update();
-
-                if (!$status) {
-                    $parametre = ['status' => true, 'msg' => 'Erreur lors de la soumission'];
-                    return redirect()->route('det', ['id' => $id])->with($parametre);
-                }
-            }
-        }
-        $parametre = ['status' => true, 'msg' => 'Chauffeur ajouté avec succès'];
-        return redirect()->route('det', ['id' => $id])->with($parametre);
-    }
-
 
     public static function chauffeurAjouterMission($missionId)
     {

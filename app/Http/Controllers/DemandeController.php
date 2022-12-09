@@ -428,40 +428,6 @@ class DemandeController extends Controller
         return $ajouter;
     }
 
-    public function rendreRessource( $id, $type ){
-        $demande = Demande::find($id);
-        $demande->status = "Rendu";
-        $status = $demande->update();
-
-        if( $type == 'voiture' ){
-            $voiture = Voiture::find($demande->affecter_id);
-            $voiture->dispo = "Disponible";
-            $voiture->mouvement = "Au parc";
-            $voiture->update();
-        }
-
-        if( $type == 'chauffeur' ){
-            $chauffeur = Chauffeur::find($demande->affecter_id);
-            $chauffeur->disp = "Disponible";
-            $chauffeur->update();
-        }
-
-        if( $type == 'reparation' ){
-            $voiture = Voiture::find($demande->affecter_id);
-            $voiture->dispo = "Disponible";
-            $voiture->mouvement = "Au parc";
-            $voiture->update();
-
-            $reparation = Reparer::where('demande_id','=',$id)->first();
-            $reparation->datereparation = now();
-            $reparation->update();
-        }
-
-        if( $status ) $parametre = ['status'=>true, 'msg'=>'Voiture ou Chauffeur rendu avec succès'];
-        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de la soumission'];
-        return redirect()->route('listereparation')->with($parametre);
-    }
-
     public function desapprouverDemande( $id, $type ){
         $demande = Demande::find($id);
         $demande->status = "Non Approuvée";
