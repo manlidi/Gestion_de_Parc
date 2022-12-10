@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Mission;
 use App\Models\Voiture;
 use App\Models\Chauffeur;
+use App\Models\Demande;
 use App\Models\MissionUser;
 use App\Models\Piece;
 use Illuminate\Http\Request;
@@ -124,18 +125,117 @@ class MissionController extends Controller
             $voit->kilmax -= $request[$voiture];
             $voit->update();
         }
-        MissionUserController::rendreVoiture($id);
-        // $mission = Mission::find($id);
-        // $status = $mission->update();
+        $this->rendreVoiture($id);
 
         $parametre = ['status'=>true, 'msg'=>'Mission modifiée avec succès'];
         return redirect()->route('missions')->with($parametre);
     }
 
+    public function rendreVoiture($demande_id)
+    {
+        $status = true;
+        $isAddKmDeb = DemandeController::kmDebutAjouterMission($demande_id);
+        $isAddKmFin = DemandeController::kmFinAjouterMission($demande_id);
+
+        if( ($isAddKmDeb == true) && ($isAddKmFin==true) ){
+            $missions = Mission::all()->where('demande_id', '=', $demande_id);
+            foreach( $missions as $mission ){
+                if( $mission->type == 'voiture' ){
+                    $voiture = Voiture::find($mission->affecter_id);
+                    $voiture->dispo = "Disponible";
+                    $voiture->mouvement = "Au parc";
+                    $voiture->update();
+                }
+                if( $mission->type == 'chauffeur' ){
+                    $user = User::find($mission->affecter_id);
+                    $chauffeur = Chauffeur::find($user->chauffeur->id);
+                    $chauffeur->disp = "Disponible";
+                    $chauffeur->update();
+                }
+                $m = Mission::find($mission->id);
+                $m->status = true;
+                $m->update();
+            }
+
+            $demande = Demande::find($demande_id);
+            $demande->status = "Rendu";
+            $demande->etat = true;
+            $status = $demande->update();
+        }else{
+            $status = false;
+        }
+        return $status;
+    }
+
+    public function addKm(Request $request, $id, $type)
+    {
+        if( $type == 'deb' ){
+            $voitures = $request['voiture'];
+            $status = true;
+            foreach ($voitures as $voiture) {
+                $mUser = Mission::find($voiture);
+                $mUser->kmdeb = $request[$voiture];
+                $status = $mUser->update();
+    
+                if (!$status) {
+                    $parametre = ['status' => true, 'msg' => 'Erreur lors de la soumission'];
+                    return redirect()->route('showDetail', ['id' => $id])->with($parametre);
+                }
+            }
+            $out = $this->rendreVoiture($id);
+            if( $out )
+                $parametre = ['status' => true, 'msg' => 'Kilométrage ajouté et ressource rendu avec succès'];
+            else
+                $parametre = ['status' => true, 'msg' => 'Kilométrage ajouté avec succès'];
+            return redirect()->route('showDetail', ['id' => $id])->with($parametre);
+        }elseif($type == 'fin'){
+            $voitures = $request['voiture'];
+            foreach( $voitures as $voiture ){
+                $mUser = Mission::find($voiture);
+                $mUser->kmfin = $request[$voiture];
+                $mUser->update();
+    
+                $kmdiff = (($mUser->kmfin) - ($mUser->kmdeb));
+                $voit = Voiture::find($mUser->affecter_id);
+                $voit->kmvidange += $kmdiff;
+                $voit->kilmax -= $request[$voiture];
+                $voit->update();
+            }
+            $out = $this->rendreVoiture($id);
+            if( $out )
+                $parametre = ['status' => true, 'msg' => 'Kilométrage ajouté et ressource rendu avec succès'];
+            else
+                $parametre = ['status' => true, 'msg' => 'Kilométrage ajouté avec succès mais ressource non rendu. Ajouter les Kilométrage'];
+            return redirect()->route('showDetail', ['id' => $id])->with($parametre);
+        }
+        else{
+            $parametre = ['status' => true, 'msg' => 'Erreur lors de la soumission'];
+            return redirect()->route('showDetail', ['id' => $id])->with($parametre);
+        }
+
+        $parametre = ['status' => true, 'msg' => 'Kilométrage ajouté avec succès'];
+        return redirect()->route('showDetail', ['id' => $id])->with($parametre);
+    }
+
+    public static function getVoiture($id){
+        $voiture = Voiture::find($id);
+        return $voiture;
+    }
+
+    public static function getVoitureInDemande($demande_id){
+        $missions = Mission::all()
+            ->where('demande_id', '=', $demande_id)
+            ->where('type', '=', 'voiture');
+        return $missions;
+    }
+
     public static function missionModal($id, $url, $type=null, $userStructureId=null){
-        $voituremissions = Mission::find($id);
+        $missions = self::getVoitureInDemande($id);
         if( $type == 'kmdeb' ) $msg = "Ajouter le kélométrage de début";
-        if( $type == null ) $msg = "Complété le kilométrage de fin";
+        if( $type == null ){
+            $msg = "Complété le kilométrage de fin";
+            $type = 'kmfin';
+        }
         ?>
             <div class="modal fade" id="<?= $type ?>modal<?= $id ?>" tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">
@@ -150,47 +250,27 @@ class MissionController extends Controller
                             <input type="hidden" name="_token" value="<?= csrf_token() ?>" />
                             <?=  method_field('PUT'); ?>
                             <?php
-                            foreach ($voituremissions as $key) {
-                                if( $type == 'chauffeure' ){
-                                    ?>
-                                    <div class="col-md-6">
-                                        <input type="text" class="form-control" value="<?= $key->voiture->marque . ' ('. $key->voiture->immatriculation . ')'; ?>" disabled>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <select id="inputState" name="<?= $key->id ?>" class="form-select">
-                                            <option value="">Choisir Chauffeur ...</option>
-                                            <?php
-                                                if( $key->chauffeur != null ){
-                                                    echo self::select_option(self::getStructureChauffeure( $userStructureId ), $key->chauffeur->id);
-                                                }else{
-                                                    echo self::select_option(self::getStructureChauffeure( $userStructureId ));
-                                                }
-                                            ?>
-                                        </select>
-                                    </div>
-                                    <input type="hidden" name="chauffeur[]" value="<?= $key->id ?>">
-                                    <?php
-                                }
+                            foreach ($missions as $mission) {
                                 if( $type == 'kmdeb' ){
                                     ?>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" value="<?= $key->voiture->marque . ' ('. $key->voiture->immatriculation . ')'; ?>" disabled>
+                                        <input type="text" class="form-control" value="<?= self::getVoiture($mission->affecter_id)->marque . ' ('. self::getVoiture($mission->affecter_id)->immatriculation . ')'; ?>" disabled>
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="number" name="<?= $key->id ?>" value="<?php if( $key->kmdeb != 0 ) echo $key->kmdeb; ?>" class="form-control" min="1" placeholder="Kilométrage de début" required>
+                                        <input type="number" name="<?= $mission->id ?>" value="<?php if( $mission->kmdeb != 0 ) echo $mission->kmdeb; ?>" class="form-control" min="1" placeholder="Kilométrage de début" required>
                                     </div>
-                                    <input type="hidden" name="voiture[]" value="<?= $key->id ?>">
+                                    <input type="hidden" name="voiture[]" value="<?= $mission->id ?>">
                                     <?php
                                 }
-                                if( $type == null ){
+                                if( $type == 'kmfin' ){
                                     ?>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" value="<?= $key->voiture->marque . ' ('. $key->voiture->immatriculation . ')'; ?>" disabled>
+                                        <input type="text" class="form-control" value="<?= self::getVoiture($mission->affecter_id)->marque . ' ('. self::getVoiture($mission->affecter_id)->immatriculation . ')'; ?>" disabled>
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="number" name="<?= $key->id ?>" class="form-control" min="1" placeholder="Kilométrage de fin" required>
+                                        <input type="number" name="<?= $mission->id ?>" value="<?php if( $mission->kmfin != 0 ) echo $mission->kmfin; ?>" class="form-control" min="1" placeholder="Kilométrage de fin" required>
                                     </div>
-                                    <input type="hidden" name="voiture[]" value="<?= $key->id ?>">
+                                    <input type="hidden" name="voiture[]" value="<?= $mission->id ?>">
                                     <?php
                                 }
                             }

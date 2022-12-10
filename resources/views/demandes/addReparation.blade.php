@@ -13,71 +13,47 @@ use Illuminate\Support\Facades\Auth;
                     <div class="card mb-3">
                         <div class="card-body">
                             <h5 class="card-title">Demandez une Réparation</h5>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <table class="table table-borderless datatable">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">
-                                                    Les voitures à votre charge pour une mission
-                                                </th>
-                                                <th scope="col">
-                                                    Action
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($voiture as $item)
-                                            <tr>
-                                                <td>
-                                                    {{ $item->marque ?? '---' }}
-                                                    ({{ $item->immatriculation ?? '---' }})
-                                                </td>
-                                                <td>
-                                                    @if( ! DemandeController::isdemanderEnReparation( $item->id ) )
-                                                        <a href="{{ route('addReparationDetail',['id'=>$item->id]) }}"><button type="button"
-                                                            class="btn btn-outline-success btn-sm">Demander Réparation</button></a>
-                                                    @else  
-                                                        <button class="btn btn-info" disabled>Réparation</button>
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                            @if(count($voitures) > 0)
+                                <table class="table table-borderless datatable">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Marque</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">
+                                                Action
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($voitures as $item)
+                                        <tr>
+                                            <td>
+                                                {{ $loop->iteration }}
+                                            </td>
+                                            <td>
+                                                {{ $item->marque }} ({{ $item->immatriculation }})
+                                            </td>
+                                            <td>
+                                                <span class="badge rounded-pill bg-info text-dark">{{ $item->mouvement }}</span>
+                                            </td>
+                                            <td>
+                                                @if( ! DemandeController::isdemanderEnReparation( $item->id ) )
+                                                    <a href="{{ route('addReparationDetail',['id'=>$item->affecter_id]) }}"><button type="button"
+                                                        class="btn btn-outline-success btn-sm">Demander Réparation</button></a>
+                                                @else
+                                                    <button class="btn btn-info" disabled>Réparation</button>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            @else
+                                <div class="alert alert-warning bg-warning border-0 alert-dismissible fade show" role="alert">
+                                    Vous n'avez de voiture à votre active
                                 </div>
-                                <div class="col-sm-6">
-                                    <table class="table table-borderless datatable">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">
-                                                    Les voitures que vous avez demander
-                                                </th>
-                                                <th scope="col">
-                                                    Action
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($voituredemande as $item)
-                                            <tr>
-                                                <td>
-                                                    {{ $item->marque ?? '---' }} ({{ $item->immatriculation ?? '---' }}) <br>
-                                                </td>
-                                                <td>
-                                                    @if( ! DemandeController::isdemanderEnReparation( $item->id ) )
-                                                        <a href="{{ route('addReparationDetail',['id'=>$item->id]) }}"><button type="button"
-                                                            class="btn btn-outline-success btn-sm">Demander Réparation</button></a>
-                                                    @else  
-                                                        <button class="btn btn-info" disabled>Réparation</button>
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>

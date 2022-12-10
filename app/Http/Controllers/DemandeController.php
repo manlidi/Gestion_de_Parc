@@ -62,7 +62,7 @@ class DemandeController extends Controller
 
         return view('demandes.admindemandes', compact('demande'));
     }
-
+    
     /**
      * Show the form for creating a new resource.
      *
@@ -91,20 +91,16 @@ class DemandeController extends Controller
     public function createReparation()
     {
         $authorId = Auth::user()->id;
-        $voiture = DB::table('mission_users')
-            ->join('voitures','voitures.id','=','mission_users.voiture_id')
-            ->select('mission_users.*','voitures.*')
-            ->where('user_id', '=', $authorId)
-            ->where('mouvement','=','En mission')
-            ->get();
-        $voituredemande = DB::table('demandes')
-            ->join('voitures', 'voitures.id', '=', 'demandes.affecter_id')
-            ->select('voitures.*')
-            ->where('demandes.type', '=', 'voiture')
+        $voitures = DB::table('voitures')
+            ->join('missions','missions.affecter_id','=','voitures.id')
+            ->join('demandes','demandes.id','=','missions.demande_id')
+            ->select('missions.*','voitures.*', 'demandes.*')
             ->where('demandes.user_id', '=', $authorId)
-            ->where('demandes.status', '=', 'Approuvée')
+            ->where('mouvement','=','En mission')
+            ->where('missions.type','=','voiture')
+            ->where('missions.status','=',0)
             ->get();
-        return view('demandes.addReparation', compact('voiture', 'voituredemande'));
+        return view('demandes.addReparation', compact('voitures'));
     }
 
     public static function chauffeurDispo(){
@@ -165,6 +161,7 @@ class DemandeController extends Controller
         $demande = Demande::create([
             'objetdemande' => "Réparation (". $voiture->marque ."/". $voiture->immatriculation .")",
             'affecter_id' => $id,
+            'description' => 'Demande de Réparation',
             'type' => 'reparation',
             'user_id' => Auth::user()->id
         ]);
@@ -331,7 +328,7 @@ class DemandeController extends Controller
         return view('demandes.showDemande', compact('demande', 'voitures', 'kmDebutAjouterMission', 'kmFinAjouterMission'));
     }
 
-    public function formValide($id){
+    public function formValide($id, $id_caisse=null){
         $demande = Demande::find($id);
 
         $voitures = Voiture::all()
@@ -387,6 +384,9 @@ class DemandeController extends Controller
                 return redirect()->route('admin_demandes')->with(['status' => true, 'msg' => 'Demande validée avec succès']);
             }
         }
+        if($type == 'reparation'){
+
+        }
     }
 
     public static function isDemandeRespo( $demande_id ){
@@ -426,40 +426,6 @@ class DemandeController extends Controller
             }
         }
         return $ajouter;
-    }
-
-    public function rendreRessource( $id, $type ){
-        $demande = Demande::find($id);
-        $demande->status = "Rendu";
-        $status = $demande->update();
-
-        if( $type == 'voiture' ){
-            $voiture = Voiture::find($demande->affecter_id);
-            $voiture->dispo = "Disponible";
-            $voiture->mouvement = "Au parc";
-            $voiture->update();
-        }
-
-        if( $type == 'chauffeur' ){
-            $chauffeur = Chauffeur::find($demande->affecter_id);
-            $chauffeur->disp = "Disponible";
-            $chauffeur->update();
-        }
-
-        if( $type == 'reparation' ){
-            $voiture = Voiture::find($demande->affecter_id);
-            $voiture->dispo = "Disponible";
-            $voiture->mouvement = "Au parc";
-            $voiture->update();
-
-            $reparation = Reparer::where('demande_id','=',$id)->first();
-            $reparation->datereparation = now();
-            $reparation->update();
-        }
-
-        if( $status ) $parametre = ['status'=>true, 'msg'=>'Voiture ou Chauffeur rendu avec succès'];
-        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de la soumission'];
-        return redirect()->route('listereparation')->with($parametre);
     }
 
     public function desapprouverDemande( $id, $type ){

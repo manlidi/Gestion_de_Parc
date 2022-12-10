@@ -21,9 +21,10 @@ return new class extends Migration
             $table->date('datedeb')->nullable()->default(NULL);
             $table->date('datefin')->nullable()->default(NULL);
             $table->string('type');
-            $table->integer('nbreVoiture');
+            $table->integer('nbreVoiture')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('status')->default('Non Approuvée');
+            $table->boolean('etat')->default(0);
             $table->timestamps();
         });
     }

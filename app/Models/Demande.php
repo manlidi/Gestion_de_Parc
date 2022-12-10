@@ -20,6 +20,7 @@ class Demande extends Model
         'nbreVoiture',
         'datedeb',
         'datefin',
+        'etat',
         'type'
     ];
 

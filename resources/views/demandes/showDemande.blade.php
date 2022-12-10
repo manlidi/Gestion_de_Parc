@@ -19,15 +19,16 @@ use App\Http\Controllers\MissionController;
                                         aria-label="Close"></button>
                                 </div>
                             @endif
-                            @if (DemandeController::isDemandeRespo($demande->id))
-                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                    <i class="bi bi-check-circle me-1"></i>
-                                    Pour rendre les voitures et les chauffeurs disponibles à la fin de la mission,<br>
-                                        vous devez ajouter les kilométrage de début et de fin.<br>
-                                        <a href="{{ route('rendreRessource',['id'=>$demande->id, 'type' =>'voiture']) }}"><button class="btn btn-primary btn-sm">Cliquez-ici pour rendre ressources disponible</button></a>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
+                            @if( ! $demande->etat )
+                                @if (DemandeController::isDemandeRespo($demande->id))
+                                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                                        <i class="bi bi-check-circle me-1"></i>
+                                        Pour rendre les voitures et les chauffeurs disponibles à la fin de la mission,<br>
+                                            vous devez ajouter les kilométrage de début et de fin.<br>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                            aria-label="Close"></button>
+                                    </div>
+                                @endif
                             @endif
                             <div class="row card-body bg-secondary">
                                 <div class="col-sm-8">
@@ -104,8 +105,8 @@ use App\Http\Controllers\MissionController;
                                         @endforeach
                                     </tbody>
                                 </table>
-                                <?= MissionController::missionModal($demande->id, route('addKmDebut',['id'=> $demande->id ]), 'kmdeb')?>
-                                <?= MissionController::missionModal($demande->id, route('addKmDebut',['id'=> $demande->id ]))?>
+                                <?= MissionController::missionModal($demande->id, route('addKm',['id'=> $demande->id, 'type'=>'deb' ]), 'kmdeb')?>
+                                <?= MissionController::missionModal($demande->id, route('addKm',['id'=> $demande->id, 'type'=>'fin' ]))?>
                                 @if ($demande->addchauffeur)
                                     <h5 class="card-title m-0">Chauffeurs affecté</h5>
                                     <hr>
