@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Voiture;
 use App\Models\Chauffeur;
 use App\Models\Garage;
+use App\Models\Mission;
 use App\Models\Piece;
 use App\Models\Reparer;
 use Illuminate\Http\Request;
@@ -30,18 +31,25 @@ class DemandeController extends Controller
     }
 
     public function indexAdminApprouve(){
-        $demande = Demande::all()->where('status', 'Approuvée');
-        return view('demandes.adminDemandeApprouve', compact('demande'));
+        $demandes = Demande::all()->where('status', 'Approuvée');
+        return view('demandes.adminDemandeApprouve', compact('demandes'));
     }
 
     public function indexApprouve(){
-        $demande = DB::table('demandes')
+        $demandes = DB::table('demandes')
             ->join('users', 'users.id', '=', 'demandes.user_id')
             ->select('demandes.*')
             ->where('demandes.user_id', '=', Auth::user()->id)
             ->where('status', '=', 'Approuvée')
             ->get();
-        return view('demandes.demandeApprouve', compact('demande'));
+
+        $nonValidedemandes = DB::table('demandes')
+            ->join('users', 'users.id', '=', 'demandes.user_id')
+            ->select('demandes.*')
+            ->where('demandes.user_id', '=', Auth::user()->id)
+            ->where('status', '=', 'Non Approuvée')
+            ->get();
+        return view('demandes.mesDemande', compact('demandes', 'nonValidedemandes'));
     }
 
     public function indexAdmin(){
@@ -70,7 +78,7 @@ class DemandeController extends Controller
             //->where('structure_id', '=', $id);
 
         $chauffeur = self::chauffeurDispo();
-        return view('demandes.addVoiture', compact('voiture', 'chauffeur'));
+        return view('demandes.askVoiture', compact('voiture', 'chauffeur'));
     }
 
     public function addReparationDetail($id){
@@ -125,30 +133,31 @@ class DemandeController extends Controller
      */
     public function store(Request $request, $type)
     {
-        if( $type == 'voiture' ){
-            $status = self::saveModel($request, $type);
-        }
-        if( $type == 'chauffeur' ){
-            $status = self::saveModel($request, $type);
-        }
+        $request->validate([
+            'objetdemande' => 'required',
+            'descdemande' => 'required',
+            'nbrevoiture' => 'required',
+            'datedeb' => 'required',
+            'datefin'    =>  'required|date|after:datedeb'
+        ]);
+
+        if( $request->addchauffeur != null ) $addchauf = true;
+        else $addchauf = false;
+
+        $status = Demande::create([
+            'objetdemande' => $request->objetdemande,
+            'description' => $request->descdemande,
+            'addchauffeur' => $addchauf,
+            'datedeb' => $request->datedeb,
+            'nbreVoiture' => $request->nbrevoiture,
+            'datefin' => $request->datefin,
+            'user_id' => Auth::user()->id,
+            'type' => $type
+        ]);
 
         if( $status ) $parametre = ['status'=>true, 'msg'=>'Votre demande a été enregistré avec succès. Veuillez attendre sa validation!'];
         else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
-        return redirect()->route('dashboard')->with($parametre);
-    }
-
-    public static function saveModel($request, $type){
-        $demande = new Demande();
-        $demande->objetdemande = $request->objetdemande;
-        $demande->descdemande = $request->descdemande;
-        $demande->checks = $request->checks;
-        $demande->datedeb = $request->datedeb;
-        $demande->datefin = $request->datefin;
-
-        $demande->type = $type;
-        $demande->user_id = Auth::user()->id;
-        $status = $demande->save();
-        return $status;
+        return redirect()->route('mesDemabdes')->with($parametre);
     }
 
     public function saveDemandeReparation( Request $request, $id ){
@@ -257,7 +266,7 @@ class DemandeController extends Controller
                                             ?>
                                                 <option value="<?= $us->id ?>"><?= $us->marque ?></option>
                                            <?php
-                                        }
+                                        } 
                                     }else{
                                         ?>
                                             <option value="">Pas de voiture disponible</option>
@@ -297,43 +306,129 @@ class DemandeController extends Controller
     <?php
     }
 
-    public function validerDemande(Request $request, $id, $type){
-        dd($request->voitures);   
+    public function showDetailDemande( $id ){
+        $demande = Demande::find($id);
+        $kmDebutAjouterMission = self::kmDebutAjouterMission($id);
+        $kmFinAjouterMission = self::kmFinAjouterMission($id);
 
-        /*$demande = Demande::find($id);
-        $demande->affecter_id = $request->voitures;
-        $demande->status = "Approuvée";
-        $status = $demande->update();
+        $voitures = DB::table('missions')
+            ->join('voitures','voitures.id','=','missions.affecter_id')
+            ->select('missions.*','voitures.*')
+            ->where('demande_id', '=', $id)
+            ->where('type','=','voiture')
+            ->get();
 
-        if( $type == 'voiture' ){
-            $voiture = Voiture::find($demande->affecter_id);
-            $voiture->dispo = "Non Disponible";
-            $voiture->mouvement = "En sortie";
-            $voiture->update();
+        if($demande->addchauffeur){
+            $chauffeurs = DB::table('missions')
+                ->join('users','users.id','=','missions.affecter_id')
+                ->join('chauffeurs','chauffeurs.user_id','=','users.id')
+                ->select('missions.*','users.*', 'chauffeurs.*')
+                ->where('demande_id', '=', $id)
+                ->where('type','=','chauffeur')
+                ->get();
+            return view('demandes.showDemande', compact('demande', 'voitures', 'chauffeurs', 'kmDebutAjouterMission', 'kmFinAjouterMission'));
         }
-
-        /*if( $type == 'chauffeur' ){
-            $chauffeurs = Chauffeur::all()->where('user_id', '=', $demande->affecter_id);
-            foreach($chauffeurs as $chauffeur){
-                //dd($chauffeur->disp);
-                $chauffeur->disp = "Non Disponible";
-                $chauffeur->update();
-            }
-        }*/
-
-        /*if( $type == 'reparation' ){
-            $voiture = Voiture::find($demande->affecter_id);
-            $voiture->dispo = "Non Disponible";
-            $voiture->mouvement = "Au garage";
-            $voiture->update();
-        }
-
-        if( $status ) $parametre = ['status'=>true, 'msg'=>'Demande approuvée avec succès !'];
-        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de la validation de la demande'];
-        return redirect()->route('admin_demandes')->with($parametre);*/
+        return view('demandes.showDemande', compact('demande', 'voitures', 'kmDebutAjouterMission', 'kmFinAjouterMission'));
     }
 
-    public function rendreDemande( $id, $type ){
+    public function formValide($id){
+        $demande = Demande::find($id);
+
+        $voitures = Voiture::all()
+            ->where('dispo', '=', 'Disponible')
+            ->where('structure_id','=',User::find(Auth::user()->id)->structure_id);
+
+        $chauffeurs = Chauffeur::all()
+            ->where('disp', '=', 'Disponible');
+
+        return view('demandes.formValideDemande', compact('demande', 'voitures', 'chauffeurs'));
+    }
+
+    public function validerDemande(Request $request, $id, $type){
+        if( $type == 'voiture' ){
+            $request->validate([
+                'voitures' => 'required',
+            ]);
+
+            $demande = Demande::find($id);
+            $nbre = count( $request->voitures );
+            if( $nbre > $demande->nbreVoiture ){
+                return redirect()->route('formValide', ['id' => $id])->with(['status'=>true, 'msg'=> 'Vous avez ajouté plus de voiture que demandée']);
+            }else{
+                foreach( $request->voitures as $caisse ){
+                    $voiture = Voiture::find($caisse);
+                    $voiture->dispo = 'Non Disponible';
+                    $voiture->mouvement = 'En mission';
+                    $voiture->update();
+
+                    Mission::create([
+                        'demande_id' => $demande->id,
+                        'affecter_id' => $voiture->id,
+                        'type' => 'voiture'
+                    ]);
+                }
+
+                if( isset( $request->chauffeurs ) ){
+                    foreach( $request->chauffeurs as $chauf ){
+                        $user = User::find($chauf);
+                        $chauffeur = Chauffeur::find($user->chauffeur->id);
+                        $chauffeur->disp = 'Non Disponible';
+                        $chauffeur->update();
+
+                        Mission::create([
+                            'demande_id' => $demande->id,
+                            'affecter_id' => $user->id,
+                            'type' => 'chauffeur'
+                        ]);
+                    }
+                }
+                $demande->status = 'Approuvée';
+                $demande->update();
+                return redirect()->route('admin_demandes')->with(['status' => true, 'msg' => 'Demande validée avec succès']);
+            }
+        }
+    }
+
+    public static function isDemandeRespo( $demande_id ){
+        $demande = Demande::find($demande_id);
+        $user_strucutre = User::find($demande->user_id)->structure_id;
+        if( (Auth::user()->role == 'Administrateur') && ($user_strucutre == Auth::user()->structure_id) ){
+            return true;
+        }
+        return false;
+    }
+
+    public static function kmDebutAjouterMission($demande_id)
+    {
+        $ajouter = true;
+        $missions = Mission::all()
+            ->where('demande_id','=',$demande_id)
+            ->where('type','=','voiture');
+
+        foreach ($missions as $mission) {
+            if ($mission->kmdeb == 0) {
+                $ajouter = false;
+            }
+        }
+        return $ajouter;
+    }
+
+    public static function kmFinAjouterMission($demande_id)
+    {
+        $ajouter = true;
+        $missions = Mission::all()
+            ->where('demande_id','=',$demande_id)
+            ->where('type','=','voiture');
+
+        foreach ($missions as $mission) {
+            if ($mission->kmfin == 0) {
+                $ajouter = false;
+            }
+        }
+        return $ajouter;
+    }
+
+    public function rendreRessource( $id, $type ){
         $demande = Demande::find($id);
         $demande->status = "Rendu";
         $status = $demande->update();
@@ -372,17 +467,26 @@ class DemandeController extends Controller
         $demande->status = "Non Approuvée";
         $status = $demande->update();
 
-        if( $type == 'voiture' ){
-            $voiture = Voiture::find($demande->affecter_id);
-            $voiture->dispo = "Disponible";
-            $voiture->mouvement = "En sortie";
-            $voiture->update();
-        }
-
-        if( $type == 'chauffeur' ){
-            $chauffeur = Chauffeur::find($demande->affecter_id);
-            $chauffeur->disp = "Disponible";
-            $chauffeur->update();
+        $missions = Mission::all()->where('demande_id', '=', $id);
+        if( count($missions) > 0 ){
+            foreach( $missions as $mission ){
+                if( $mission->type == 'voiture' ){
+                    $voiture = Voiture::find($mission->affecter_id);
+                    $voiture->dispo = "Disponible";
+                    $voiture->mouvement = "Au parc";
+                    $voiture->update();
+                }
+                if( $mission->type == 'chauffeur' ){
+                    $user = User::find($mission->affecter_id);
+                    $chauffeur = Chauffeur::find($user->chauffeur->id);
+                    $chauffeur->disp = "Disponible";
+                    $chauffeur->update();
+                }
+                $m = Mission::find($mission->id);
+                $m->delete();
+            }
+        }else{
+            $status = false;
         }
 
         if( $status ) $parametre = ['status'=>true, 'msg'=>'Demande désapprouvée avec succès'];

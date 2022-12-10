@@ -14,7 +14,7 @@ use App\Models\User;
                     <div class="col-12">
                         <div class="card recent-sales overflow-auto">
                             <div class="card-body">
-                                <h5 class="card-title">Liste des demandes</h5>
+                                <h5 class="card-title">Liste Des Demandes En Attente De Validation</h5>
                                 @if (session('status'))
                                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                                         <i class="bi bi-check-circle me-1"></i>
@@ -29,13 +29,10 @@ use App\Models\User;
                                         <tr>
                                             <th scope="col">#</th>
                                             <th scope="col">Objet De La Demande</th>
-                                            <th scope="col">Description De La Demande</th>
+                                            <th scope="col">Avec Chauffeur</th>
                                             <th scope="col">Type</th>
-                                            <th scope="col">Chauffeur</th>
-                                            <th scope="col">Date début</th>
-                                            <th scope="col">Date de fin</th>
-                                            <th scope="col">Status</th>
-                                            <th scope="col">Approuvé</th>
+                                            <th scope="col">Date</th>
+                                            <th scope="col">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -43,7 +40,6 @@ use App\Models\User;
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $item->objetdemande }}</td>
-                                                <td>{{ $item->descdemande }}</td>
                                                 <td>
                                                     <span
                                                         class="<?php if ($item->type == 'reparation') {
@@ -54,26 +50,23 @@ use App\Models\User;
                                                             echo 'text-primary';
                                                         } ?>">{{ ucfirst($item->type) }}
                                                     </span>
+                                                </td>
                                                 <td>
-                                                    @if($item->checks == 'on')
+                                                    @if($item->addchauffeur)
                                                         <strong class="text-success">Oui</strong>
                                                     @else
                                                         <strong class="text-danger">Non</strong>
                                                     @endif
                                                 </td>
-                                                <td>{{ $item->datedeb ?? '--' }}</td>
-                                                <td>{{ $item->datefin ?? '--' }}</td>
-                                                <td>
-                                                    <span class="badge bg-warning p-1">{{ $item->status }}</span>
-                                                </td>
+                                                <td>Du {{ $item->datedeb ?? '--' }} Au {{ $item->datefin ?? '--' }}</td>
                                                 <td>
                                                     @if($item->type == 'voiture')
                                                         <div class="row">
                                                             <div class="col-sm-6">
-                                                              <button type="button" data-bs-toggle="modal" data-bs-target="#validerdemande<?= $item->id ?>" class="btn btn-outline-info btn-sm">Valider</button>
+                                                                <a class="btn btn-outline-info btn-sm" href="{{ route('formValide',['id'=>$item->id]) }}">Approuvé</a>
                                                             </div>
                                                             <div class="col-sm-6">
-                                                                <a class="btn btn-outline-danger btn-sm" href="{{ route('rejeterDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rejeter</a>
+                                                                <a onclick="return confirm('Voulez-vous vraiment rejeter cette demande? Si oui cliquez sur Ok')" class="btn btn-outline-danger btn-sm" href="{{ route('rejeterDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rejeter</a>
                                                             </div>
                                                         </div>
                                                     @endif
@@ -82,7 +75,6 @@ use App\Models\User;
                                         @endforeach
                                     </tbody>
                                 </table>
-                                <?= DemandeController::modal($item->id, route('validerDemande',['id'=> $item->id, 'type'=>$item->type]))?>
                                 @else
                                     <div class="alert alert-warning">
                                         Pas de demande !

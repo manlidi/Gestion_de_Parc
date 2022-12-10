@@ -38,14 +38,16 @@ Route::get('admin_demandes', [DemandeController::class, 'indexAdmin'])->name('ad
 Route::get('adminDemandeApprouve', [DemandeController::class, 'indexAdminApprouve'])->name('adminDemandeApprouve');
 
 Route::get('addReparationDetail/{id}', [DemandeController::class, 'addReparationDetail'])->name('addReparationDetail');
-Route::get('demandeApprouve', [DemandeController::class, 'indexApprouve']);
+Route::get('mesDemandes', [DemandeController::class, 'indexApprouve'])->name('mesDemabdes');
+Route::get('showDetail/{id}', [DemandeController::class, 'showDetailDemande'])->name('showDetail');
 Route::get('demanderVoiture', [DemandeController::class, 'createVoiture'])->name('demanderVoiture');
 Route::get('demanderChauffeur', [DemandeController::class, 'createChauffeur'])->name('demanderChauffeur');
-Route::get('rendreDemande/{id}/{type}', [DemandeController::class, 'rendreDemande'])->name('rendreDemande');
+Route::get('rendreRessource/{id}/{type}', [DemandeController::class, 'rendreDemande'])->name('rendreRessource');
 Route::get('desapprouverDemande/{id}/{type}', [DemandeController::class, 'desapprouverDemande'])->name('desapprouverDemande');
 Route::get('rejeterDemande/{id}/{type}', [DemandeController::class, 'rejeterDemande'])->name('rejeterDemande');
 Route::get('demanderReparation', [DemandeController::class, 'createReparation'])->name('demanderReparation');
-Route::put('validerDemande/{id}/{type}', [DemandeController::class, 'validerDemande'])->name('validerDemande')->whereNumber('id');
+Route::get('formValide/{id}', [DemandeController::class, 'formValide'])->name('formValide')->whereNumber('id');
+Route::post('validerDemande/{id}/{type}', [DemandeController::class, 'validerDemande'])->name('validerDemande')->whereNumber('id');
 Route::post('saveDemande/{type}', [DemandeController::class, 'store'])->name('saveDemande');
 Route::post('saveDemandeReparation/{id}', [DemandeController::class, 'saveDemandeReparation'])->name('saveDemandeReparation');
 Route::get('updateDemandeVoiture/{id}', [DemandeController::class, 'updateDemandeVoiture'])->name('updateDemandeVoiture');

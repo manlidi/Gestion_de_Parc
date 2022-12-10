@@ -133,8 +133,7 @@ class MissionController extends Controller
     }
 
     public static function missionModal($id, $url, $type=null, $userStructureId=null){
-        $voituremissions = Mission::find($id)->mission_users;
-        if( $type == 'chauffeure' ) $msg = "Ajouter les chauffeurs au mission";
+        $voituremissions = Mission::find($id);
         if( $type == 'kmdeb' ) $msg = "Ajouter le kélométrage de début";
         if( $type == null ) $msg = "Complété le kilométrage de fin";
         ?>

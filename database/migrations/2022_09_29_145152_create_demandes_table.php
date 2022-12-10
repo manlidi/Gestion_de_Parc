@@ -16,12 +16,12 @@ return new class extends Migration
         Schema::create('demandes', function (Blueprint $table) {
             $table->id();
             $table->string('objetdemande');
-            $table->text('descdemande');
-            $table->string('checks');
+            $table->text('description');
+            $table->boolean('addchauffeur')->default(false);
             $table->date('datedeb')->nullable()->default(NULL);
             $table->date('datefin')->nullable()->default(NULL);
-            $table->integer('affecter_id')->nullable()->default(NULL);
             $table->string('type');
+            $table->integer('nbreVoiture');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('status')->default('Non Approuvée');
             $table->timestamps();

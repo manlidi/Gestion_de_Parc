@@ -2,10 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\MissionUser;
 
 class Mission extends Model
 {
@@ -13,12 +11,12 @@ class Mission extends Model
 
 
     protected $fillable = [
-        'objetmission',
-        'datedeb',
-        'datefin'
+        'demande_id',
+        'affecter_id',
+        'type',
+        'kmdeb',
+        'kmfin',
+        'status'
     ];
 
-    public function mission_users(){
-        return $this->hasMany(MissionUser::class);
-    }
 }

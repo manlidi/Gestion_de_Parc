@@ -15,11 +15,12 @@ return new class extends Migration
     {
         Schema::create('missions', function (Blueprint $table) {
             $table->id();
-            $table->text('objetmission');
-            $table->date('datedeb');
-            $table->date('datefin');
-            $table->string('etat')->default('Non fait');
-            $table->boolean('rendre')->default(0);
+            $table->foreignId('demande_id')->constrained()->onDelete('cascade');
+            $table->foreignId('affecter_id');
+            $table->string('type');
+            $table->integer('kmdeb')->default(0);
+            $table->integer('kmfin')->default(0);
+            $table->boolean('status')->default(0);
             $table->timestamps();
         });
     }
