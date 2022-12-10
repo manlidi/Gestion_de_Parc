@@ -41,6 +41,17 @@ use App\Models\User;
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $item->objetdemande }}</td>
                                                 <td>
+                                                    @if($item->type == 'voiture')
+                                                        @if($item->addchauffeur)
+                                                            <strong class="text-success">Oui</strong>
+                                                        @else
+                                                            <strong class="text-danger">Non</strong>
+                                                        @endif
+                                                    @else
+                                                        ----
+                                                    @endif
+                                                </td>
+                                                <td>
                                                     <span
                                                         class="<?php if ($item->type == 'reparation') {
                                                             echo 'text-danger';
@@ -52,24 +63,25 @@ use App\Models\User;
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    @if($item->addchauffeur)
-                                                        <strong class="text-success">Oui</strong>
+                                                    @if($item->type == 'voiture')
+                                                        Du {{ $item->datedeb ?? '--' }} Au {{ $item->datefin ?? '--' }}
                                                     @else
-                                                        <strong class="text-danger">Non</strong>
+                                                        Non Définie
                                                     @endif
                                                 </td>
-                                                <td>Du {{ $item->datedeb ?? '--' }} Au {{ $item->datefin ?? '--' }}</td>
                                                 <td>
-                                                    @if($item->type == 'voiture')
-                                                        <div class="row">
-                                                            <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            @if( $item->type == 'reparation' )
+                                                                <a class="btn btn-outline-info btn-sm" href="{{ route('formValideReparation',['id'=>$item->id, 'id_caisse'=> 1]) }}">Approuvé</a>
+                                                            @else
                                                                 <a class="btn btn-outline-info btn-sm" href="{{ route('formValide',['id'=>$item->id]) }}">Approuvé</a>
-                                                            </div>
-                                                            <div class="col-sm-6">
-                                                                <a onclick="return confirm('Voulez-vous vraiment rejeter cette demande? Si oui cliquez sur Ok')" class="btn btn-outline-danger btn-sm" href="{{ route('rejeterDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rejeter</a>
-                                                            </div>
+                                                            @endif
                                                         </div>
-                                                    @endif
+                                                        <div class="col-sm-6">
+                                                            <a onclick="return confirm('Voulez-vous vraiment rejeter cette demande? Si oui cliquez sur Ok')" class="btn btn-outline-danger btn-sm" href="{{ route('rejeterDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rejeter</a>
+                                                        </div>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         @endforeach

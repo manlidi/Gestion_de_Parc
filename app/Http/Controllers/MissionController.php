@@ -181,13 +181,13 @@ class MissionController extends Controller
                     $parametre = ['status' => true, 'msg' => 'Erreur lors de la soumission'];
                     return redirect()->route('showDetail', ['id' => $id])->with($parametre);
                 }
-                $out = $this->rendreVoiture($id);
-                if( $out )
-                    $parametre = ['status' => true, 'msg' => 'Kilométrage ajouté et ressource rendu avec succès'];
-                else
-                    $parametre = ['status' => true, 'msg' => 'Kilométrage ajouté avec succès'];
-                return redirect()->route('showDetail', ['id' => $id])->with($parametre);
             }
+            $out = $this->rendreVoiture($id);
+            if( $out )
+                $parametre = ['status' => true, 'msg' => 'Kilométrage ajouté et ressource rendu avec succès'];
+            else
+                $parametre = ['status' => true, 'msg' => 'Kilométrage ajouté avec succès'];
+            return redirect()->route('showDetail', ['id' => $id])->with($parametre);
         }elseif($type == 'fin'){
             $voitures = $request['voiture'];
             foreach( $voitures as $voiture ){

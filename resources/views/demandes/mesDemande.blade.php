@@ -86,15 +86,6 @@ use App\Models\User;
                             <div class="card recent-sales overflow-auto">
                                 <div class="card-body">
                                     <h5 class="card-title text-danger">Liste Des Demandes Non Approuvées</h5>
-                                    @if (session('status'))
-                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                            <i class="bi bi-check-circle me-1"></i>
-                                            {{ session('msg') }}
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                aria-label="Close"></button>
-                                        </div>
-                                    @endif
-                                    <hr>
                                     @if ($nonValidedemandes->count() > 0)
                                         <table class="table table-borderless datatable">
                                             <thead>
