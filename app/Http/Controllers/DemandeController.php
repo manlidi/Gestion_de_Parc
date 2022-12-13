@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Demande;
-use Illuminate\Support\Facades\DB;
-use App\Models\Voiture;
-use App\Models\Chauffeur;
-use App\Models\Garage;
-use App\Models\Mission;
 use App\Models\Piece;
+use App\Models\Garage;
+use App\Models\Demande;
+use App\Models\Mission;
 use App\Models\Reparer;
+use App\Models\Voiture;
+use App\Mail\RejeterMail;
+use App\Mail\ValiderMail;
+use App\Models\Chauffeur;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class DemandeController extends Controller
 {
@@ -62,7 +65,7 @@ class DemandeController extends Controller
 
         return view('demandes.admindemandes', compact('demande'));
     }
-    
+
     /**
      * Show the form for creating a new resource.
      *
@@ -263,7 +266,7 @@ class DemandeController extends Controller
                                             ?>
                                                 <option value="<?= $us->id ?>"><?= $us->marque ?></option>
                                            <?php
-                                        } 
+                                        }
                                     }else{
                                         ?>
                                             <option value="">Pas de voiture disponible</option>
@@ -341,6 +344,25 @@ class DemandeController extends Controller
         return view('demandes.formValideDemande', compact('demande', 'voitures', 'chauffeurs'));
     }
 
+    public function sendMailUserDemande($senderEmail, $name){
+        $contenu = [
+            'titre' => 'Demande de Voiture (MP)',
+            'nom' => $name
+        ];
+
+        return Mail::to($senderEmail)->send(new ValiderMail($contenu));
+    }
+    public function sendMailUserDemandeRejeter($senderEmail, $name, $demandeobjet, $demandetype){
+        $contenu = [
+            'titre' => 'Demande de Voiture (MP)',
+            'nom' => $name,
+            'demande' => $demandeobjet,
+            'demandetype' => $demandetype
+        ];
+
+        return Mail::to($senderEmail)->send(new RejeterMail($contenu));
+    }
+
     public function validerDemande(Request $request, $id, $type){
         if( $type == 'voiture' ){
             $request->validate([
@@ -348,40 +370,47 @@ class DemandeController extends Controller
             ]);
 
             $demande = Demande::find($id);
-            $nbre = count( $request->voitures );
-            if( $nbre > $demande->nbreVoiture ){
-                return redirect()->route('formValide', ['id' => $id])->with(['status'=>true, 'msg'=> 'Vous avez ajouté plus de voiture que demandée']);
-            }else{
-                foreach( $request->voitures as $caisse ){
-                    $voiture = Voiture::find($caisse);
-                    $voiture->dispo = 'Non Disponible';
-                    $voiture->mouvement = 'En mission';
-                    $voiture->update();
+            $user = User::find($demande->user_id);
+            $send = $this->sendMailUserDemande($user->email, $user->name);
 
-                    Mission::create([
-                        'demande_id' => $demande->id,
-                        'affecter_id' => $voiture->id,
-                        'type' => 'voiture'
-                    ]);
-                }
-
-                if( isset( $request->chauffeurs ) ){
-                    foreach( $request->chauffeurs as $chauf ){
-                        $user = User::find($chauf);
-                        $chauffeur = Chauffeur::find($user->chauffeur->id);
-                        $chauffeur->disp = 'Non Disponible';
-                        $chauffeur->update();
+            if( $send ){
+                $nbre = count( $request->voitures );
+                if( $nbre > $demande->nbreVoiture ){
+                    return redirect()->route('formValide', ['id' => $id])->with(['status'=>true, 'msg'=> 'Vous avez ajouté plus de voiture que demandée']);
+                }else{
+                    foreach( $request->voitures as $caisse ){
+                        $voiture = Voiture::find($caisse);
+                        $voiture->dispo = 'Non Disponible';
+                        $voiture->mouvement = 'En mission';
+                        $voiture->update();
 
                         Mission::create([
                             'demande_id' => $demande->id,
-                            'affecter_id' => $user->id,
-                            'type' => 'chauffeur'
+                            'affecter_id' => $voiture->id,
+                            'type' => 'voiture'
                         ]);
                     }
+
+                    if( isset( $request->chauffeurs ) ){
+                        foreach( $request->chauffeurs as $chauf ){
+                            $user = User::find($chauf);
+                            $chauffeur = Chauffeur::find($user->chauffeur->id);
+                            $chauffeur->disp = 'Non Disponible';
+                            $chauffeur->update();
+
+                            Mission::create([
+                                'demande_id' => $demande->id,
+                                'affecter_id' => $user->id,
+                                'type' => 'chauffeur'
+                            ]);
+                        }
+                    }
+                    $demande->status = 'Approuvée';
+                    $demande->update();
+                    return redirect()->route('admin_demandes')->with(['status' => true, 'msg' => 'Demande validée avec succès !']);
                 }
-                $demande->status = 'Approuvée';
-                $demande->update();
-                return redirect()->route('admin_demandes')->with(['status' => true, 'msg' => 'Demande validée avec succès']);
+            }else{
+                return redirect()->route('admin_demandes')->with(['status' => true, 'msg' => 'Une erreur est survenu lors de la validation de la demande !']);
             }
         }
         if($type == 'reparation'){
@@ -462,11 +491,18 @@ class DemandeController extends Controller
 
     public function rejeterDemande($id, $type){
         $demande = Demande::find($id);
-        $status = $demande->delete();
+        $user = User::find($demande->user_id);
+        $send = $this->sendMailUserDemandeRejeter($user->email, $user->name, $demande->objetdemande, $demande->type);
 
-        if( $status ) $parametre = ['status'=>true, 'msg'=>'Demande rejetée avec succès'];
-        else $parametre = ['status'=>false, 'msg'=>'Erreur lors de la soumission'];
-        return redirect()->route('admin_demandes')->with($parametre);
+        if( $send ){
+            $status = $demande->delete();
+
+            if( $status ) $parametre = ['status'=>true, 'msg'=>'Demande rejetée avec succès'];
+            return redirect()->route('admin_demandes')->with($parametre);
+        }else{
+            $parametre = ['status'=>true, 'msg'=>'Une erreur est survenue lors du rejet de la demande'];
+            return redirect()->route('admin_demandes')->with($parametre);
+        }
     }
 
     public static function voitureIsDispo( $id ){
