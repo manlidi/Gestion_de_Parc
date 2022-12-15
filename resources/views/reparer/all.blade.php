@@ -11,7 +11,7 @@ use App\Models\Piece;
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Liste des réparations</h5>
-                            @if( $repare->count() > 0 )
+                            @if( $repares->count() > 0 )
                             <table class="table table-responsive datatable">
                                 <thead>
                                     <tr>
@@ -24,7 +24,7 @@ use App\Models\Piece;
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($repare as $rep)
+                                    @foreach($repares as $rep)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $rep->marque }} ({{ $rep->immatriculation }})</td>
@@ -40,8 +40,8 @@ use App\Models\Piece;
                                                 @endif
                                             </td>
                                             <td>
-                                                <a href="{{ route('rendreDemande',['id'=>$rep->id, 'type'=>$rep->type]) }}">
-                                                    <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top">
+                                                <a href="{{ route('rendreRessource',['id'=>$rep->id, 'type'=>$rep->type]) }}">
+                                                    <button type="button" class="btn btn-outline-primary btn-sm">
                                                         Terminée ?
                                                     </button>
                                                 </a>

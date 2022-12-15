@@ -59,6 +59,9 @@ use App\Http\Controllers\MissionController;
                             </div>
                             <div class="card-footer">
                                 <strong>Nombre de Voiture Demandée : {{ $demande->nbreVoiture }}</strong>
+                                @if( ($kmDebutAjouterMission == true) && ($kmFinAjouterMission == true) && (!$demande->etat))
+                                    <div class="alert alert-warning">Quelque voiture son en reparation pour le moment. <br>Attendez la fin de la réparation pour ajouter les km.</div>
+                                @endif
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title m-0">Voitures affectée</h5>
