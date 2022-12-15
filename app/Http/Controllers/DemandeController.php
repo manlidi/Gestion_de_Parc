@@ -103,6 +103,7 @@ class DemandeController extends Controller
             ->where('missions.type','=','voiture')
             ->where('missions.status','=',0)
             ->get();
+
         return view('demandes.addReparation', compact('voitures'));
     }
 
@@ -190,7 +191,10 @@ class DemandeController extends Controller
 
     public static function isdemanderEnReparation($id){
         $status = false;
-        $demandes = Demande::all()->where('user_id','=',Auth::user()->id)->where('type','=','reparation');
+        $demandes = Demande::all()
+            ->where('user_id','=',Auth::user()->id)
+            ->where('type','=','reparation')
+            ->where('status','=','Approuvée');
         foreach($demandes as $demande){
             if( $demande->affecter_id == $id ){
                 return true;
@@ -331,7 +335,7 @@ class DemandeController extends Controller
         return view('demandes.showDemande', compact('demande', 'voitures', 'kmDebutAjouterMission', 'kmFinAjouterMission'));
     }
 
-    public function formValide($id, $id_caisse=null){
+    public function formValide($id){
         $demande = Demande::find($id);
 
         $voitures = Voiture::all()
@@ -414,7 +418,17 @@ class DemandeController extends Controller
             }
         }
         if($type == 'reparation'){
+            $caisse = Reparer::all()->where('demande_id', '=', $id)->first();
+            $demande = Demande::find($id);
 
+            $voiture = Voiture::find($caisse->voiture_id);
+            $voiture->dispo = 'Non Disponible';
+            $voiture->mouvement = 'En reparation';
+            $voiture->update();
+
+            $demande->status = 'Approuvée';
+            $demande->update();
+            return redirect()->route('admin_demandes')->with(['status' => true, 'msg' => 'Demande validée avec succès']);
         }
     }
 
@@ -438,6 +452,10 @@ class DemandeController extends Controller
             if ($mission->kmdeb == 0) {
                 $ajouter = false;
             }
+            $voiture = Voiture::find($mission->affecter_id);
+            if( $voiture->mouvement == 'En reparation' ){
+                return true;
+            }
         }
         return $ajouter;
     }
@@ -451,7 +469,11 @@ class DemandeController extends Controller
 
         foreach ($missions as $mission) {
             if ($mission->kmfin == 0) {
-                $ajouter = false;
+                $ajouter =  false;
+            }
+            $voiture = Voiture::find($mission->affecter_id);
+            if( $voiture->mouvement == 'En reparation' ){
+                return true;
             }
         }
         return $ajouter;
@@ -462,26 +484,39 @@ class DemandeController extends Controller
         $demande->status = "Non Approuvée";
         $status = $demande->update();
 
-        $missions = Mission::all()->where('demande_id', '=', $id);
-        if( count($missions) > 0 ){
-            foreach( $missions as $mission ){
-                if( $mission->type == 'voiture' ){
-                    $voiture = Voiture::find($mission->affecter_id);
-                    $voiture->dispo = "Disponible";
-                    $voiture->mouvement = "Au parc";
-                    $voiture->update();
+        if( $type == 'voiture' ){
+            $missions = Mission::all()->where('demande_id', '=', $id);
+            if( count($missions) > 0 ){
+                foreach( $missions as $mission ){
+                    if( $mission->type == 'voiture' ){
+                        $voiture = Voiture::find($mission->affecter_id);
+                        $voiture->dispo = "Disponible";
+                        $voiture->mouvement = "Au parc";
+                        $voiture->update();
+                    }
+                    if( $mission->type == 'chauffeur' ){
+                        $user = User::find($mission->affecter_id);
+                        $chauffeur = Chauffeur::find($user->chauffeur->id);
+                        $chauffeur->disp = "Disponible";
+                        $chauffeur->update();
+                    }
+                    $m = Mission::find($mission->id);
+                    $m->delete();
                 }
-                if( $mission->type == 'chauffeur' ){
-                    $user = User::find($mission->affecter_id);
-                    $chauffeur = Chauffeur::find($user->chauffeur->id);
-                    $chauffeur->disp = "Disponible";
-                    $chauffeur->update();
-                }
-                $m = Mission::find($mission->id);
-                $m->delete();
+            }else{
+                $status = false;
             }
-        }else{
-            $status = false;
+        }
+
+        if( $type == 'reparation' ){
+            $caisse = Reparer::all()->where('demande_id', '=', $id)->first();
+
+            $voiture = Voiture::find($caisse->voiture_id);
+            $voiture->dispo = 'Non Disponible';
+            $voiture->mouvement = 'En mission';
+            $voiture->update();
+
+            $reparer = Reparer::find($caisse->id);
         }
 
         if( $status ) $parametre = ['status'=>true, 'msg'=>'Demande désapprouvée avec succès'];
@@ -509,6 +544,25 @@ class DemandeController extends Controller
         $voiture = Voiture::find($id);
         if( $voiture->dispo == "Disponible" ) return true;
         else return false;
+    }
+
+    public function rendreDemande( $id, $type ){
+        if( $type == 'reparation' ){
+            $demande = Demande::find($id);
+            $demande->status = "Rendu";
+            $demande->update();
+            
+            $caisse = Reparer::all()->where('demande_id', '=', $id)->first();
+
+            $voiture = Voiture::find($caisse->voiture_id);
+            $voiture->dispo = 'Non Disponible';
+            $voiture->mouvement = 'En mission';
+            $voiture->update();
+
+            $reparer = Reparer::find($caisse->id);
+        }
+        $parametre = ['status'=>false, 'msg'=>'Reparation terminée avec succès'];
+        return redirect()->route('dashboard')->with($parametre);
     }
 
     public static function chauffeurIsDispo( $id ){

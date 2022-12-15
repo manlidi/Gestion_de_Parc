@@ -47,7 +47,6 @@ Route::get('desapprouverDemande/{id}/{type}', [DemandeController::class, 'desapp
 Route::get('rejeterDemande/{id}/{type}', [DemandeController::class, 'rejeterDemande'])->name('rejeterDemande');
 Route::get('demanderReparation', [DemandeController::class, 'createReparation'])->name('demanderReparation');
 Route::get('formValide/{id}', [DemandeController::class, 'formValide'])->name('formValide')->whereNumber('id');
-Route::get('formValideReparation/{id}/{id_caisse}', [DemandeController::class, 'formValide'])->name('formValideReparation')->whereNumber('id');
 Route::post('validerDemande/{id}/{type}', [DemandeController::class, 'validerDemande'])->name('validerDemande')->whereNumber('id');
 Route::post('saveDemande/{type}', [DemandeController::class, 'store'])->name('saveDemande');
 Route::post('saveDemandeReparation/{id}', [DemandeController::class, 'saveDemandeReparation'])->name('saveDemandeReparation');

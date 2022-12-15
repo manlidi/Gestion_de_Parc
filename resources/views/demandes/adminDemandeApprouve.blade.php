@@ -30,8 +30,8 @@ use App\Models\User;
                                                 <tr>
                                                     <th scope="col">#</th>
                                                     <th scope="col">Objet De La Demande</th>
-                                                    <th scope="col">Avec Chauffeur</th>
                                                     <th scope="col">Type</th>
+                                                    <th scope="col">Avec Chauffeur</th>
                                                     <th scope="col">Date</th>
                                                     <th scope="col">Action</th>
                                                 </tr>
@@ -40,7 +40,13 @@ use App\Models\User;
                                                 @foreach ($demandes as $item)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
-                                                        <td><a href="{{ route('showDetail',['id' => $item->id]) }}">{{ $item->objetdemande }}</a></td>
+                                                        <td>
+                                                            @if ($item->type=='reparation')
+                                                                {{ $item->objetdemande }}
+                                                            @else
+                                                                <a href="{{ route('showDetail',['id' => $item->id]) }}">{{ $item->objetdemande }}</a>
+                                                            @endif
+                                                        </td>
                                                         <td>
                                                             <span class="<?php if ($item->type == 'reparation') {
                                                                 echo 'text-danger';
@@ -62,13 +68,15 @@ use App\Models\User;
                                                         </td>
                                                         <td class="text-center">
                                                             @if ($item->type == 'voiture')
-                                                                @if ($item->type != 'reparation')
-                                                                    <a class="btn btn-outline-primary btn-sm"
-                                                                        href="{{ route('showDetail', ['id' => $item->id]) }}">Rendre</a>
-                                                                @endif
-                                                                <a class="btn btn-outline-warning btn-sm"
-                                                                    href="{{ route('desapprouverDemande', ['id' => $item->id, 'type' => $item->type]) }}">Désapprouver</a>
+                                                                <a class="btn btn-outline-primary btn-sm"
+                                                                    href="{{ route('showDetail', ['id' => $item->id]) }}">Rendre</a>
                                                             @endif
+                                                            @if ($item->type == 'reparation')
+                                                                <a class="btn btn-outline-success btn-sm"
+                                                                    href="{{ route('rendreRessource',['id'=>$item->id, 'type'=>$item->type]) }}">Terminé</a>
+                                                            @endif
+                                                            <a class="btn btn-outline-warning btn-sm"
+                                                                href="{{ route('desapprouverDemande', ['id' => $item->id, 'type' => $item->type]) }}">Désapprouver</a>
                                                         </td>
                                                     </tr>
                                                 @endforeach

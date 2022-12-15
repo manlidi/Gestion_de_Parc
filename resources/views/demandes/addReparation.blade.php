@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\Auth;
                                             </td>
                                             <td>
                                                 @if( ! DemandeController::isdemanderEnReparation( $item->id ) )
-                                                    <a href="{{ route('addReparationDetail',['id'=>$item->affecter_id]) }}"><button type="button"
+                                                    <a href="{{ route('addReparationDetail',['id'=>$item->affecter_id,]) }}"><button type="button"
                                                         class="btn btn-outline-success btn-sm">Demander Réparation</button></a>
                                                 @else
                                                     <button class="btn btn-info" disabled>Réparation</button>

@@ -72,11 +72,7 @@ use App\Models\User;
                                                 <td>
                                                     <div class="row">
                                                         <div class="col-sm-6">
-                                                            @if( $item->type == 'reparation' )
-                                                                <a class="btn btn-outline-info btn-sm" href="{{ route('formValideReparation',['id'=>$item->id, 'id_caisse'=> 1]) }}">Approuvé</a>
-                                                            @else
-                                                                <a class="btn btn-outline-info btn-sm" href="{{ route('formValide',['id'=>$item->id]) }}">Approuvé</a>
-                                                            @endif
+                                                            <a class="btn btn-outline-info btn-sm" href="{{ route('formValide',['id'=>$item->id]) }}">Approuvé</a>
                                                         </div>
                                                         <div class="col-sm-6">
                                                             <a onclick="return confirm('Voulez-vous vraiment rejeter cette demande? Si oui cliquez sur Ok')" class="btn btn-outline-danger btn-sm" href="{{ route('rejeterDemande',['id'=>$item->id, 'type'=>$item->type]) }}">Rejeter</a>

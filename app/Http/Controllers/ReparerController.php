@@ -18,14 +18,16 @@ class ReparerController extends Controller
      */
     public function index()
     {
-        $repare = DB::table('reparers')
+        $repares = DB::table('reparers')
             ->join('voitures', 'voitures.id', '=', 'reparers.voiture_id')
             ->join('garages', 'garages.id', '=', 'reparers.garage_id')
             ->join('demandes', 'demandes.id', '=', 'reparers.demande_id')
             ->where('status', '=', 'Approuvée')
             ->select('*')
             ->get();
-        return view('reparer.all', compact('repare'));
+
+        
+        return view('reparer.all', compact('repares'));
     }
 
     /**
