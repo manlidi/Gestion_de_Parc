@@ -60,16 +60,15 @@ class NotificationController extends Controller
             $jourRestant = $date2->diff($date1)->format("%a");
             if( $date2 < $date1 ){
                 if( $jourRestant <= 7 ){
-                    $datas += array( $piece->id => array($jourRestant, $piece->datefin, $piece->nompiece, $piece->voiture_id) );
+                    $datas += array( $piece->id => array($jourRestant, $piece->datefin, $piece->nompiece) );
                 }
             }else{
-                $datas += array( $piece->id => array(($jourRestant/(-1)), $piece->datefin, $piece->nompiece, $piece->voiture_id) );
+                $datas += array( $piece->id => array(($jourRestant/(-1)), $piece->datefin, $piece->nompiece) );
             }
         }
 
         foreach( $datas as $id => $info ){
-            $voiture = Voiture::find($info[3]);
-            $notifs += array($id => array('marque' => $voiture->marque, 'immatriculation' => $voiture->immatriculation, 'datefin' => $info[1], 'jourRestant' => $info[0], 'nompiece' =>$info[2]));
+            $notifs += array($id => array('datefin' => $info[1], 'jourRestant' => $info[0], 'nompiece' =>$info[2]));
         }
         return $notifs;
     }

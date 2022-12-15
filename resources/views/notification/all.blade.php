@@ -131,11 +131,6 @@
                                                         <i class="bi bi-exclamation-triangle me-1"></i>
                                                         La piece <strong
                                                             class="text-primary">{{ $piece['nompiece'] }}</strong>
-                                                        de la
-                                                        voiture <strong
-                                                            class="text-primary">{{ $piece['marque'] }}</strong>
-                                                        immatriculé <strong
-                                                            class="text-primary">{{ $piece['immatriculation'] }}</strong>
                                                             @if( $piece['jourRestant'] < 0 )
                                                                 est expirée depuis {{ ($piece['jourRestant'] * (-1)) }} jour
                                                             @else
@@ -164,7 +159,7 @@
                                                         La voiture <strong
                                                         class="text-primary">{{ $vidange['marque'] }}</strong>
                                                         immatriculé <strong class="text-primary">{{ $vidange['immatriculation'] }}</strong>
-                                                        doit aller en vidange car son kilomettrage a atteint 
+                                                        doit aller en vidange car son kilomettrage a atteint
                                                              <strong
                                                             class="text-primary">{{ $vidange['kmvidange'] }}</strong> depuis le dernier vidange.
                                                     </div>

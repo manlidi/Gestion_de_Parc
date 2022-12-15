@@ -121,6 +121,12 @@
                     <span>Ajouter Un Membre</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url('notif') }}">
+                    <i class="bi bi-bell"></i>
+                    <span>Vos notifications</span>
+                </a>
+            </li>
         @endif
         @if (!Auth::user())
             <li class="nav-item">
@@ -128,7 +134,7 @@
                     <i class="bi bi-box-arrow-in-right"></i>
                     <span>Connexion</span>
                 </a>
-            </li>
+            </li> 
         @endif
     </ul>
 </aside>
