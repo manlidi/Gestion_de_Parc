@@ -27,19 +27,17 @@
                                 <x-input-error :messages="$errors->get('objetdemande')" class="m-1" />
                                 <input type="text" name="objetdemande" id="objetdemande"
                                     value="{{ isset($demande->objetdemande) ? $demande->objetdemande : old('objetdemande') }}"
-                                    required class="form-control" placeholder="Objet de la demande" required>
+                                    required class="form-control" placeholder="Objet de la demande">
                             </div>
                             <div class="col-12">
-                                <x-input-error :messages="$errors->get('descdemande')" class="m-1" />
-                                <textarea class="form-control" required name="descdemande" id="descdemande" placeholder="Description"
-                                    style="height: 100px">{{ isset($demande->descdemande) ? $demande->descdemande : old('descdemande') }}</textarea>
+                                <x-input-error :messages="$errors->get('description')" class="m-1" />
+                                <textarea class="form-control" required name="description" id="description" placeholder="Description"
+                                    style="height: 100px">{{ isset($demande->description) ? $demande->description : old('description') }}</textarea>
                             </div>
                             <div class="col-6">
-                                <x-input-error :messages="$errors->get('nbrevoiture')" class="m-1" />
-                                <input type="number" min="1" placeholder="Nombre de voiture" name="nbrevoiture"
-                                    id="nbrevoiture"
-                                    value="{{ isset($demande->objetdemande) ? $demande->objetdemande : old('objetdemande') }}"
-                                    required class="form-control" placeholder="Objet de la demande" required>
+                                <x-input-error :messages="$errors->get('nbreVoiture')" class="m-1" />
+                                <input type="number" min="1" placeholder="Nombre de voiture" name="nbreVoiture" id="nbreVoiture"
+                                value="{{ isset($demande->nbreVoiture) ? $demande->nbreVoiture : old('nbreVoiture') }}" class="form-control" required>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-check pt-2 text-primary">

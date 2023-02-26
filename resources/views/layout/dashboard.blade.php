@@ -168,11 +168,10 @@ use Illuminate\Support\Facades\Auth;
                                             <tr>
                                                 <th scope="col">#</th>
                                                 <th scope="col">Objet De La Demande</th>
+                                                <th scope="col">Date Début</th>
+                                                <th scope="col">Date Fin</th>
                                                 <th scope="col">Type</th>
-                                                <th scope="col">Demande</th>
-                                                <th scope="col">Date début</th>
-                                                <th scope="col">Date de fin</th>
-                                                <th scope="col">Status</th>
+                                                <th scope="col">Avec Chauffeur</th>
                                                 <th scope="col">Action</th>
                                             </tr>
                                         </thead>
@@ -180,50 +179,30 @@ use Illuminate\Support\Facades\Auth;
                                             @foreach ($demande as $item)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $item->objetdemande }}</td>
-                                                    <td><span class="<?php if( $item->type == 'reparation' ) echo 'text-danger';else if($item->type == 'chauffeur') echo 'text-success'; else echo 'text-primary'; ?>">{{ ucfirst($item->type) }}</span></td>
-                                                    <td>
-                                                        @if( ($item->type == 'voiture') || $item->type == 'reparation' )
-                                                            <strong>{{ Voiture::find($item->affecter_id)->marque }} ( {{ Voiture::find($item->affecter_id)->immatriculation }} )</strong>
-                                                        @else
-                                                            <strong>{{ User::find($item->affecter_id)->name ?? '--' }}</strong>
-                                                        @endif
-                                                    </td>
-                                                    <td>{{ $item->datedeb ?? '--' }}</td>
+                                                    <td><a href="{{ route('showDetail',['id' => $item->id]) }}">{{ $item->objetdemande }}</a></td>
+                                                    <td>{{ $item->datedeb ?? '--' }} </td>
                                                     <td>{{ $item->datefin ?? '--' }}</td>
                                                     <td>
-                                                        @if($item->type == 'chauffeur')
-                                                            @if( DemandeController::chauffeurIsDispo($item->affecter_id) )
-                                                                <span class="badge bg-warning p-1">{{ $item->status }}</span>
-                                                            @else
-                                                                <span class="badge bg-danger p-1">Chauffeur Indisponible</span>
-                                                            @endif
-                                                        @endif
-                                                        @if($item->type == 'voiture')
-                                                            @if( DemandeController::voitureIsDispo($item->affecter_id) )
-                                                                <span class="badge bg-warning p-1">{{ $item->status }}</span>
-                                                            @else
-                                                                <span class="badge bg-danger p-1">Voiture Indisponible</span>
-                                                            @endif
-                                                        @endif
-                                                        @if($item->type == 'reparation')
-                                                            <span class="badge bg-warning p-1">{{ $item->status }}</span>
+                                                        <span class="<?php if ($item->type == 'reparation') {
+                                                            echo 'text-danger';
+                                                        } elseif ($item->type == 'chauffeur') {
+                                                            echo 'text-success';
+                                                        } else {
+                                                            echo 'text-primary';
+                                                        } ?>">{{ ucfirst($item->type) }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        @if ($item->addchauffeur)
+                                                            <strong class="text-success">Oui</strong>
+                                                        @else
+                                                            <strong class="text-danger">Non</strong>
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        @if($item->type == 'chauffeur')
-                                                            @if( DemandeController::chauffeurIsDispo($item->affecter_id) )
-                                                                <a href="{{ route('updateDemandeChauffeur',['id'=>$item->id]) }}"><button type="button" class="btn btn-outline-success btn-sm">Modifier</button></a>
-                                                            @else
-                                                                <a href="{{ route('updateDemandeChauffeur',['id'=>$item->id]) }}"><button type="button" class="btn btn-success btn-sm">Changer</button></a>
-                                                            @endif
-                                                        @endif
-                                                        @if($item->type == 'voiture')
-                                                            @if( DemandeController::voitureIsDispo($item->affecter_id) )
-                                                                <a href="{{ route('updateDemandeVoiture',['id'=>$item->id]) }}"><button type="button" class="btn btn-outline-primary btn-sm">Modifier</button></a>
-                                                            @else
-                                                                <a href="{{ route('updateDemandeVoiture',['id'=>$item->id]) }}"><button type="button" class="btn btn-primary btn-sm">Changer</button></a>
-                                                            @endif
+                                                        @if ($item->type == 'voiture')
+                                                            <a class="btn btn-outline-primary btn-sm"
+                                                                href="{{ route('showDetail',['id' => $item->id]) }}">Voir</a>
                                                         @endif
                                                     </td>
                                                 </tr>

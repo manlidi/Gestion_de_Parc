@@ -45,7 +45,7 @@ class AuthController extends Controller
         if(Auth::attempt($login)){
             $user = Auth::user();
             $user->remember_token = null;
-            
+
             $user->update();
 
             return redirect()->intended('dashboard')->with('message','Connecter');
@@ -155,7 +155,12 @@ class AuthController extends Controller
             $vo = Voiture::count();
             $mission = Mission::count();
             $chauffeurs = Chauffeur::count();
-            $demande = Demande::all()->where('user_id', Auth::user()->id)->where('status', 'Non Approuvée');
+            $demande = DB::table('demandes')
+                ->join('users', 'users.id', '=', 'demandes.user_id')
+                ->select('demandes.*')
+                ->where('demandes.user_id', '=', Auth::user()->id)
+                ->where('status', '=', 'Non Approuvée')
+                ->get();
             return view('layout.dashboard', compact('structure', 'voiture', 'vo', 'mission', 'chauffeurs', 'demande'));
         }
         return redirect('/login');

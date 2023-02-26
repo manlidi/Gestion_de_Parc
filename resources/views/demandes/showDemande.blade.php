@@ -1,5 +1,5 @@
-<?php 
-use App\Http\Controllers\DemandeController; 
+<?php
+use App\Http\Controllers\DemandeController;
 use App\Http\Controllers\MissionController;
 ?>
 @extends('master')
@@ -75,7 +75,7 @@ use App\Http\Controllers\MissionController;
                                                 Km Début
                                                 @if (DemandeController::isDemandeRespo($demande->id))
                                                     @if (! $kmDebutAjouterMission)
-                                                    <button type="button" data-bs-toggle="modal" data-bs-target="#kmdebmodal<?= $demande->id ?>" class="btn btn-warning btn-sm">Ajouter Km</button>
+                                                        <button type="button" data-bs-toggle="modal" data-bs-target="#kmdebmodal<?= $demande->id ?>" class="btn btn-warning btn-sm">Ajouter Km</button>
                                                     @endif
                                                 @endif
                                             </th>
@@ -83,7 +83,7 @@ use App\Http\Controllers\MissionController;
                                                 Km Fin
                                                 @if (DemandeController::isDemandeRespo($demande->id))
                                                     @if (! $kmFinAjouterMission)
-                                                    <button type="button" data-bs-toggle="modal" data-bs-target="#kmfinmodal<?= $demande->id ?>" class="btn btn-success btn-sm">Ajouter Km</button>
+                                                        <button type="button" data-bs-toggle="modal" data-bs-target="#kmfinmodal<?= $demande->id ?>" class="btn btn-success btn-sm">Ajouter Km</button>
                                                     @endif
                                                 @endif
                                             </th>
@@ -139,7 +139,7 @@ use App\Http\Controllers\MissionController;
                                     @else
                                     @endif
                                 @endif
-                            </div>
+                            </div>    
                         </div>
                     </div>
                 </div>

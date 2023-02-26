@@ -39,13 +39,6 @@
                     </li>
 
                     <li>
-                        <a href="{{ url('missions') }}">
-                            <i class="bi bi-circle"></i>
-                            <span>Missions</span>
-                        </a>
-                    </li>
-
-                    <li>
                         <a href="{{ url('chauffeurs') }}">
                             <i class="bi bi-circle"></i>
                             <span>Chauffeurs</span>
@@ -128,13 +121,33 @@
                 </a>
             </li>
         @endif
+        @if (Auth::user() && (Auth::user()->role == 'Utilisateur' || Auth::user()->role == 'Chauffeur'))
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url('mesDemandes') }}">
+                    <i class="bi bi-shield-check"></i>
+                    <span>Listes De Mes Demandes</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url('demanderVoiture') }}">
+                    <i class="bi bi-truck"></i>
+                    <span>Demander Une Voiture</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url('demanderReparation') }}">
+                    <i class="bi bi-wrench"></i>
+                    <span>Demande De Réparation</span>
+                </a>
+            </li>
+        @endif
         @if (!Auth::user())
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('login') }}">
                     <i class="bi bi-box-arrow-in-right"></i>
                     <span>Connexion</span>
                 </a>
-            </li> 
+            </li>
         @endif
     </ul>
 </aside>

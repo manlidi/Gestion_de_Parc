@@ -28,7 +28,7 @@ class ValiderMail extends Mailable
     public function build()
     {
         return $this->subject('Demande de Voiture (MP)')
-                    ->from('mdtech3007@gmail.com', 'MINISTERE DU PLAN')
+                    ->from('support.mdc@gouv.bj', 'MINISTERE DU PLAN')
                     ->view('layout.valide');
     }
 }

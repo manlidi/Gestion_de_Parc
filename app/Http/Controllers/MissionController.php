@@ -176,7 +176,7 @@ class MissionController extends Controller
                 $mUser = Mission::find($voiture);
                 $mUser->kmdeb = $request[$voiture];
                 $status = $mUser->update();
-    
+
                 if (!$status) {
                     $parametre = ['status' => true, 'msg' => 'Erreur lors de la soumission'];
                     return redirect()->route('showDetail', ['id' => $id])->with($parametre);
@@ -194,7 +194,7 @@ class MissionController extends Controller
                 $mUser = Mission::find($voiture);
                 $mUser->kmfin = $request[$voiture];
                 $mUser->update();
-    
+
                 $kmdiff = (($mUser->kmfin) - ($mUser->kmdeb));
                 $voit = Voiture::find($mUser->affecter_id);
                 $voit->kmvidange += $kmdiff;

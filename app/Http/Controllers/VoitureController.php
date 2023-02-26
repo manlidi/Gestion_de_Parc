@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Models\Voiture;
 use App\Models\Piece;
+use App\Models\Voiture;
 use App\Models\Assurance;
 use App\Models\Structure;
+use Jenssegers\Date\Date;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 class VoitureController extends Controller
 {
     /**
@@ -45,7 +47,6 @@ class VoitureController extends Controller
             'capacite' => 'required',
             'immatriculation' => 'required',
             'datdebservice' => 'required',
-            'dureeVie' => 'required',
             'numchassis' => 'required',
             'etat' => 'required',
             'kilmax' => 'required',
@@ -76,7 +77,6 @@ class VoitureController extends Controller
             'capacite' => $data['capacite'],
             'immatriculation' => $data['immatriculation'],
             'datdebservice' => $data['datdebservice'],
-            'dureeVie' => $data['dureeVie'],
             'numchassis' => $data['numchassis'],
             'etat' => $data['etat'],
             'kilmax' => $data['kilmax'],
@@ -92,12 +92,41 @@ class VoitureController extends Controller
             ->join('voitures', 'voitures.id', '=', 'reparers.voiture_id')
             ->select(DB::raw('count(*) as nombre'))
             ->where('voitures.id', '=', $id)
-            ->get();
+            ->count();
+
+
         $detail = DB::table('voitures')
             ->select('voitures.*')
             ->where('id', '=', $id)
             ->get();
-        return view('voitures.details', compact('nbr','detail'));
+        foreach ($detail as $key) {
+            $dateNaissance = $key->datdebservice;
+            $aujourdhui = date("Y-m-d");
+            $diff = date_diff(date_create($dateNaissance), date_create($aujourdhui));
+            $age = $diff->format('%y');
+            $mois = $diff->format('%m');
+            $jour = $diff->format('%d');
+        }
+
+            $reparations = DB::table('reparers')
+                ->where('voiture_id', $id)
+                ->get();
+            $pieces_reparees = array();
+            foreach ($reparations as $reparation) {
+                $pieces_serialized = $reparation->pieces;
+                $pieces_array = unserialize($pieces_serialized);
+                foreach ($pieces_array as $piece_id) {
+                    if (!isset($pieces_reparees[$piece_id])) {
+                        $piece_name = DB::table('pieces')->where('id', $piece_id)->value('nompiece');
+                        $pieces_reparees[$piece_id] = array('nom' => $piece_name, 'number' => 1);
+                    }
+                    else {
+                        $pieces_reparees[$piece_id]['number']++;
+                    }
+                }
+            }
+            //dd($pieces_reparees);
+        return view('voitures.details', compact('nbr','detail', 'age', 'mois', 'jour', 'pieces_reparees'));
     }
 
     /**

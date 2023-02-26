@@ -29,7 +29,7 @@ class RejeterMail extends Mailable
     public function build()
     {
         return $this->subject('REJET DE DEMANDE (MP)')
-                    ->from('mdtech3007@gmail.com', 'MINISTERE DU PLAN')
+                    ->from('support.mdc@gouv.bj', 'MINISTERE DU PLAN')
                     ->view('layout.rejete');
     }
 }

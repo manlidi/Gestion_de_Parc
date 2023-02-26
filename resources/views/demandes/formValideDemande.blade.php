@@ -1,3 +1,7 @@
+<?php
+use App\Http\Controllers\DemandeController;
+use App\Http\Controllers\MissionController;
+?>
 @extends('master')
 @section('content')
     <main id="main" class="main">
@@ -21,9 +25,9 @@
                                         <strong class="text-warning">Description : </strong><br>
                                         <?= nl2br($demande->description) ?>
                                     </p>
-                                    @if( $demande->type == 'reparation' )
+                                    @if ($demande->type == 'reparation')
                                         <p class="text-white p-0 m-0">
-                                            <h5>Réparation de : </h5>
+                                        <h5>Réparation de : </h5>
                                         </p>
                                     @endif
                                 </div>
@@ -54,7 +58,7 @@
                             <div class="card-footer">
                                 <strong>Nombre de Voiture Demandée : {{ $demande->nbreVoiture }}</strong>
                             </div>
-                            <form class=" card-body row g-3 " method="POST" 
+                            <form class=" card-body row g-3 " method="POST"
                                 action="{{ route('validerDemande', ['id' => $demande->id, 'type' => $demande->type]) }}">
                                 @csrf
                                 @if ($demande->type != 'reparation')

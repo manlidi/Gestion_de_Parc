@@ -19,7 +19,6 @@ return new class extends Migration
             $table->integer('capacite');
             $table->string('immatriculation')->unique();
             $table->date('datdebservice');
-            $table->integer('dureeVie');
             $table->integer('numchassis');
             $table->string('etat');
             $table->integer('kilmax')->default(0);

@@ -84,6 +84,11 @@ class DemandeController extends Controller
         return view('demandes.askVoiture', compact('voiture', 'chauffeur'));
     }
 
+    public function modifierdemandevoiture($id){
+        $demande = Demande::find($id);
+        return view('demandes.askVoiture', compact('demande'));
+    }
+
     public function addReparationDetail($id){
         $voiture = Voiture::find($id);
         $pieces = Piece::all();
@@ -135,8 +140,8 @@ class DemandeController extends Controller
     {
         $request->validate([
             'objetdemande' => 'required',
-            'descdemande' => 'required',
-            'nbrevoiture' => 'required',
+            'description' => 'required',
+            'nbreVoiture' => 'required',
             'datedeb' => 'required',
             'datefin'    =>  'required|date|after:datedeb'
         ]);
@@ -146,10 +151,10 @@ class DemandeController extends Controller
 
         $status = Demande::create([
             'objetdemande' => $request->objetdemande,
-            'description' => $request->descdemande,
+            'description' => $request->description,
             'addchauffeur' => $addchauf,
             'datedeb' => $request->datedeb,
-            'nbreVoiture' => $request->nbrevoiture,
+            'nbreVoiture' => $request->nbreVoiture,
             'datefin' => $request->datefin,
             'user_id' => Auth::user()->id,
             'type' => $type
@@ -227,22 +232,24 @@ class DemandeController extends Controller
      */
     public function update(Request $request, $id, $type)
     {
+
+        if( $request->addchauffeur != null ) $addchauf = true;
+        else $addchauf = false;
+        //dd($request);
         $demande = Demande::find($id);
         $demande->objetdemande = $request->objetdemande;
+        $demande->description = $request->description;
+        $demande->nbreVoiture = $request->nbreVoiture;
+        $demande->addchauffeur = $addchauf;
         $demande->datedeb = $request->datedeb;
         $demande->datefin = $request->datefin;
-        if( $type == 'voiture' ){
-            $demande->affecter_id = $request->voiture_id;
-        }else{
-            $demande->affecter_id = $request->chauffeur_id;
-        }
         $demande->type = $type;
         $demande->user_id = Auth::user()->id;
         $status = $demande->update();
 
         if( $status ) $parametre = ['status'=>true, 'msg'=>'Votre modification a été enregistré avec succès. Veuillez attendre sa validation!'];
         else $parametre = ['status'=>false, 'msg'=>'Erreur lors de la modification'];
-        return redirect()->route('dashboard')->with($parametre);
+        return redirect()->route('mesDemabdes')->with($parametre);
     }
 
     public static function modal($id, $url, $type=null){
@@ -337,6 +344,7 @@ class DemandeController extends Controller
 
     public function formValide($id){
         $demande = Demande::find($id);
+        $kmDebutAjouterMission = self::kmDebutAjouterMission($id);
 
         $voitures = Voiture::all()
             ->where('dispo', '=', 'Disponible')
@@ -345,7 +353,7 @@ class DemandeController extends Controller
         $chauffeurs = Chauffeur::all()
             ->where('disp', '=', 'Disponible');
 
-        return view('demandes.formValideDemande', compact('demande', 'voitures', 'chauffeurs'));
+        return view('demandes.formValideDemande', compact('demande', 'voitures', 'chauffeurs', 'kmDebutAjouterMission'));
     }
 
     public function sendMailUserDemande($senderEmail, $name){
@@ -551,7 +559,7 @@ class DemandeController extends Controller
             $demande = Demande::find($id);
             $demande->status = "Rendu";
             $demande->update();
-            
+
             $caisse = Reparer::all()->where('demande_id', '=', $id)->first();
 
             $voiture = Voiture::find($caisse->voiture_id);

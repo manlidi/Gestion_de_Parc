@@ -28,7 +28,7 @@ use App\Http\Controllers\NotificationController;
 */
 
 Route::get('/', function () {
-    return view('layout.index');
+    return view('layout.login');
 });
 
 Route::get('mail', [MailController::class, 'index'])->name('mail');
@@ -41,6 +41,7 @@ Route::get('addReparationDetail/{id}', [DemandeController::class, 'addReparation
 Route::get('mesDemandes', [DemandeController::class, 'indexApprouve'])->name('mesDemabdes');
 Route::get('showDetail/{id}', [DemandeController::class, 'showDetailDemande'])->name('showDetail');
 Route::get('demanderVoiture', [DemandeController::class, 'createVoiture'])->name('demanderVoiture');
+Route::get('modifierdemandevoiture/{id}', [DemandeController::class, 'modifierdemandevoiture'])->name('modifierdemandevoiture');
 Route::get('demanderChauffeur', [DemandeController::class, 'createChauffeur'])->name('demanderChauffeur');
 Route::get('rendreRessource/{id}/{type}', [DemandeController::class, 'rendreDemande'])->name('rendreRessource');
 Route::get('desapprouverDemande/{id}/{type}', [DemandeController::class, 'desapprouverDemande'])->name('desapprouverDemande');

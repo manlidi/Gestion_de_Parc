@@ -126,7 +126,7 @@ use App\Models\User;
                                                         <td>
                                                             @if ($item->type == 'voiture')
                                                                 <a class="btn btn-outline-primary btn-sm"
-                                                                    href="">Editer</a>
+                                                                    href="{{ route('modifierdemandevoiture', ['id' => $item->id]) }}">Editer</a>
                                                                 <a class="btn btn-outline-danger btn-sm"
                                                                     href="">Supprimer</a>
                                                             @endif

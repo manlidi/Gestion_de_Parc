@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : sam. 10 déc. 2022 à 19:53
--- Version du serveur : 10.4.27-MariaDB
--- Version de PHP : 8.1.12
+-- Généré le : mer. 11 jan. 2023 à 11:15
+-- Version du serveur : 10.4.24-MariaDB
+-- Version de PHP : 8.1.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données : `gestionauto`
+-- Base de données : `gestauto`
 --
 
 -- --------------------------------------------------------
@@ -29,7 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `assurances` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `societeAssurance` varchar(255) NOT NULL,
+  `societeAssurance` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `datedebA` date NOT NULL,
   `datefinA` date NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
@@ -55,10 +55,10 @@ INSERT INTO `assurances` (`id`, `societeAssurance`, `datedebA`, `datefinA`, `sta
 
 CREATE TABLE `chauffeurs` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `tel` varchar(255) NOT NULL,
-  `adresse` varchar(255) NOT NULL,
+  `tel` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `adresse` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `disp` varchar(255) NOT NULL DEFAULT 'Disponible',
+  `disp` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Disponible',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -68,8 +68,8 @@ CREATE TABLE `chauffeurs` (
 --
 
 INSERT INTO `chauffeurs` (`id`, `tel`, `adresse`, `user_id`, `disp`, `created_at`, `updated_at`) VALUES
-(6, '62869062', 'gboyouentreprise', 2, 'Disponible', '2022-12-08 22:08:39', '2022-12-10 14:58:31'),
-(7, '62869063', 'gboyouentreprise', 3, 'Disponible', '2022-12-08 22:08:55', '2022-12-10 14:58:31');
+(6, '62869062', 'gboyouentreprise', 2, 'Non Disponible', '2022-12-08 22:08:39', '2022-12-28 08:18:43'),
+(7, '62869063', 'gboyouentreprise', 3, 'Disponible', '2022-12-08 22:08:55', '2022-12-12 09:30:57');
 
 -- --------------------------------------------------------
 
@@ -79,17 +79,17 @@ INSERT INTO `chauffeurs` (`id`, `tel`, `adresse`, `user_id`, `disp`, `created_at
 
 CREATE TABLE `demandes` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `objetdemande` varchar(255) NOT NULL,
+  `objetdemande` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `datedeb` date DEFAULT NULL,
   `datefin` date DEFAULT NULL,
   `addchauffeur` tinyint(1) NOT NULL DEFAULT 0,
-  `type` varchar(255) NOT NULL,
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `status` varchar(255) NOT NULL DEFAULT 'Non Approuvée',
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Non Approuvée',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `nbreVoiture` int(11) DEFAULT NULL,
-  `description` text NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `etat` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -100,8 +100,15 @@ CREATE TABLE `demandes` (
 INSERT INTO `demandes` (`id`, `objetdemande`, `datedeb`, `datefin`, `addchauffeur`, `type`, `user_id`, `status`, `created_at`, `updated_at`, `nbreVoiture`, `description`, `etat`) VALUES
 (5, 'Livrer Un Colis 1', '2022-12-09', '2022-12-17', 1, 'voiture', 1, 'Rendu', '2022-12-08 20:36:42', '2022-12-09 08:58:23', 3, 'Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire pour calibrer une mise en page, le texte définitif venant remplacer le faux-texte dès qu\'il est prêt ou que la mise en page est achevée. Généralement, on utilise un texte en faux latin, le Lorem ipsum ou Lipsum', 1),
 (7, 'Livrer Un Colis 1', '2022-12-10', '2022-12-18', 1, 'voiture', 1, 'Rendu', '2022-12-09 09:48:08', '2022-12-10 14:58:31', 2, 'Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire pour calibrer une mise en page.\r\n\r\nLe texte définitif venant remplacer le faux-texte dès qu\'il est prêt ou que la mise en page est achevée. Généralement, on utilise un texte en faux latin, le Lorem ipsum ou Lipsum.', 1),
-(9, 'Livrer Un Colis 1', '2022-12-11', '2022-12-18', 0, 'voiture', 1, 'Approuvée', '2022-12-10 15:01:47', '2022-12-10 15:02:10', 1, 'Pas de description', 0),
-(10, 'Réparation (TOYOTA/AB7665)', NULL, NULL, 0, 'reparation', 1, 'Non Approuvée', '2022-12-10 15:09:53', '2022-12-10 15:09:53', NULL, 'Demande de Réparation', 0);
+(9, 'Livrer Un Colis 1', '2022-12-11', '2022-12-18', 0, 'voiture', 1, 'Rendu', '2022-12-10 15:01:47', '2022-12-10 21:08:28', 1, 'Pas de description', 1),
+(11, 'Aller a une mission', '2022-12-18', '2023-01-01', 0, 'voiture', 1, 'Rendu', '2022-12-10 21:06:03', '2022-12-12 13:25:58', 2, 'Demande de voiture', 1),
+(12, 'Aller a une mission', '2022-12-18', '2022-12-25', 1, 'voiture', 1, 'Rendu', '2022-12-11 19:53:13', '2022-12-12 13:25:01', 1, 'oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo', 1),
+(14, 'Aller a une mission a boha boha', '2022-12-12', '2023-01-01', 0, 'voiture', 1, 'Rendu', '2022-12-12 13:27:04', '2022-12-12 13:32:52', 2, 'Voilà une demande intéressante', 1),
+(16, 'Aller a une mission', '2022-12-16', '2022-12-31', 0, 'voiture', 1, 'Rendu', '2022-12-15 07:20:41', '2022-12-15 07:26:04', 2, 'Aller a une mission a boha boha', 1),
+(17, 'Réparation (TOYOTA/AB7665)', NULL, NULL, 0, 'reparation', 1, 'Rendu', '2022-12-15 07:22:50', '2022-12-15 07:24:01', NULL, 'Demande de Réparation', 0),
+(19, 'Accessibilité à la connexion', '2022-12-16', '2023-01-08', 0, 'voiture', 3, 'Approuvée', '2022-12-15 07:34:15', '2022-12-16 07:44:14', 1, 'Mettre de la connexion a Espace Dina', 0),
+(20, 'Mission de maintenance', '2022-12-27', '2023-01-08', 1, 'voiture', 3, 'Approuvée', '2022-12-28 08:14:05', '2022-12-28 08:18:44', 1, 'Nous permettra de réinstaller les pc et d\'installer antivirus', 0),
+(21, 'ddddddddd', '2023-01-02', '2023-01-22', 0, 'voiture', 5, 'Non Approuvée', '2023-01-03 07:31:43', '2023-01-03 07:31:43', 1, 'oooooooooooooooooooooooooo', 0);
 
 -- --------------------------------------------------------
 
@@ -111,11 +118,11 @@ INSERT INTO `demandes` (`id`, `objetdemande`, `datedeb`, `datefin`, `addchauffeu
 
 CREATE TABLE `failed_jobs` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `uuid` varchar(255) NOT NULL,
-  `connection` text NOT NULL,
-  `queue` text NOT NULL,
-  `payload` longtext NOT NULL,
-  `exception` longtext NOT NULL,
+  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -127,7 +134,7 @@ CREATE TABLE `failed_jobs` (
 
 CREATE TABLE `garages` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `nomgarage` varchar(255) NOT NULL,
+  `nomgarage` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -147,7 +154,7 @@ INSERT INTO `garages` (`id`, `nomgarage`, `created_at`, `updated_at`) VALUES
 
 CREATE TABLE `migrations` (
   `id` int(10) UNSIGNED NOT NULL,
-  `migration` varchar(255) NOT NULL,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -185,7 +192,7 @@ CREATE TABLE `missions` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `demande_id` int(11) NOT NULL,
   `affecter_id` int(11) NOT NULL,
-  `type` varchar(255) NOT NULL,
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `kmdeb` int(11) DEFAULT 0,
   `kmfin` int(11) DEFAULT 0,
   `status` tinyint(1) NOT NULL DEFAULT 0,
@@ -205,7 +212,17 @@ INSERT INTO `missions` (`id`, `demande_id`, `affecter_id`, `type`, `kmdeb`, `kmf
 (23, 7, 2, 'voiture', 10, 24, 1, '2022-12-10 14:55:59', '2022-12-10 14:58:31'),
 (24, 7, 2, 'chauffeur', 0, 0, 1, '2022-12-10 14:55:59', '2022-12-10 14:58:31'),
 (25, 7, 3, 'chauffeur', 0, 0, 1, '2022-12-10 14:55:59', '2022-12-10 14:58:31'),
-(26, 9, 1, 'voiture', 0, 0, 0, '2022-12-10 15:02:10', '2022-12-10 15:02:10');
+(26, 9, 1, 'voiture', 12, 1250, 1, '2022-12-10 15:02:10', '2022-12-10 21:08:28'),
+(27, 11, 2, 'voiture', 50, 12000, 1, '2022-12-11 19:52:44', '2022-12-12 13:25:58'),
+(30, 12, 1, 'voiture', 12, 12345, 1, '2022-12-12 09:31:14', '2022-12-12 13:25:01'),
+(31, 12, 2, 'chauffeur', 0, 0, 1, '2022-12-12 09:31:14', '2022-12-12 13:25:01'),
+(32, 14, 1, 'voiture', 12, 45, 1, '2022-12-12 13:27:22', '2022-12-12 13:32:52'),
+(33, 14, 2, 'voiture', 15, 90, 1, '2022-12-12 13:27:22', '2022-12-12 13:32:52'),
+(34, 16, 1, 'voiture', 30, 500, 1, '2022-12-15 07:21:15', '2022-12-15 07:26:04'),
+(35, 16, 2, 'voiture', 50, 800, 1, '2022-12-15 07:21:15', '2022-12-15 07:26:04'),
+(36, 19, 3, 'voiture', 0, 0, 0, '2022-12-16 07:44:14', '2022-12-16 07:44:14'),
+(37, 20, 1, 'voiture', 0, 0, 0, '2022-12-28 08:18:43', '2022-12-28 08:18:43'),
+(38, 20, 2, 'chauffeur', 0, 0, 0, '2022-12-28 08:18:44', '2022-12-28 08:18:44');
 
 -- --------------------------------------------------------
 
@@ -231,8 +248,8 @@ CREATE TABLE `mission_users` (
 --
 
 CREATE TABLE `password_resets` (
-  `email` varchar(255) NOT NULL,
-  `token` varchar(255) NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -244,11 +261,11 @@ CREATE TABLE `password_resets` (
 
 CREATE TABLE `personal_access_tokens` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `tokenable_type` varchar(255) NOT NULL,
+  `tokenable_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tokenable_id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `token` varchar(64) NOT NULL,
-  `abilities` text DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `abilities` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `last_used_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -262,7 +279,7 @@ CREATE TABLE `personal_access_tokens` (
 
 CREATE TABLE `pieces` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `nompiece` varchar(255) NOT NULL,
+  `nompiece` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `datefin` date NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -273,10 +290,10 @@ CREATE TABLE `pieces` (
 --
 
 INSERT INTO `pieces` (`id`, `nompiece`, `datefin`, `created_at`, `updated_at`) VALUES
-(1, 'Moteur', '2022-12-11', '2022-11-26 15:30:40', '2022-11-26 15:30:40'),
-(2, 'Echapement', '2022-12-11', '2022-11-26 15:30:55', '2022-11-26 15:30:55'),
-(3, 'Pneu', '2022-12-11', '2022-11-26 15:31:08', '2022-11-26 15:31:08'),
-(4, 'Frein', '2022-12-11', '2022-11-26 15:31:41', '2022-11-26 15:31:41');
+(1, 'Moteur', '2023-01-11', '2022-11-26 15:30:40', '2022-11-26 15:30:40'),
+(2, 'Echapement', '2023-01-11', '2022-11-26 15:30:55', '2022-11-26 15:30:55'),
+(3, 'Pneu', '2023-01-11', '2022-11-26 15:31:08', '2022-11-26 15:31:08'),
+(4, 'Frein', '2023-01-11', '2022-11-26 15:31:41', '2022-11-26 15:31:41');
 
 -- --------------------------------------------------------
 
@@ -286,13 +303,13 @@ INSERT INTO `pieces` (`id`, `nompiece`, `datefin`, `created_at`, `updated_at`) V
 
 CREATE TABLE `reparers` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `panne` varchar(255) NOT NULL,
+  `panne` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `datereparation` date DEFAULT NULL,
   `garage_id` bigint(20) UNSIGNED NOT NULL,
   `voiture_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `demande_id` bigint(20) UNSIGNED NOT NULL,
-  `pieces` text NOT NULL,
+  `pieces` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -302,7 +319,7 @@ CREATE TABLE `reparers` (
 --
 
 INSERT INTO `reparers` (`id`, `panne`, `datereparation`, `garage_id`, `voiture_id`, `user_id`, `demande_id`, `pieces`, `created_at`, `updated_at`) VALUES
-(4, 'Pneu', NULL, 1, 1, 1, 10, 'a:1:{i:0;s:1:\"3\";}', '2022-12-10 15:09:53', '2022-12-10 15:09:53');
+(6, 'La batterie présente des défaillances et demande une recharge', NULL, 1, 1, 1, 17, 'a:1:{i:0;s:1:\"1\";}', '2022-12-15 07:22:50', '2022-12-15 07:22:50');
 
 -- --------------------------------------------------------
 
@@ -312,8 +329,8 @@ INSERT INTO `reparers` (`id`, `panne`, `datereparation`, `garage_id`, `voiture_i
 
 CREATE TABLE `structures` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `nomStructure` varchar(255) NOT NULL,
-  `localisation` varchar(255) NOT NULL,
+  `nomStructure` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `localisation` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -334,12 +351,12 @@ INSERT INTO `structures` (`id`, `nomStructure`, `localisation`, `created_at`, `u
 
 CREATE TABLE `users` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `role` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(255) NOT NULL,
-  `remember_token` varchar(100) DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `structure_id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -350,9 +367,11 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `role`, `email`, `email_verified_at`, `password`, `remember_token`, `structure_id`, `created_at`, `updated_at`) VALUES
-(1, 'User 1', 'Administrateur', 'user1@gmail.com', NULL, '$2y$10$SyYXcwWgmqg/RnrJJnt3FOpLZ3W/aJXFeW9uCx0gxx90fcfiC9BZa', NULL, 1, NULL, NULL),
+(1, 'User 1', 'Administrateur', 'user1@gmail.com', NULL, '$2y$10$SyYXcwWgmqg/RnrJJnt3FOpLZ3W/aJXFeW9uCx0gxx90fcfiC9BZa', NULL, 1, NULL, '2022-12-28 07:19:21'),
 (2, 'Chauffeur 1', 'Chauffeur', 'chauffeur1@gmail.com', NULL, '$2y$10$SyYXcwWgmqg/RnrJJnt3FOpLZ3W/aJXFeW9uCx0gxx90fcfiC9BZa', NULL, 1, NULL, '2022-12-08 22:08:39'),
-(3, 'Charles GBOYOU', 'Chauffeur', 'gboyoucharles22@gmail.com', NULL, '$2y$10$KdlxflkRnzZE0.SgGxN8Z.mmeI.oJoDtD5W0oxaVTdMuLZGe2DXEG', NULL, 1, '2022-11-27 16:55:10', '2022-12-08 22:08:55');
+(3, 'Charles GBOYOU', 'Chauffeur', 'gboyoucharles22@gmail.com', NULL, '$2y$10$KdlxflkRnzZE0.SgGxN8Z.mmeI.oJoDtD5W0oxaVTdMuLZGe2DXEG', NULL, 1, '2022-11-27 16:55:10', '2022-12-08 22:08:55'),
+(4, 'BellO', 'Utilisateur', 'bastoubello@gmail.com', NULL, '$2y$10$0ws70AhtMLrmOpQZoeYL5Or9Z.0xHOhL/7I/XnLieTcPHDTVCzLyy', NULL, 1, '2022-12-28 07:31:05', '2022-12-28 07:31:05'),
+(5, 'SANT-ANNA Marie-Didier', 'Utilisateur', 'mariesantanna114@gmail.com', NULL, '$2y$10$sWwP3dbGqHFuVvx8.TW3eutApnElE6vDXLc.aOLuLeRh7VNEGeLNK', NULL, 1, '2022-12-28 07:41:26', '2023-01-03 07:13:49');
 
 -- --------------------------------------------------------
 
@@ -403,18 +422,18 @@ INSERT INTO `visites` (`id`, `kmvidange`, `datevisite`, `status`, `voiture_id`, 
 
 CREATE TABLE `voitures` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `marque` varchar(255) NOT NULL,
+  `marque` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `capacite` int(11) NOT NULL,
-  `immatriculation` varchar(255) NOT NULL,
+  `immatriculation` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `datdebservice` date NOT NULL,
   `dureeVie` int(11) NOT NULL,
   `numchassis` int(11) NOT NULL,
-  `etat` varchar(255) NOT NULL,
+  `etat` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `kilmax` int(11) NOT NULL,
-  `connsommation` varchar(255) NOT NULL,
+  `connsommation` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `coutaquisition` int(11) NOT NULL,
-  `mouvement` varchar(255) NOT NULL DEFAULT 'Au parc',
-  `dispo` varchar(255) NOT NULL DEFAULT 'Disponible',
+  `mouvement` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Au parc',
+  `dispo` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Disponible',
   `kmvidange` int(11) DEFAULT 0,
   `date_next_visite` date NOT NULL DEFAULT current_timestamp(),
   `status_visite` tinyint(1) NOT NULL DEFAULT 0,
@@ -429,11 +448,11 @@ CREATE TABLE `voitures` (
 --
 
 INSERT INTO `voitures` (`id`, `marque`, `capacite`, `immatriculation`, `datdebservice`, `dureeVie`, `numchassis`, `etat`, `kilmax`, `connsommation`, `coutaquisition`, `mouvement`, `dispo`, `kmvidange`, `date_next_visite`, `status_visite`, `status_vidange`, `structure_id`, `created_at`, `updated_at`) VALUES
-(1, 'TOYOTA', 7, 'AB7665', '2022-10-03', 10, 3456789, 'Utilisable', 123455489, '12345', 9876543, 'En mission', 'Non Disponible', 179, '2022-11-19', 0, 0, 1, '2022-10-03 21:20:22', '2022-12-10 15:02:10'),
-(2, 'LEXUS', 7, 'AB1234', '2022-10-03', 10, 3456789, 'Utilisable', 123456610, '12345', 9876543, 'Au parc', 'Disponible', 39, '2022-11-26', 0, 0, 1, '2022-10-03 21:20:22', '2022-12-10 14:58:31'),
-(3, 'AVALON', 4, 'AC4234', '2022-10-03', 10, 3456789, 'Utilisable', 123456558, '12345', 9876543, 'Au parc', 'Disponible', 222, '2022-12-02', 0, 0, 1, '2022-10-03 21:20:22', '2022-12-09 10:13:53'),
-(4, 'RAV4', 4, 'AD5234', '2022-10-03', 10, 3456789, 'Utilisable', 123456700, '12345', 9876543, 'Au parc', 'Disponible', 0, '2022-11-17', 0, 0, 1, '2022-10-03 21:20:22', '2022-12-09 10:13:53'),
-(5, 'LEXUS 23', 123, 'QA7675', '2022-11-28', 1234, 123456, 'Utilisable', 1234567, '1234', 12345678, 'Au parc', 'Disponible', 0, '2022-11-30', 0, 0, 1, '2022-11-27 20:12:03', '2022-11-27 20:12:03');
+(1, 'TOYOTA', 7, 'AB7665', '2022-10-03', 10, 3456789, 'Utilisable', 123441349, '12345', 9876543, 'En mission', 'Non Disponible', 14253, '2023-01-11', 0, 0, 1, '2022-10-03 21:20:22', '2022-12-28 08:18:43'),
+(2, 'LEXUS', 7, 'AB1234', '2022-10-03', 10, 3456789, 'Utilisable', 123443720, '12345', 9876543, 'Au parc', 'Disponible', 12814, '2023-01-11', 0, 0, 1, '2022-10-03 21:20:22', '2022-12-15 07:26:04'),
+(3, 'AVALON', 4, 'AC4234', '2022-10-03', 10, 3456789, 'Utilisable', 123456558, '12345', 9876543, 'En mission', 'Non Disponible', 222, '2023-01-11', 0, 0, 1, '2022-10-03 21:20:22', '2022-12-16 07:44:14'),
+(4, 'RAV4', 4, 'AD5234', '2022-10-03', 10, 3456789, 'Utilisable', 123456700, '12345', 9876543, 'Au parc', 'Disponible', 0, '2023-01-11', 0, 0, 1, '2022-10-03 21:20:22', '2022-12-09 10:13:53'),
+(5, 'LEXUS 23', 123, 'QA7675', '2022-11-28', 1234, 123456, 'Utilisable', 1234567, '1234', 12345678, 'Au parc', 'Disponible', 0, '2023-01-11', 0, 0, 1, '2022-11-27 20:12:03', '2022-11-27 20:12:03');
 
 --
 -- Index pour les tables déchargées
@@ -575,7 +594,7 @@ ALTER TABLE `chauffeurs`
 -- AUTO_INCREMENT pour la table `demandes`
 --
 ALTER TABLE `demandes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT pour la table `failed_jobs`
@@ -599,7 +618,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT pour la table `missions`
 --
 ALTER TABLE `missions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT pour la table `mission_users`
@@ -623,7 +642,7 @@ ALTER TABLE `pieces`
 -- AUTO_INCREMENT pour la table `reparers`
 --
 ALTER TABLE `reparers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT pour la table `structures`
@@ -635,7 +654,7 @@ ALTER TABLE `structures`
 -- AUTO_INCREMENT pour la table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT pour la table `visites`

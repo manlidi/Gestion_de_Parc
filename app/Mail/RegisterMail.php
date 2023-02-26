@@ -28,7 +28,7 @@ class RegisterMail extends Mailable
     public function build()
     {
         return $this->subject('VALIDATION COMPTE (MP)')
-                    ->from('mdtech3007@gmail.com', 'MINISTERE DU PLAN')
+                    ->from('support.mdc@gouv.bj', 'MINISTERE DU PLAN')
                     ->view('layout.mail');
     }
 }

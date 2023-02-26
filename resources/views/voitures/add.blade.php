@@ -33,19 +33,11 @@
                                         <span class="text-danger">{{ $errors->first('immatriculation') }}</span>
                                     @endif
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <label for="">Date début de service</label>
                                     <input type="date" name="datdebservice" id="datdebservice" class="form-control">
                                     @if ($errors->has('datdebservice'))
                                         <span class="text-danger">{{ $errors->first('datdebservice') }}</span>
-                                    @endif
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="">Durée de vie de la voiture</label>
-                                    <input type="number" min="1" name="dureeVie" id="dureeVie"
-                                        class="form-control">
-                                    @if ($errors->has('dureeVie'))
-                                        <span class="text-danger">{{ $errors->first('dureeVie') }}</span>
                                     @endif
                                 </div>
                                 <div class="col-md-6">
@@ -109,7 +101,7 @@
                                     @endif
                                 </div>
                                 <div class="text-center">
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    <button type="submit" class="btn btn-primary">Enregistrer</button>
                                     <button type="reset" class="btn btn-secondary">Reset</button>
                                 </div>
                             </form>
