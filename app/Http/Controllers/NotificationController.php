@@ -30,14 +30,17 @@ class NotificationController extends Controller
         $date2 = new DateTime(date('Y-m-d'));
         $datas = array();
         $notifs = array();
-        $assurances = Assurance::all()
-            ->where('status','=',true );
+        $assurances = Assurance::where('status','=',true )->get();
 
         foreach($assurances as $assurance){
             $date1 = new DateTime($assurance->datefinA);
             $jourRestant = $date2->diff($date1)->format("%a");
-            if( $jourRestant <= 7 ){
-                $datas += array( $assurance->voiture_id => array($jourRestant, $assurance->datefinA) );
+            if( $date2 < $date1 ){
+                if( $jourRestant <= 7 ){
+                    $datas += array( $assurance->voiture_id => array($jourRestant, $assurance->datefinA) );
+                }
+            }else{
+                $datas += array( $assurance->voiture_id => array(($jourRestant/(-1)), $assurance->datefinA) );
             }
         }
 
