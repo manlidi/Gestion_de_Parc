@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Auth;
                         @endif
                         <br><br>
                         <div class="row">
-                            <a href="{{ url('structures') }}" class="col-xxl-4 col-md-3">
+                            <a href="{{ url('structures') }}" class="col-xxl-4 col-md-4">
                                 <div class="card info-card revenue-card">
                                     <div class="card-body">
                                         <h3 class="card-title">Structures</span></h3>
@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\Auth;
                                 </div>
                             </a>
 
-                            <a class="col-xxl-4 col-md-3" href="{{ url('voitures') }}">
+                            <a class="col-xxl-4 col-md-4" href="{{ url('voitures') }}">
                                 <div class="card info-card revenue-card">
                                     <div class="card-body">
                                         <h3 class="card-title">Voitures</span></h3>
@@ -56,7 +56,7 @@ use Illuminate\Support\Facades\Auth;
                                 </div>
                             </a>
 
-                            <a href="{{ url('chauffeurs') }}" class="col-xxl-4 col-md-3">
+                            <a href="{{ url('chauffeurs') }}" class="col-xxl-4 col-md-4">
                                 <div class="card info-card revenue-card">
                                     <div class="card-body">
                                         <h3 class="card-title">Chauffeurs</span></h3>
@@ -68,25 +68,6 @@ use Illuminate\Support\Facades\Auth;
                                             </div>
                                             <div class="ps-3">
                                                 <h6>{{ $chauffeurs }}</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </a>
-
-                            <a href="{{ url('missions') }}" class="col-xxl-4 col-md-3">
-                                <div class="card info-card revenue-card">
-                                    <div class="card-body">
-                                        <h3 class="card-title">Missions</span></h3>
-
-                                        <div class="d-flex align-items-center">
-                                            <div
-                                                class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                                <i class="bi bi-currency-dollar"></i>
-                                            </div>
-                                            <div class="ps-3">
-                                                <h6>{{ $mission }}</h6>
                                             </div>
                                         </div>
                                     </div>
