@@ -46,7 +46,8 @@
                                                     style="box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';color:#232629;font-size:18px;font-weight:bold;margin-top:0;text-align:left">
                                                     Bien à vous monsieur/madame {{ $contenu['nom'] }}.</h4>
                                                 <p style="box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';font-size:16px;line-height:1.5em;margin-top:0;text-align:left">
-                                                    Le DPAF responsable de la Gestion du parc automobile vous invite à valider votre compte.
+                                                Votre demande de voiture a été validée. Veuillez vous connectez pour voir
+                                                    les véhicules qui vous ont été affecter et veuillez bien les rendres à la fin de votre mission.
                                                 </p>
                                                     <p
                                                         style="box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';font-size:16px;line-height:1.5em;margin-top:0;text-align:left">
@@ -76,9 +77,9 @@
                                                                                             <tr>
                                                                                                 <td
                                                                                                     style="box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol'">
-                                                                                                    <a href="{{ $contenu['url'] }}"
+                                                                                                    <a href="{{ config('app.url') }}"
                                                                                                         style="box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';border-radius:4px;color:#fff;display:inline-block;overflow:hidden;text-decoration:none;background-color:#2d3748;border-bottom:8px solid #2d3748;border-left:18px solid #2d3748;border-right:18px solid #2d3748;border-top:8px solid #2d3748">
-                                                                                                        Valider Compte
+                                                                                                        Continuer vers le site
                                                                                                     </a>
                                                                                                 </td>
                                                                                             </tr>
