@@ -1,7 +1,3 @@
-<?php
-use App\Http\Controllers\DemandeController;
-use App\Http\Controllers\MissionController;
-?>
 @extends('master')
 @section('content')
     <main id="main" class="main">
@@ -20,14 +16,14 @@ use App\Http\Controllers\MissionController;
                                 </div>
                             @endif
                             <form class=" card-body row g-3 " method="POST"
-                                action="{{ route('validerDemande', ['id' => $demande->id]) }}">
+                                action="{{ route('addkmdeb', ['id' => $demande->id]) }}">
                                 @csrf
-                                <div class="row">
-                                    @foreach ($voitureValides as $voiture)
-                                        <div class="col-sm-6"><input class="form-control" type="text" disabled name="{{ $voiture->affecter_id }}" value="{{ $voiture->affecter_id }}" /></div>
-                                        <div class="col-sm-6"><input class="form-control" type="number" min="1" disabled name="{{ $voiture->affecter_id }}" placeholder="Kilométrage de début" /></div>
-                                    @endforeach
+                                @foreach ($voitureValides as $voiture)
+                                <div class="row g-3">
+                                    <div class="col-sm-6"><input class="form-control" type="text" disabled name="{{ $voiture->affecter_id }}" value="{{ $voiture->voiture->marque }} ({{ $voiture->voiture->immatriculation }})" /></div>
+                                    <div class="col-sm-6"><input class="form-control" type="number" min="1" name="{{ $voiture->affecter_id }}" placeholder="Kilométrage de début" /></div>
                                 </div>
+                                    @endforeach
                                 <div class="text-left">
                                     <button type="submit" class="btn btn-primary">Valider Demande</button>
                                 </div>

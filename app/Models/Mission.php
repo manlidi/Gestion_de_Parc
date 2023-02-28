@@ -19,4 +19,8 @@ class Mission extends Model
         'status'
     ];
 
+    public function voiture(){
+        return $this->belongsTo(Voiture::class, 'affecter_id');
+    }
+
 }
