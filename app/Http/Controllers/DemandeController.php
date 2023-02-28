@@ -130,12 +130,6 @@ class DemandeController extends Controller
         return view('demandes.addChauffeur', compact('chauffeur'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request, $type)
     {
         $request->validate([
@@ -162,7 +156,7 @@ class DemandeController extends Controller
 
         if( $status ) $parametre = ['status'=>true, 'msg'=>'Votre demande a été enregistré avec succès. Veuillez attendre sa validation!'];
         else $parametre = ['status'=>false, 'msg'=>'Erreur lors de l\'enregistrement'];
-        return redirect()->route('mesDemabdes')->with($parametre);
+            return redirect()->route('mesDemabdes')->with($parametre);
     }
 
     public function saveDemandeReparation( Request $request, $id ){
@@ -375,6 +369,22 @@ class DemandeController extends Controller
         return Mail::to($senderEmail)->send(new RejeterMail($contenu));
     }
 
+    public function addkmdeb(Request $request, $id){
+        if(count($request->all()) > 0){
+            foreach($request->all() as $voiture_id => $km){
+                if(is_int($voiture_id)){
+                    $mission = Mission::where('affecter_id', '=', $voiture_id)
+                        ->where('type', '=', 'voiture')
+                        ->where('demande_id', '=', $id)
+                        ->first();
+                    $mission->kmdeb = $km;
+                    $mission->update();
+                }
+            }
+        }
+        return redirect()->route('admin_demandes')->with(['status' => true, 'msg' => 'Demande validée avec succès !']);
+    }
+
     public function validerDemande(Request $request, $id, $type){
         if( $type == 'voiture' ){
             $request->validate([
@@ -383,7 +393,9 @@ class DemandeController extends Controller
 
             $demande = Demande::find($id);
             $user = User::find($demande->user_id);
-            $send = $this->sendMailUserDemande($user->email, $user->name);
+            // $send = $this->sendMailUserDemande($user->email, $user->name);
+            $send = true;
+            $voitureValides = [];
 
             if( $send ){
                 $nbre = count( $request->voitures );
@@ -396,7 +408,7 @@ class DemandeController extends Controller
                         $voiture->mouvement = 'En mission';
                         $voiture->update();
 
-                        Mission::create([
+                        $voitureValides[] = Mission::create([
                             'demande_id' => $demande->id,
                             'affecter_id' => $voiture->id,
                             'type' => 'voiture'
@@ -419,7 +431,7 @@ class DemandeController extends Controller
                     }
                     $demande->status = 'Approuvée';
                     $demande->update();
-                    return redirect()->route('admin_demandes')->with(['status' => true, 'msg' => 'Demande validée avec succès !']);
+                    return view('demandes.formAddKm', compact('demande', 'voitureValides'));
                 }
             }else{
                 return redirect()->route('admin_demandes')->with(['status' => true, 'msg' => 'Une erreur est survenu lors de la validation de la demande !']);
