@@ -384,6 +384,7 @@ class DemandeController extends Controller
             $demande = Demande::find($id);
             $user = User::find($demande->user_id);
             $send = $this->sendMailUserDemande($user->email, $user->name);
+            $voitureValides = [];
 
             if( $send ){
                 $nbre = count( $request->voitures );
@@ -396,7 +397,7 @@ class DemandeController extends Controller
                         $voiture->mouvement = 'En mission';
                         $voiture->update();
 
-                        Mission::create([
+                        $voitureValides[] = Mission::create([
                             'demande_id' => $demande->id,
                             'affecter_id' => $voiture->id,
                             'type' => 'voiture'
@@ -419,7 +420,8 @@ class DemandeController extends Controller
                     }
                     $demande->status = 'Approuvée';
                     $demande->update();
-                    return redirect()->route('admin_demandes')->with(['status' => true, 'msg' => 'Demande validée avec succès !']);
+                    return view('demandes.formAddKm', compact('demande', 'voitureValides'));
+                    // return redirect()->route('admin_demandes')->with(['status' => true, 'msg' => 'Demande validée avec succès !']);
                 }
             }else{
                 return redirect()->route('admin_demandes')->with(['status' => true, 'msg' => 'Une erreur est survenu lors de la validation de la demande !']);
