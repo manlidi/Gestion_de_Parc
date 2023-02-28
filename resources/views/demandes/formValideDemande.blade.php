@@ -19,42 +19,45 @@ use App\Http\Controllers\MissionController;
                                         aria-label="Close"></button>
                                 </div>
                             @endif
-                            <div class="row card-body bg-secondary">
-                                <div class="col-sm-8">
-                                    <p class="text-white p-0 m-0">
-                                        <strong class="text-warning">Description : </strong><br>
-                                        <?= nl2br($demande->description) ?>
-                                    </p>
-                                    @if ($demande->type == 'reparation')
-                                        <p class="text-white p-0 m-0">
-                                        <h5>Réparation de : </h5>
+                            <div class="card-body bg-light">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <p class="p-0 m-0">
+                                            <strong class="text-warning">Description : </strong><br>
+                                            <?= nl2br($demande->description) ?>
                                         </p>
-                                    @endif
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="row text-white">
-                                        <div class="col-sm-12">
-                                            Avec Chauffeur :
-                                            @if ($demande->addchauffeur)
-                                                <strong style="color: rgb(222, 248, 125)">Oui</strong>
-                                            @else
-                                                <strong class="text-danger">Non</strong>
-                                            @endif
-                                        </div>
-                                        <div class="col-sm-12 pt-2">
-                                            Date <br>
-                                            <ul class="text-sm space-y-1">
-                                                <li style="color: yellow">Du :
-                                                    <strong>{{ $demande->datedeb ?? '----' }}</strong>
-                                                </li>
-                                                <li style="color: yellow">Au :
-                                                    <strong>{{ $demande->datefin ?? '----' }}</strong>
-                                                </li>
-                                            </ul>
+                                        @if ($demande->type == 'reparation')
+                                            <p class="text-white p-0 m-0">
+                                            <h5>Réparation de : </h5>
+                                            </p>
+                                        @endif
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                Avec Chauffeur :
+                                                @if ($demande->addchauffeur)
+                                                    <strong style="color: rgb(222, 248, 125)">Oui</strong>
+                                                @else
+                                                    <strong class="text-danger">Non</strong>
+                                                @endif
+                                            </div>
+                                            <div class="col-sm-12 pt-2">
+                                                Date <br>
+                                                <ul class="text-sm space-y-1">
+                                                    <li class="text-danger">Du :
+                                                        <strong>{{ $demande->datedeb ?? '----' }}</strong>
+                                                    </li>
+                                                    <li class="text-danger">Au :
+                                                        <strong>{{ $demande->datefin ?? '----' }}</strong>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="card-footer">
                                 <strong>Nombre de Voiture Demandée : {{ $demande->nbreVoiture }}</strong>
                             </div>
