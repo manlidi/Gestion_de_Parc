@@ -131,6 +131,7 @@ class DemandeController extends Controller
             'objetdemande' => 'required',
             'description' => 'required',
             'nbreVoiture' => 'required',
+            'nbPlace' => 'required',
             'datedeb' => 'required',
             'datefin'    =>  'required|date|after:datedeb'
         ]);
@@ -144,6 +145,7 @@ class DemandeController extends Controller
             'addchauffeur' => $addchauf,
             'datedeb' => $request->datedeb,
             'nbreVoiture' => $request->nbreVoiture,
+            'nbPlace' => $request->nbPlace,
             'datefin' => $request->datefin,
             'user_id' => Auth::user()->id,
             'type' => $type
@@ -229,6 +231,7 @@ class DemandeController extends Controller
         $demande->objetdemande = $request->objetdemande;
         $demande->description = $request->description;
         $demande->nbreVoiture = $request->nbreVoiture;
+        $demande->nbPlace = $request->nbPlace;
         $demande->addchauffeur = $addchauf;
         $demande->datedeb = $request->datedeb;
         $demande->datefin = $request->datefin;

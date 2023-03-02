@@ -21,7 +21,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <input type="number" min="1" name="capacite" id="capacite" class="form-control"
-                                        placeholder="Capacité de la voiture">
+                                        placeholder="Nombre de personnes supportées">
                                     @if ($errors->has('capacite'))
                                         <span class="text-danger">{{ $errors->first('capacite') }}</span>
                                     @endif

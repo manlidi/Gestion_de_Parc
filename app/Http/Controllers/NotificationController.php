@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use DateTime;
 use App\Models\Assurance;
+use App\Models\Demande;
 use App\Models\Notification;
 use App\Models\Piece;
 use App\Models\Voiture;
@@ -22,8 +23,9 @@ class NotificationController extends Controller
         $pieces = self::pieceNotif();
         $visites = self::visiteNotif();
         $vidanges = self::vidangeNotif();
+        $demandes = self::rendreVehicule();
 
-        return view('notification.all', compact('assurences', 'pieces', 'visites', 'vidanges'));
+        return view('notification.all', compact('assurences', 'pieces', 'visites', 'vidanges', 'demandes'));
     }
 
     public static function assuranceNotif(){
@@ -97,7 +99,26 @@ class NotificationController extends Controller
         return $datas;
     }
 
-    public static function vidangeNotif(){
+    public static function rendreVehicule(){
+        $date = new DateTime(date('Y-m-d'));
+        $datas = array();
+
+        $demandes = DB::table('demandes')
+        ->join('users', 'users.id', '=', 'demandes.user_id')
+        ->select('*')
+        ->where('status', '=', 'Approuvée')
+        ->get();//Demande::all()->where('status', '=', 'Approuvée');
+        foreach($demandes as $demande){
+            $date1 = new DateTime($demande->datefin);
+
+            if($date > $date1){
+                $datas += array( $demande->id => array('objetdemande' => $demande->objetdemande, 'name' => $demande->name, 'datefin' => $demande->datefin) );
+            }
+        }
+        return $datas;
+    }
+
+    public function vidangeNotif(){
         $voitures = Voiture::all()
             ->where('status_vidange','=',false)
             ->where('kmvidange', '>=', 1000);

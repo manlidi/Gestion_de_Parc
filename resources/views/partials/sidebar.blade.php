@@ -14,7 +14,7 @@
         @if (Auth::user() && Auth::user()->role == 'Administrateur')
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-file-plus"></i><span>Ajout</span><i class="bi bi-chevron-down ms-auto"></i>
+                    <i class="bi bi-plus-circle"></i><span>Ajout</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     <li>
@@ -69,7 +69,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link collapsed" href="{{ url('demanderReparation') }}">
-                            <i class="bi bi-wrench"></i>
+                            <i class="bi bi-circle"></i>
                             <span>Demande De Réparation</span>
                         </a>
                     </li>
@@ -77,31 +77,31 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#demandes" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-wrench"></i><span>Demandes</span><i class="bi bi-chevron-down ms-auto"></i>
+                    <i class="bi bi-people"></i><span>Demandes</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="demandes" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     <li class="nav-item">
                         <a class="nav-link collapsed" href="{{ url('demanderVoiture') }}">
-                            <i class="bi bi-truck"></i>
+                            <i class="bi bi-circle"></i>
                             <span>Demander Une Voiture</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link collapsed" href="{{ url('mesDemandes') }}">
-                            <i class="bi bi-shield-check"></i>
+                            <i class="bi bi-circle"></i>
                             <span>Listes De Mes Demandes</span>
                         </a>
                     </li>
                     @if (Auth::user() && Auth::user()->role == 'Administrateur')
                         <li class="nav-item">
                             <a class="nav-link collapsed" href="{{ url('admin_demandes') }}">
-                                <i class="bi bi-eye"></i>
+                                <i class="bi bi-circle"></i>
                                 <span>Demandes en Attente</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link collapsed" href="{{ url('adminDemandeApprouve') }}">
-                                <i class="bi bi-eye"></i>
+                                <i class="bi bi-circle"></i>
                                 <span>Demandes Approuvées</span>
                             </a>
                         </li>
@@ -110,7 +110,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url('register') }}">
-                    <i class="bi bi-card-list"></i>
+                    <i class="bi bi-person"></i>
                     <span>Ajouter Un Membre</span>
                 </a>
             </li>

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->date('datefin')->nullable()->default(NULL);
             $table->string('type');
             $table->integer('nbreVoiture')->nullable();
+            $table->integer('nbPlace')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('status')->default('Non Approuvée');
             $table->boolean('etat')->default(0);

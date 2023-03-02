@@ -106,18 +106,18 @@
                                     <h5 class="card-title">Pièces <span>| Réparée/Changée</span></h5>
 
                                     <div class="activity">
-                                        @foreach ($pieces_reparees as $piece_reparer)
+                                        @forelse ($pieces_reparees as $piece_reparer)
                                             <div class="activity-item d-flex">
                                                 <div class="activite-label">{{ $piece_reparer['number'] }} fois</div>
                                                 <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
                                                 <div class="activity-content">
                                                     {{ $piece_reparer['nom'] }}
                                                 </div>
-                                            </div><!-- End activity item-->
-                                        @endforeach
-
+                                            </div>
+                                        @empty
+                                            <small>Aucune pièce n'a encore été changée ou réparée !</small>
+                                        @endforelse
                                     </div>
-
                                 </div>
                             </div>
                         </div>

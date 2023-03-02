@@ -6,7 +6,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Bordered Tabs</h5>
+                            <h5 class="card-title">Vos Notifications</h5>
 
                             <!-- Bordered Tabs -->
                             <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist">
@@ -32,6 +32,12 @@
                                         data-bs-target="#bordered-vidange" type="button" role="tab"
                                         aria-controls="vidange" aria-selected="false">Vidange Véhicule
                                         {{ count($vidanges) }}</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="rendre-tab" data-bs-toggle="tab"
+                                        data-bs-target="#bordered-rendre" type="button" role="tab"
+                                        aria-controls="rendre" aria-selected="false">Voiture Non rendu
+                                        {{ count($demandes) }}</button>
                                 </li>
                             </ul>
                             <div class="tab-content pt-2" id="borderedTabContent">
@@ -157,6 +163,28 @@
                                             doit aller en vidange car son kilomettrage a atteint
                                             <strong class="text-primary">{{ $vidange['kmvidange'] }}</strong>
                                             depuis le dernier vidange.
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @else
+                            <div class="alert border-warning alert-dismissible fade show" role="alert">
+                                Pas de notification
+                            </div>
+                        @endif
+                    </div>
+                    <div class="tab-pane fade" id="bordered-rendre" role="tabpanel" aria-labelledby="rendre-tab">
+                        @if (count($demandes) > 0)
+                            @foreach ($demandes as $key => $demande)
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <i class="bi bi-exclamation-triangle me-1"></i>
+                                            Les voitures de la demande <strong class="text-primary">{{ $demande['objetdemande'] }}</strong>
+                                            faite par <strong
+                                                class="text-primary">{{ $demande['name'] }}</strong>
+                                            n'ont pas été rendues. La mission est terminé depuis le
+                                            <strong class="text-primary">{{ $demande['datefin'] }}</strong>.
                                         </div>
                                     </div>
                                 </div>

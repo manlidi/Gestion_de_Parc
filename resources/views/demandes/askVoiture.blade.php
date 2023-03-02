@@ -34,6 +34,11 @@
                                 <textarea class="form-control" required name="description" id="description" placeholder="Description"
                                     style="height: 100px">{{ isset($demande->description) ? $demande->description : old('description') }}</textarea>
                             </div>
+                            <div class="col-12">
+                                <x-input-error :messages="$errors->get('nbPlace')" class="m-1" />
+                                <textarea class="form-control" required name="nbPlace" id="nbPlace" placeholder="Description"
+                                    style="height: 100px">{{ isset($demande->nbPlace) ? $demande->nbPlace : old('nbPlace') }}</textarea>
+                            </div>
                             <div class="col-6">
                                 <x-input-error :messages="$errors->get('nbreVoiture')" class="m-1" />
                                 <input type="number" min="1" placeholder="Nombre de voiture" name="nbreVoiture" id="nbreVoiture"
