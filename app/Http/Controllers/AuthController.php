@@ -149,7 +149,7 @@ class AuthController extends Controller
                 $parameter->update();
             }
         }
-        return redirect()->route('parameter_form');
+        return redirect()->route('parameter-page');
     }
 
     public function dashboard(){

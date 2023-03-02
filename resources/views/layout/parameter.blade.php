@@ -46,6 +46,8 @@
                                                                     les assurances des voitures 
                                                                 @elseif ($notif->name == 'visite')
                                                                     les visites techniques
+                                                                @elseif ($notif->name == 'demande')
+                                                                    les demandes de voiture
                                                                 @else 
                                                                     les pièces
                                                                 @endif

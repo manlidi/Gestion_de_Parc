@@ -34,6 +34,9 @@ return new class extends Migration
         DB::table('parameters')->insert([
             'name' =>'vidange'
         ]);
+        DB::table('parameters')->insert([
+            'name' =>'demande'
+        ]);
     }
 
     /**

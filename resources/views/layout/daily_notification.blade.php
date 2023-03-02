@@ -41,13 +41,73 @@
                                                 style="box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';max-width:100vw;padding:32px">
                                                 <h1
                                                     style="box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';color:#0068c9;font-size:18px;font-weight:bold;margin-top:0;text-align:left">
-                                                    {{ $contenu['titre'] }}</h1>
+                                                    Notification 
+                                                    @if ($contenu['type'] == 'vidange')
+                                                        Piece Véhicule
+                                                    @elseif ($contenu['type'] == 'assurance')
+                                                        Assurances Voiture 
+                                                    @elseif ($contenu['type'] == 'visite')
+                                                        Visite Technique
+                                                    @elseif ($contenu['type'] == 'demande')
+                                                        Voitures
+                                                    @else 
+                                                        Piece Véhicule
+                                                    @endif
+                                                    </h1>
                                                 <h4
                                                     style="box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';color:#232629;font-size:18px;font-weight:bold;margin-top:0;text-align:left">
-                                                    Bien à vous monsieur/madame {{ $contenu['nom'] }}.</h4>
+                                                    Bien à vous monsieur/madame.</h4>
+                                                    
                                                 <p style="box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';font-size:16px;line-height:1.5em;margin-top:0;text-align:left">
-                                                Votre demande de voiture a été validée. Veuillez vous connectez pour voir
-                                                    les véhicules qui vous ont été affecter et veuillez bien les rendres à la fin de votre mission.
+
+                                                    @foreach ($notification as $notif)
+                                                        @if ($contenu['type'] == 'vidange')
+                                                            La voiture <strong class="text-primary">{{ $notif['marque'] }}</strong>
+                                                            immatriculé <strong
+                                                                class="text-primary">{{ $notif['immatriculation'] }}</strong>
+                                                            doit aller en vidange car son kilomettrage a atteint
+                                                            <strong class="text-primary">{{ $notif['kmvidange'] }}</strong>
+                                                            depuis le dernier vidange.
+                                                        @elseif ($contenu['type'] == 'assurance')
+                                                                L'assurance de la voiture <strong>{{ $notif['marque'] }}</strong>
+                                                            immatriculé <strong
+                                                                class="text-primary">{{ $notif['immatriculation'] }}</strong>
+                                                            @if ($notif['jourRestant'] < 0)
+                                                                est expirée depuis
+                                                                {{ $notif['jourRestant'] * -1 }} jour
+                                                            @else
+                                                                expire dans moins d'une semaine
+                                                            @endif
+                                                            précisement le <strong
+                                                                class="text-primary">{{ $notif['datefinA'] }}
+                                                        @elseif ($contenu['type'] == 'visite')
+                                                                La prochaine vitsite technique de la voiture <strong
+                                                                class="text-primary">{{ $notif['marque'] }}</strong>
+                                                            immatriculé <strong
+                                                                class="text-primary">{{ $notif['immatriculation'] }}</strong>
+                                                            @if ($notif['jourRestant'] < 0)
+                                                                est passée il y a {{ $notif['jourRestant'] * -1 }}
+                                                            @else
+                                                                est dans moins d'une semaine
+                                                            @endif
+                                                            précisement le <strong
+                                                                class="text-primary">{{ $visite['date_next_visite'] }}</strong>
+                                                        @elseif ($contenu['type'] == 'demande')
+                                                            Les voitures de la demande <strong class="text-primary">{{ $notif['objetnotif'] }}</strong>
+                                                            faite par <strong
+                                                                class="text-primary">{{ $notif['name'] }}</strong>
+                                                            n'ont pas été rendues. La mission est terminé depuis le
+                                                            <strong class="text-primary">{{ $notif['datefin'] }}</strong>.
+                                                        @else 
+                                                            La piece <strong class="text-primary">{{ $notif['nompiece'] }}</strong>
+                                                            @if ($notif['jourRestant'] < 0)
+                                                                est expirée depuis {{ $notif['jourRestant'] * -1 }} jour
+                                                            @else
+                                                                expire dans moins d'une semaine
+                                                            @endif
+                                                            précisement le <strong class="text-primary">{{ $piece['datefin'] }}</strong>
+                                                        @endif
+                                                    @endforeach                                                
                                                 </p>
                                                     <p
                                                         style="box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';font-size:16px;line-height:1.5em;margin-top:0;text-align:left">
