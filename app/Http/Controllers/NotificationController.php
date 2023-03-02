@@ -97,7 +97,7 @@ class NotificationController extends Controller
         return $datas;
     }
 
-    public function vidangeNotif(){
+    public static function vidangeNotif(){
         $voitures = Voiture::all()
             ->where('status_vidange','=',false)
             ->where('kmvidange', '>=', 1000);

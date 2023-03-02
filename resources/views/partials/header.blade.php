@@ -3,7 +3,7 @@
     <div class="d-flex align-items-center justify-content-between">
         <a href="#" class="logo d-flex align-items-center">
             <img src="../../logo/i.png" alt="">
-            <span style="font-size: 20px; text-align:center">Gestion de parc automobile</span>
+            <span style="font-size: 20px; text-align:center">G-Parc</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
@@ -17,8 +17,13 @@
                 </a>
             </li>
             @if (Auth::user())
+            
+                <li class="nav-item dropdown">
+                    <a class="nav-link nav-icon" title="parametre" href="{{ route('parameter-page') }}">
+                        <i class="bi bi-gear"></i>
+                    </a>
+                </li>
                 <li class="nav-item dropdown pe-3">
-
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#"
                         data-bs-toggle="dropdown">
                         <img src="../assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">

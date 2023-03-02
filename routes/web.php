@@ -57,6 +57,8 @@ Route::get('updateDemandeChauffeur/{id}', [DemandeController::class, 'updateDema
 Route::post('updateDemande/{id}/{type}', [DemandeController::class, 'update'])->name('updateDemande');
 
 Route::middleware(['auth', 'role:Administrateur'])->group(function () {
+    Route::get('admin/parameter', [AuthController::class, 'parameter_page'])->name('parameter-page');
+    Route::post('parameter_form', [AuthController::class, 'parameter_form'])->name('parameter_form');
     Route::get('structures', [StructureController::class, 'index'])->name('structures');
     Route::get('addstructures', [StructureController::class, 'show'])->name('addstructures');
     Route::post('savestructures', [StructureController::class, 'create']);

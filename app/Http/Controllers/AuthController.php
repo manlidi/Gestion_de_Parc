@@ -7,33 +7,24 @@ use App\Models\Demande;
 use App\Models\Mission;
 use App\Models\Voiture;
 use App\Models\Chauffeur;
+use App\Models\Parameter;
 use App\Models\Structure;
 use App\Mail\RegisterMail;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Validation\Rules;
 
 class AuthController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         return view('layout.login');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create(Request $request)
     {
         $request->validate([
@@ -71,12 +62,6 @@ class AuthController extends Controller
         //     $send = $this->sendMailUser( $user->email, $urlUser, $user->name );
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $pass = $this->genererToken();
@@ -148,6 +133,25 @@ class AuthController extends Controller
         else return view('layout.errorPage');
     }
 
+    public function parameter_page(){
+        $notifs = Parameter::all();
+        return view('layout.parameter', compact('notifs'));
+    }
+
+    public function parameter_form(Request $request){
+        Parameter::query()->update(['status'=>false]);
+        $times = Parameter::all();
+        foreach($times as $time){
+            if($request->input($time->name) != null){
+                $parameter = Parameter::where('name', $time->name)->first();
+                $parameter->status = true;
+                $parameter->time = $request->input($time->name . '_hour');
+                $parameter->update();
+            }
+        }
+        return redirect()->route('parameter_form');
+    }
+
     public function dashboard(){
         if(Auth::check()){
             $structure = Structure::count();
@@ -165,47 +169,12 @@ class AuthController extends Controller
         }
         return redirect('/login');
     }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show()
     {
         $structures = Structure::all();
         return view('layout.register', compact('structures'));
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy()
     {
         Session::flush();

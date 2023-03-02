@@ -19,11 +19,6 @@ use Illuminate\Support\Facades\Mail;
 
 class DemandeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         if(Auth::guest()){
@@ -393,8 +388,7 @@ class DemandeController extends Controller
 
             $demande = Demande::find($id);
             $user = User::find($demande->user_id);
-            // $send = $this->sendMailUserDemande($user->email, $user->name);
-            $send = true;
+            $send = $this->sendMailUserDemande($user->email, $user->name);
             $voitureValides = [];
 
             if( $send ){
