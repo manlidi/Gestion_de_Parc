@@ -51,7 +51,7 @@
                 <div class="container">
                     <div class="row justify-content-center">
                         <div class="col-sm-5 d-flex flex-column align-items-center justify-content-center">
-                            <div class="text-center"><img src="{{ asset('logo/i.png') }}" style="width: 170px;"
+                            <div class="text-center"><img src="{{ asset('logo/ministere.png') }}" style="width: 170px;"
                                     alt="_logo"></div>
                             <div class="card mb-3">
 

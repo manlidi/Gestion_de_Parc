@@ -2,8 +2,8 @@
 
     <div class="d-flex align-items-center justify-content-between">
         <a href="#" class="logo d-flex align-items-center">
-            <img src="../../logo/i.png" alt="">
-            <span style="font-size: 20px; text-align:center">Gestion de parc automobile</span>
+            <img src="../../logo/ministere.png" alt="">
+            <span style="font-size: 20px; text-align:center">Gestion du parc automobile</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->

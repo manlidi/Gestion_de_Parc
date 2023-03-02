@@ -27,7 +27,7 @@ use App\Http\Controllers\MissionController;
                                             <?= nl2br($demande->description) ?>
                                         </p>
                                         @if ($demande->type == 'reparation')
-                                            <p class="text-white p-0 m-0">
+                                            <p class="text-white p-0 m-0"> 
                                             <h5>Réparation de : </h5>
                                             </p>
                                         @endif
@@ -42,6 +42,11 @@ use App\Http\Controllers\MissionController;
                                                     <strong class="text-danger">Non</strong>
                                                 @endif
                                             </div>
+                                            @if ($demande->type == "voiture")
+                                                <div class="col-sm-12 pt-2">
+                                                    Nombres de personne pour la mission : {{ $demande->nbPlace }}
+                                                </div>
+
                                             <div class="col-sm-12 pt-2">
                                                 Date <br>
                                                 <ul class="text-sm space-y-1">
@@ -53,14 +58,16 @@ use App\Http\Controllers\MissionController;
                                                     </li>
                                                 </ul>
                                             </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
+                            @if ($demande->type == "voiture")
                             <div class="card-footer">
                                 <strong>Nombre de Voiture Demandée : {{ $demande->nbreVoiture }}</strong>
                             </div>
+                            @endif
                             <form class=" card-body row g-3 " method="POST"
                                 action="{{ route('validerDemande', ['id' => $demande->id, 'type' => $demande->type]) }}">
                                 @csrf
@@ -71,8 +78,8 @@ use App\Http\Controllers\MissionController;
                                             name="voitures[]" id="voitures">
                                             @if ($voitures->count() > 0)
                                                 @foreach ($voitures as $us)
-                                                    <option value="{{ $us->id }}">{{ $us->marque }} (
-                                                        {{ $us->immatriculation }} )</option>
+                                                    <option value="{{ $us->id }}">{{ $us->marque }}/{{ $us->immatriculation }} (
+                                                        {{ $us->capacite }} places)</option>
                                                 @endforeach
                                             @else
                                                 <option value="">Pas de voiture</option>
